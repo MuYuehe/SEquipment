@@ -1,9 +1,24 @@
 local ADDON_NAME,SEquipment = ...
 local SE = SEquipment
 
+local _, ns = ...
+local L = ns.L or {}
+
 local DB={
-    button1 = true,
-    button2 = true,
+    ShowPlayerInfo = true,
+    ShowTargetInfo = true,
+    ShowTooltip = true,
+    ShowWholeStat = true,
+    -- ShowEquipLevel = true,
+    ShowClassColorFrame = true,
+}
+local options = {
+    {key = "ShowPlayerInfo"},
+    {key = "ShowTargetInfo"},
+    {key = "ShowTooltip"},
+    {key = "ShowWholeStat"},
+    -- {key = "ShowEquipLevel"},
+    {key = "ShowClassColorFrame"},
 }
 
 local vars = CreateFrame("Frame")
@@ -31,48 +46,30 @@ function SEquipment:CreateOptions()
 
     local ButtonFrame = Frame("Button_",SE.options,200,200,1,0,0,0)
     ButtonFrame:SetPoint("TOPLEFT",20,-50)
-    local ButtonFrame_Son1 = Frame("Button_Son1_",ButtonFrame,200,30,0,1,0,0)
-    ButtonFrame_Son1:SetPoint("TOPLEFT",0,0)
-    ButtonFrame_Son1.ItemString = ButtonFrame_Son1:CreateFontString(nil,"ARTWORK","GameFontNormalSmall")
-    ButtonFrame_Son1.ItemString:SetText("显示自身面板")
-    ButtonFrame_Son1.ItemString:SetPoint("LEFT",40,2)
-    local Button1 = CreateFrame("CheckButton","button1",ButtonFrame_Son1,"ChatConfigCheckButtonTemplate")
-    Button1:SetSize(30,30)
-    Button1:SetPoint("LEFT",0,0)
 
-    local ButtonFrame_Son2 = Frame("Button_Son2_",ButtonFrame,200,30,0,1,0,0)
-    ButtonFrame_Son2:SetPoint("TOPLEFT",0,-35)
-    ButtonFrame_Son2.ItemString = ButtonFrame_Son2:CreateFontString(nil,"ARTWORK","GameFontNormalSmall")
-    ButtonFrame_Son2.ItemString:SetText("显示目标面板")
-    ButtonFrame_Son2.ItemString:SetPoint("LEFT",40,2)
-    local Button2 = CreateFrame("CheckButton","button2",ButtonFrame_Son2,"ChatConfigCheckButtonTemplate")
-    Button2:SetSize(30,30)
-    Button2:SetPoint("LEFT",0,0)
-    
-    Button1:SetChecked(SE.DB.button1)
-    Button1:SetScript("OnClick",function (self)
-        if SE.DB.button1 == true then
-            SEquipmentDB.button1 = false
-            SE.DB.button1 = false
-            self:SetChecked(false)
-        else
-            SEquipmentDB.button1 = true
-            SE.DB.button1 = true
-            self:SetChecked(true)
-        end
-    end)
+    for k, v in pairs(options) do
+        local name = v.key
+        local ButtonFrame_Son = Frame("Button_Son_"..k,ButtonFrame,200,30,0,1,0,0)
+        ButtonFrame_Son:SetPoint("TOPLEFT",0,(k-1)*(-35))
+        ButtonFrame_Son.ItemString = ButtonFrame_Son:CreateFontString(nil,"ARTWORK","GameFontNormalSmall")
+        ButtonFrame_Son.ItemString:SetText(L[name])
+        ButtonFrame_Son.ItemString:SetPoint("LEFT",40,2)
+        local Button = CreateFrame("CheckButton","button"..k,ButtonFrame_Son,"ChatConfigCheckButtonTemplate")
+        Button:SetSize(30,30)
+        Button:SetPoint("LEFT",0,0)
 
-    Button2:SetChecked(SE.DB.button2)
-    Button2:SetScript("OnClick",function (self)
-        if SE.DB.button2 == true then
-            SEquipmentDB.button2 = false
-            SE.DB.button2 = false
-            self:SetChecked(false)
-        else
-            SEquipmentDB.button2 = true
-            SE.DB.button2 = true
-            self:SetChecked(true)
-        end
-    end)
-
+        Button:SetChecked(SE.DB[name])
+        -- print(SE.DB.name)
+        Button:SetScript("OnClick",function (self)
+            if SE.DB[name] == true then
+                SEquipmentDB[name] = false
+                SE.DB[name] = false
+                self:SetChecked(false)
+            else
+                SEquipmentDB[name] = true
+                SE.DB[name] = true
+                self:SetChecked(true)
+            end
+        end)
+    end
 end

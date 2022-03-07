@@ -1,4 +1,4 @@
-local GemList = {
+local TongYuGemList = {
     [187079] = "邪坦1",
     [187292] = "邪坦2",
     [187301] = "邪坦3",
@@ -54,9 +54,20 @@ local GemList = {
     [187316] = "冰通5",
 }
 
+local GemList = {
+    [173121] = "12爆击",
+    [173127] = "16爆击",
+    [173122] = "12急速",
+    [173128] = "16急速",
+    [173124] = "12精通",
+    [173130] = "16精通",
+    [173123] = "12全能",
+    [173129] = "16全能",
+}
+--[[获取统御宝石名称]]
 function Bloon(id)
     local number = 0
-    if GemList[id] then
+    if TongYuGemList[id] then
         number = 1
     end
     
@@ -64,5 +75,17 @@ function Bloon(id)
 end
 
 function GetDominateName(id)
+    return TongYuGemList[id]
+end
+--[[获取宝石绿字]]
+function Gloon(id)
+    local number = 0
+    if GemList[id] then
+        number = 1
+    end
+    return number
+end
+
+function GetGemStat(id)
     return GemList[id]
 end
