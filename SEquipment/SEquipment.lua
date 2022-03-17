@@ -40,10 +40,12 @@ local font = "Fonts\\ARKai_T.TTF"
 local frames={}
 local backdrop={
     bgFile="Interface\\Tooltips\\UI-Tooltip-Background",
+    -- edgeFile = "Interface\\Buttons\\WHITE8x8",
+    -- edgeSize=2,
     edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+    edgeSize=10,
     tile=true,
     tileSize=8,
-    edgeSize=10,
     insets={ left=2,right=2,top=2,bottom=2},
 }
 -- 创建框体函数
@@ -470,7 +472,7 @@ function GetInvColor(ItemQuality)
     local r,g,b,a
     if ItemQuality ~= "" then
         r,g,b=GetItemQualityColor(ItemQuality)
-        a=0.8
+        a=1
     else
         r,g,b,a=0,0,0,0
     end
@@ -621,7 +623,7 @@ local a = 0
 
 local PlayerFrame,ItemString_P,Tex_P,ILevel_P,Green_L_P,Green_R_P,Gem_P,TongYu_P,Miss_P = CreateSEFrame(PaperDollFrame,"player")
 PlayerFrame:SetBackdropBorderColor(0,0,0,1)
-PlayerFrame:SetPoint("LEFT",PaperDollFrame:GetWidth(),0)
+PlayerFrame:SetPoint("LEFT",PaperDollFrame:GetWidth()+2,0)
 
 local TargetFrame,ItemString_T,Tex_T,ILevel_T,Green_L_T,Green_R_T,Gem_T,TongYu_T
 
@@ -651,7 +653,7 @@ EventFrame:SetScript("OnEvent",function (self,event,...)
             if SEquipmentDB.ShowTargetInfo == true then
                 if SEquipmentDB.ShowPlayerInfo == true then
                     PlayerFrame:SetParent(InspectFrame)
-                    PlayerFrame:SetPoint("LEFT",InspectFrame:GetWidth()+200,0)
+                    PlayerFrame:SetPoint("LEFT",InspectFrame:GetWidth()+203,0)
                     ShowChangeItem("player",ItemString_P,Tex_P,ILevel_P,Green_L_P,Green_R_P,Gem_P,TongYu_P,Miss_P)
                     PlayerFrame:Show()
 
@@ -667,7 +669,7 @@ EventFrame:SetScript("OnEvent",function (self,event,...)
             else
                 if SEquipmentDB.ShowPlayerInfo == true then
                     PlayerFrame:SetParent(InspectFrame)
-                    PlayerFrame:SetPoint("LEFT",InspectFrame:GetWidth()+1,0)
+                    PlayerFrame:SetPoint("LEFT",InspectFrame:GetWidth()+2,0)
                     ShowChangeItem("player",ItemString_P,Tex_P,ILevel_P,Green_L_P,Green_R_P,Gem_P,TongYu_P,Miss_P)
                     PlayerFrame:Show()
 
@@ -693,7 +695,7 @@ EventFrame:SetScript("OnEvent",function (self,event,...)
             TargetFrame,ItemString_T,Tex_T,ILevel_T,Green_L_T,Green_R_T,Gem_T,TongYu_T,Miss_T = CreateSEFrame(InspectFrame,"target")
             
             TargetFrame:SetBackdropBorderColor(0,0,0,1)
-            TargetFrame:SetPoint("LEFT",InspectFrame:GetWidth(),0)
+            TargetFrame:SetPoint("LEFT",InspectFrame:GetWidth()+2,0)
         end
     end
 

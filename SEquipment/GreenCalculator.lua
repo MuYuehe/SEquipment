@@ -47,7 +47,7 @@ local MasteryEffect = {
     [267] = 2,
 -- zs
     [71] = 1.1,
-    [72] = 1.46,
+    [72] = 1.4,
     [73] = 0.5,
 }
 -- 基础精通
@@ -181,7 +181,7 @@ function GetPercent(number,n,SpecNumber,raceID)
             Percent = Percent * MasteryEffect[SpecNumber] --XXX精通系数 GetMasteryEffect()
             -- print(MasteryEffect[SpecNumber])
             -- print(GetMasteryEffect())
-            -- print(35/8.33)
+            -- print(852/35*1.4)
         end
     elseif num == 2 then
         -- 急速
