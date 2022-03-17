@@ -1,0 +1,10 @@
+package-as:SEquipment
+
+externals:
+    embeds/oUF:
+        url: git://github.com/oUF-wow/oUF
+        tag:latest
+
+ignore:
+    - *.code-workspace
+    - .vscode
