@@ -31,4 +31,4 @@ jobs:
       - name: Package and release
         uses: BigWigsMods/checkout@v1
         with:
-          args: release.sh -p 542475
+          args: -g retail
