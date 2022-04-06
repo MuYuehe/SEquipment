@@ -7,7 +7,7 @@ on:
   # Triggers the workflow on push or pull request events but only for the main branch
   push:
     tags:
-      - '**'
+      - '[0-9]+.[0-9]+.[0-9]+'
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -25,9 +25,10 @@ jobs:
     
       - name: Clone project
         uses: actions/checkout@v1
-      
+          with:
+            fetch-depth: 50
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Package and release
-      - uses: BigWigsMods/checkout@v1
+        uses: BigWigsMods/checkout@v1
         with:
           args: release.sh -p 542475
