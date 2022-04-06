@@ -55,7 +55,7 @@ Style[ExitButton]                   = {
 
 Style[SEVersion]                    = {
     location                        = { Anchor("BOTTOMLEFT",15,15) },
-    text                            = "V2.0.0",
+    text                            = L["Log1 Version"],
     textcolor                       = Color(0.5,0.5,0.5,1),
 }
 
