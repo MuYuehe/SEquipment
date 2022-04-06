@@ -315,7 +315,7 @@ function GetEquipInfo(unit)
             "",-- link
             "",-- quality
         }
-        if GetInventoryItemLink(unit,i) then
+        if unit and GetInventoryItemLink(unit,i) then
             EachItem[1],EachItem[2],EachItem[3]=GetItemInfo(GetInventoryItemLink(unit,i))
             if i ~= 4 then
                 -- 获取非空装备列表,空插槽被忽略
@@ -685,7 +685,7 @@ end
 function SEGetContainerItemInfo(itemLink)
     local Color
     local itemQuality = select(3,GetItemInfo(itemLink))
-    local itemLevel = select(4,GetItemInfo(itemLink))
+    local itemLevel = select(1,GetDetailedItemLevelInfo(itemLink))
     local itemType = select(6,GetItemInfo(itemLink))
     local itemEquipLoc = select(9,GetItemInfo(itemLink))
     local LocName = _G[itemEquipLoc]
