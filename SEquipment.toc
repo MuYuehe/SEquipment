@@ -1,21 +1,39 @@
-#@retail@
 ## Interface: 90200
-#@end-retail@
-#@non-retail@
-# ## Interface: 90200
-#@end-non-retail@
+## Version: V2.0.0
 ## Title: |cff87CEEBS|r|cffEF5555E|r|cffA0522DQ|r|cff6ED73AU|r|cffFE4500I|r|cff3399EAP|r|cffFFFFFFment|r
-## Author: 汐染晨风
-## Version: @project-version@
-## Notes: 让你有一个更加清晰的装备观察面板
+## Dependencies: Scorpio
 ## DefaultState: Enabled
 ## LoadOnDemand: 0
-## SavedVariables: SEquipmentDB
+## SavedVariables: SEquipment_DB
+## SavedVariablesPerCharacter: SEquipment_DB_Char
 
-locales\locales.xml
+# Localization files
 
-Options.lua
-GreenCalculator.lua
-GemList.lua
-EnchantList.lua
-SEquipment.lua
+Locale\enUS.lua
+Locale\zhCN.lua
+
+
+# Config files
+Config.lua
+
+
+# Page files
+UIMenu\MainInterface.lua
+UIMenu\Home.lua
+UIMenu\General.lua
+Containers\Bag.lua
+Containers\BagAddons.lua
+Containers\Bank.lua
+Containers\GuildNew.lua
+Containers\Chat.lua
+Containers\PaperDollFrame.lua
+
+# Player files
+Player\PlayerListFrame.lua
+Player\Config.lua
+Player\Player.lua
+
+# Target files
+Target\TargetListFrame.lua
+Target\Config.lua
+Target\Target.lua
