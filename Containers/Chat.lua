@@ -34,11 +34,12 @@ local function InsertLevelMsg(msg)
     return msg
 end
 local function filter(self, event, msg, ...)
-    if _SVDB.IsLevelShow[7] then
+    if _SVDB and _SVDB.IsLevelShow[7] then
         msg = InsertLevelMsg(msg)
     end
     return false, msg, ...
 end
+
 ChatFrame_AddMessageEventFilter("CHAT_MSG_CHANNEL", filter)
 ChatFrame_AddMessageEventFilter("CHAT_MSG_SAY", filter)
 ChatFrame_AddMessageEventFilter("CHAT_MSG_YELL", filter)
