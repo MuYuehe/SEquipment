@@ -177,8 +177,8 @@ Style.UpdateSkin("Default",{
         backdropbordercolor         = Color(1,1,1,1),
         ScrollBar                   = {
             location                = {
-                                        Anchor("TOPLEFT", -20, -15, nil, "TOPRIGHT"),
-                                        Anchor("BOTTOMLEFT", -20, 15, nil, "BOTTOMRIGHT"),
+                                        Anchor("TOPRIGHT", -5, -15, nil, "TOPRIGHT"),
+                                        Anchor("BOTTOMRIGHT", -5, 15, nil, "BOTTOMRIGHT"),
             },
         },
     }
