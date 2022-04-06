@@ -682,19 +682,15 @@ end
 -- Get Container ItemInfo --
 --   Level,Part,Quality   --
 ----------------------------
-function GetContainerItemInfo(itemLink)
-    local Color = {
-        r = 0,
-        g = 0,
-        b = 0,
-    }
+function SEGetContainerItemInfo(itemLink)
+    local Color
     local itemQuality = select(3,GetItemInfo(itemLink))
     local itemLevel = select(4,GetItemInfo(itemLink))
     local itemType = select(6,GetItemInfo(itemLink))
     local itemEquipLoc = select(9,GetItemInfo(itemLink))
     local LocName = _G[itemEquipLoc]
     if itemQuality then
-        Color.r,Color.g,Color.b=GetItemQualityColor(itemQuality)
+        Color = ITEM_QUALITY_COLORS[itemQuality].hex
     end
     return Color,itemType,LocName,itemLevel
 end
@@ -711,18 +707,22 @@ function ShowItemLevelAndPart(bag,number)
         Per_ShowItemLevel(button,number)
     end
 end
+
 function Per_ShowItemLevel(self,number)
-    local Colors,itemType,LocName,itemLevel
     local itemLink = GetContainerItemLink(self:GetParent():GetID(),self:GetID())
-    if itemLink then
-        Colors,itemType,LocName,itemLevel = GetContainerItemInfo(itemLink)
+    Min_ShowItemLevel(itemLink,number,self)
+end
+
+function Min_ShowItemLevel(link,number,self)
+    local Colors,itemType,LocName,itemLevel
+    if link then
+        Colors,itemType,LocName,itemLevel = SEGetContainerItemInfo(link)
     end
     local levelshowLeveltext = FontString("levelshowLeveltext",self)
     if (itemType == WEAPON  or itemType == ARMOR) and _SVDB.IsLevelShow[number] then
         Style[levelshowLeveltext]    = {
-            text = tostring(itemLevel),
+            text = Colors..tostring(itemLevel),
             location = { Anchor(ItemLocation[_SVDB.LevelSetPartLocation[number]])},
-            Textcolor = Color(Colors.r,Colors.b,Colors.b),
             font        = {
                 font    = SEFontStyle[_SVDB.FontStyleSet].value,
                 height  = _SVDB.LevelSetPartSize[number],
