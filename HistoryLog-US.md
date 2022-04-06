@@ -1,0 +1,8 @@
+"ChangeLog\n"
+"2022/4/6" "V2.0.1\n"
+"1.Modify the quality color display, now it can correctly display different quality colors\n"
+"2.For the font size setting in the general menu, it is now preset to 14-16, and this option will be updated in the large version + new, and the frame under the influence of the text size will be adjusted\n"
+"3.Adjust the display order of the target observation frame, and now it is correctly placed after the Blizzard_InspectUI is loaded, and the error that the InspectPaperDollFrame frame cannot be found will not be reported\n"
+"4.Some bloated code was removed as smaller functions were added\n"
+"5.The home page is now replaced with a changelog page, showing details of future releases\n"
+"6.Update version number V2.0.1, this version is an emergency repair version, which is a minor version update\n"
