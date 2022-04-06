@@ -23,11 +23,20 @@ end
 ----------------------------
 --          Event         --
 ----------------------------
+__SystemEvent__()
+function ADDON_LOADED(addon)
+    if addon == "Blizzard_InspectUI" then
+        TargetScanFrame:SetParent(InspectPaperDollFrame)
+        Style[TargetScanFrame]                  = {
+            location                            = { Anchor("TOPLEFT",0,0,"InspectPaperDollFrame","TOPRIGHT")},
+        }
+    end
+end
 __Async__()
 function OnEnable()
     while Wait("INSPECT_READY") do
         Next()
-        TargetScanFrame:SetParent(InspectPaperDollFrame)
+        
         local EquipInfo,EquipNameMaxLongm,EquipedGemInfo,EquipedGemNumber
         local EachEquipInfo,CritNumber,HasteNumber,MasteryNumber,VersaNumber,NullGemNumber,SetEquipNumber
         EquipInfo                                                                       = GetEquipInfo("target")
@@ -47,9 +56,6 @@ function OnEnable()
         SEUpdateEquipList(EquipInfo,EachEquipInfo,EquipedGemNumber,NullGemNumber,StatsNumberList,SetEquipNumber)
         SEUpdateTalentList(SpecInfo)
         SEUpdateAvgLevel(AvgItemLevelEquiped)
-        Style[TargetScanFrame]                  = {
-            location                            = { Anchor("TOPLEFT",0,0,"InspectPaperDollFrame","TOPRIGHT")},
-        }
         TargetScanFrame:Show()
     end
 end
