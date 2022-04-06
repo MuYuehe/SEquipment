@@ -2,7 +2,7 @@ name: Package and release
 
 on:
   push:
-    tag:
+    tags:
       - '[0-9]+.[0-9]+.[0-9]+'
 
 jobs:
@@ -17,11 +17,11 @@ jobs:
 
       steps:
 
-          - name:Clone project
+          - name: Clone project
             uses: actions/checkout@v1
             with:
               fetch-depth: 50
-          - name:Package and release
+          - name: Package and release
             uses: BigWigsMods/packager@master
             with:
               args: release.sh -p 542475
