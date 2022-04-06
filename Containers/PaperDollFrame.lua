@@ -30,30 +30,9 @@ local function InsetPaperDollLevel(button,unit,number)
         return
     end
     local buttonID = button:GetID()
-    local levelshowLeveltext = FontString("levelshowLeveltext",button)
     if unit then
-        local Colors,itemType,LocName,itemLevel
         local itemLink = GetInventoryItemLink(unit,buttonID)
-        if itemLink then
-            Colors,itemType,LocName,itemLevel = GetContainerItemInfo(itemLink)
-        end
-        if (itemType == WEAPON  or itemType == ARMOR) and _SVDB.IsLevelShow[number] then
-            Style[levelshowLeveltext]    = {
-                text = tostring(itemLevel),
-                location = { Anchor(ItemLocation[_SVDB.LevelSetPartLocation[number]])},
-                Textcolor = Color(Colors.r,Colors.b,Colors.b),
-                font        = {
-                    font    = SEFontStyle[_SVDB.FontStyleSet].value,
-                    height  = _SVDB.LevelSetPartSize[number],
-                    monochrome = false,
-                    outline = "NORMAL"
-                },
-            }
-        else
-            Style[levelshowLeveltext]    = {
-                text = "",
-            }
-        end
+        Min_ShowItemLevel(itemLink,number,button)
     end
     
 end
