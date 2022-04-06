@@ -28,6 +28,6 @@ jobs:
       
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Package and release
-      - uses: BigWigsMods/checkout@v1
+        uses: BigWigsMods/checkout@v1
         with:
           args: -g retail
