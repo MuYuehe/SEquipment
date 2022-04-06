@@ -32,20 +32,21 @@ function ADDON_LOADED(addon)
         }
     end
 end
+
 __Async__()
 function OnEnable()
-    while Wait("INSPECT_READY") do
+    while Wait("INSPECT_READY") and IsAddOnLoaded("Blizzard_InspectUI") do
         Next()
-        
+        local Force = InspectFrame.unit
         local EquipInfo,EquipNameMaxLongm,EquipedGemInfo,EquipedGemNumber
         local EachEquipInfo,CritNumber,HasteNumber,MasteryNumber,VersaNumber,NullGemNumber,SetEquipNumber
-        EquipInfo                                                                       = GetEquipInfo("target")
+        EquipInfo                                                                       = GetEquipInfo(Force)
         -- print(#EquipInfo)
         EquipNameMaxLong = GetNameLongMax(EquipInfo)
         EquipedGemInfo,EquipedGemNumber                                                 = GetEquipedGemInfo(EquipInfo)
-        SpecInfo = GetSpecInfo("target")
-        AvgItemLevelEquiped = GetAvgItemLevelEquiped("target")
-        EachEquipInfo,CritNumber,HasteNumber,MasteryNumber,VersaNumber,NullGemNumber,SetEquipNumber    = GetEachEquipInfo("target")
+        SpecInfo = GetSpecInfo(Force)
+        AvgItemLevelEquiped = GetAvgItemLevelEquiped(Force)
+        EachEquipInfo,CritNumber,HasteNumber,MasteryNumber,VersaNumber,NullGemNumber,SetEquipNumber    = GetEachEquipInfo(Force)
         StatsNumberList                                                                 ={
                                                                                             CritNumber,
                                                                                             HasteNumber,
@@ -150,7 +151,7 @@ function SEUpdateEquipList(equipinfo,eachequipinfo,equipgemnumber,nullgemnumber,
             -- 添加Tooltip处理
             value:SetScript("OnEnter",function (self)
                 GameTooltip:SetOwner(self,"ANCHOR_RIGHT")
-                GameTooltip:SetInventoryItem("target",eachequipinfo[index][8])
+                GameTooltip:SetInventoryItem(InspectFrame.unit,eachequipinfo[index][8])
                 GameTooltip:Show()
             end)
             value:SetScript("OnLeave",function (self)
@@ -187,7 +188,7 @@ function SEUpdateEquipList(equipinfo,eachequipinfo,equipgemnumber,nullgemnumber,
     for index, value in ipairs(children) do
         Style[value]                                    = {
             ["TargetStatsPercentText"..index]           = {
-                text                                    = GetStatsPercent(statsnumberlist[index],index,"target",SpecInfo),
+                text                                    = GetStatsPercent(statsnumberlist[index],index,InspectFrame.unit,SpecInfo),
             }
         }
     end

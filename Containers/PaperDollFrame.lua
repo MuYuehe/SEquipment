@@ -62,7 +62,7 @@ function ADDON_LOADED(addon)
 end
 __SystemEvent__()
 function INSPECT_READY(inspecteeGUID)
-    if (InspectFrame) and (inspecteeGUID == UnitGUID("target")) then
+    if (InspectFrame) and (inspecteeGUID == UnitGUID(InspectFrame.unit)) then
         for _, value in ipairs({
     InspectHeadSlot,    InspectNeckSlot,    InspectShoulderSlot,    InspectBackSlot,
     InspectChestSlot,   InspectWristSlot,   InspectHandsSlot,       InspectWaistSlot,
@@ -70,7 +70,7 @@ function INSPECT_READY(inspecteeGUID)
     InspectTrinket0Slot,InspectTrinket1Slot,InspectMainHandSlot,    InspectSecondaryHandSlot,
     InspectShirtSlot,   InspectTabardSlot
 }) do
-            InsetPaperDollLevel(value,"target",2)
+            InsetPaperDollLevel(value,InspectFrame.unit,2)
         end
     end
 end
