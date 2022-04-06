@@ -42,28 +42,7 @@ function OnEnable(self)
                 local column = math.ceil((i-0.5)/GUILDBANK_SLOTS_PER_GROUP)
                 local button = self.Columns[column].Buttons[index]
                 local itemLink =  GetGuildBankItemLink(tabID,i)
-                local Colors,itemType,LocName,itemLevel
-                if itemLink then
-                    Colors,itemType,LocName,itemLevel = GetContainerItemInfo(itemLink)
-                end
-                local levelshowLeveltext = FontString("levelshowLeveltext",button)
-                if (itemType == WEAPON  or itemType == ARMOR) and _SVDB.IsLevelShow[5] then
-                    Style[levelshowLeveltext]    = {
-                        text = tostring(itemLevel),
-                        location = { Anchor(ItemLocation[_SVDB.LevelSetPartLocation[5]])},
-                        Textcolor = Color(Colors.r,Colors.b,Colors.b),
-                        font        = {
-                            font    = SEFontStyle[_SVDB.FontStyleSet].value,
-                            height  = _SVDB.LevelSetPartSize[5],
-                            monochrome = false,
-                            outline = "NORMAL"
-                        },
-                    }
-                else
-                    Style[levelshowLeveltext]    = {
-                        text = "",
-                    }
-                end
+                Min_ShowItemLevel(itemLink,5,button)
             end
         end)
     end
