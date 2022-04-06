@@ -1,5 +1,5 @@
 ## Interface: 90200
-## Version: V2.0.0
+## Version: V2.0.1
 ## Title: |cff87CEEBS|r|cffEF5555E|r|cffA0522DQ|r|cff6ED73AU|r|cffFE4500I|r|cff3399EAP|r|cffFFFFFFment|r
 ## Dependencies: Scorpio
 ## DefaultState: Enabled
