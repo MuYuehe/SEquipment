@@ -60,16 +60,17 @@ function ADDON_LOADED(addon)
         end
     end
 end
-__SystemEvent__()
-function INSPECT_READY(inspecteeGUID)
-    if (InspectFrame) and (inspecteeGUID == UnitGUID(InspectFrame.unit)) then
+__Async__()
+function OnEnable()
+    while Wait("INSPECT_READY") and IsAddOnLoaded("Blizzard_InspectUI") do
+        Next()
         for _, value in ipairs({
-    InspectHeadSlot,    InspectNeckSlot,    InspectShoulderSlot,    InspectBackSlot,
-    InspectChestSlot,   InspectWristSlot,   InspectHandsSlot,       InspectWaistSlot,
-    InspectLegsSlot,    InspectFeetSlot,    InspectFinger0Slot,     InspectFinger1Slot,
-    InspectTrinket0Slot,InspectTrinket1Slot,InspectMainHandSlot,    InspectSecondaryHandSlot,
-    InspectShirtSlot,   InspectTabardSlot
-}) do
+                InspectHeadSlot,    InspectNeckSlot,    InspectShoulderSlot,    InspectBackSlot,
+                InspectChestSlot,   InspectWristSlot,   InspectHandsSlot,       InspectWaistSlot,
+                InspectLegsSlot,    InspectFeetSlot,    InspectFinger0Slot,     InspectFinger1Slot,
+                InspectTrinket0Slot,InspectTrinket1Slot,InspectMainHandSlot,    InspectSecondaryHandSlot,
+                InspectShirtSlot,   InspectTabardSlot
+            }) do
             InsetPaperDollLevel(value,InspectFrame.unit,2)
         end
     end
