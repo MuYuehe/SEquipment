@@ -249,7 +249,7 @@ local function Create_Item_List_Frame(parent)
     return parent.ItemListFrame
 end
 -- 初始化面板
-__SystemEvent__ "MAIN_FRAME_CREATE" "Main_FRAME_CHANGE"
+__SystemEvent__ "MAIN_FRAME_CREATE" "Main_FRAME_CHANGE" "INSPECT_FRAME_CHANGE"
 function MAIN_FRAME_STYLE(frame,parent,event)
     -- Header
     if _SVDB.SettingOption[2] then
@@ -359,7 +359,7 @@ function MAIN_FRAME_STYLE(frame,parent,event)
             }
         }
     })
-    if event == "Main_FRAME_CHANGE" then
+    if event == "Main_FRAME_CHANGE" or event == "INSPECT_FRAME_CHANGE" then
         FireSystemEvent("Main_FRAME_CHANGE_UPDATE", frame, parent, "Main_FRAME_CHANGE_UPDATE")
     end
 end
@@ -542,6 +542,7 @@ __SystemEvent__()
 function UNIT_INSPECT_READY()
     if InspectFrame and InspectFrame.unit then
         local frame = Show_Item_List_Frame(InspectFrame.unit, InspectPaperDollFrame)
+        FireSystemEvent("INSPECT_FRAME_CHANGE", frame, InspectPaperDollFrame)
     end
 end
 __AddonSecureHook__ "Blizzard_InspectUI"
