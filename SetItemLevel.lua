@@ -179,25 +179,28 @@ if IsAddOnLoaded("LiteBag") then
     end
 end
 -- Bagnon
-if IsAddOnLoaded("Bagnon") then
-    __SecureHook__(Bagnon.ItemSlot)
-    function Update(self)
-        local itemLink = GetContainerItemLink(self:GetBag(), self:GetID())
-        if self:GetBag() < 5 and self:GetBag() ~= -1 then
-            Set_Per_Item_Level(self, itemLink, 3)
-        else
-            Set_Per_Item_Level(self, itemLink, 4)
-        end
-    end
-
-    __SecureHook__(Bagnon.Item)
-    function Update(self)
-        local itemLink = GetContainerItemLink(self:GetBag(), self:GetID())
-        if self:GetBag() < 5 and self:GetBag() ~= -1 then
-            Set_Per_Item_Level(self, itemLink, 3)
-        else
-            Set_Per_Item_Level(self, itemLink, 4)
-        end
+-- TinyInspect Code
+__SystemEvent__()
+function PLAYER_LOGIN()
+    -- For Bagnon
+    if (Bagnon and Bagnon.Item and Bagnon.Item.Update) then
+        hooksecurefunc(Bagnon.Item, "Update", function(self)
+            local itemLink = GetContainerItemLink(self:GetBag(), self:GetID())
+            if self:GetBag() < 5 and self:GetBag() ~= -1 then
+                Set_Per_Item_Level(self, itemLink, 3)
+            else
+                Set_Per_Item_Level(self, itemLink, 4)
+            end
+        end)
+    elseif (Bagnon and Bagnon.ItemSlot and Bagnon.ItemSlot.Update) then
+        hooksecurefunc(Bagnon.ItemSlot, "Update", function(self)
+            local itemLink = GetContainerItemLink(self:GetBag(), self:GetID())
+            if self:GetBag() < 5 and self:GetBag() ~= -1 then
+                Set_Per_Item_Level(self, itemLink, 3)
+            else
+                Set_Per_Item_Level(self, itemLink, 4)
+            end
+        end)
     end
 end
 -- Combuctor
