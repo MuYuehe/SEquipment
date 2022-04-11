@@ -18,24 +18,11 @@ Locale\zhCN.lua
 # Config files
 Config.lua
 
-
 # Page files
 UIMenu\MainInterface.lua
 UIMenu\Home.lua
 UIMenu\General.lua
-Containers\Bag.lua
-Containers\BagAddons.lua
-Containers\Bank.lua
-Containers\GuildNew.lua
-Containers\Chat.lua
-Containers\PaperDollFrame.lua
 
-# Player files
-Player\PlayerListFrame.lua
-Player\Config.lua
-Player\Player.lua
-
-# Target files
-Target\TargetListFrame.lua
-Target\Config.lua
-Target\Target.lua
+SetItemLevel.lua
+UnitOption.lua
+SetItemList.lua

@@ -23,11 +23,9 @@ SEMainUI                            = SEDialog("SEMainUI")
         HomeFrame                   =SESetMenuFrame("HomeFrame",SEMainUI)
         GeneralFrame                =SESetMenuFrame("GeneralFrame",SEMainUI)
         PlayerFrame                 =SESetMenuFrame("PlayerFrame",SEMainUI)
-        TargetFrame                 =SESetMenuFrame("TargetFrame",SEMainUI)
 SEMainUI:Hide()
         GeneralFrame:Hide()
         PlayerFrame:Hide()
-        TargetFrame:Hide()
 -- Style --
 Style[SEMainUI]                     = {
     location                        = { Anchor("CENTER") },
@@ -45,7 +43,6 @@ Style.ActiveSkin("SETreeNode",MenuTreeName)
 MenuTree:AddTreeNode(L["Home"])
 MenuTree:AddTreeNode(L["General"])
 MenuTree:AddTreeNode(L["Player"])
-MenuTree:AddTreeNode(L["Target"])
 
 
 Style[ExitButton]                   = {
@@ -74,11 +71,6 @@ Style[PlayerFrame]={
     location                        = {Anchor("RIGHT",-15,0)},
     backdropbordercolor             = Color(1,1,1,1),
 }
-Style[TargetFrame]={
-    size                            = Size(400,320),
-    location                        = {Anchor("RIGHT",-15,0)},
-    backdropbordercolor             = Color(1,1,1,1),
-}
 
 -- /CMD
 __SlashCmd__ "SE"
@@ -86,20 +78,22 @@ function enableModule()
     SEMainUI:Show()
 end
 
+-- SEMainUI:SetScript("OnKeyDown",function (self,key)
+--     if self:IsShown() and key == "ESCAPE" then
+--         self:Hide()
+--     end
+-- end)
 -- Event
 function MenuTree:OnNodeClick(path)
     HomeFrame:Hide()
     GeneralFrame:Hide()
     PlayerFrame:Hide()
-    TargetFrame:Hide()
     if path == L["Home"] then
         HomeFrame:Show()
     elseif path == L["General"] then
         GeneralFrame:Show()
     elseif path == L["Player"] then
         PlayerFrame:Show()
-    elseif path == L["Target"] then
-        TargetFrame:Show()
     end
 end
 __Async__()

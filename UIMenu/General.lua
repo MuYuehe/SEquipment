@@ -52,7 +52,8 @@ Style.UpdateSkin("Default",{
         location                    = { Anchor("BOTTOM",0,25) },
 
         minMaxValues                = MinMax(1,50),
-        valueStep                   = 5,
+        valueStep                   = 1,
+        obeyStepOnDrag              = true,
     },
 })
 
@@ -88,7 +89,7 @@ function OnLoad(self)
             15,
         },
         FontStyleSet = 1,
-        FontSizeSet = 15,
+        FrameScaleSet = 15,
     }
 end
 ----------------------------
@@ -109,7 +110,7 @@ EquipNameLocation = {
 FontSetFrame                    = SESetMenuFrame("FontSetFrame",GeneralFrame)
     FontSetHeader               = FontString("FontSetHeader",FontSetFrame)
     FontStyleSet                = SEComboBox("FontStyleSet",FontSetFrame)
-    FontSizeSet                 = SETrackBar("FontSizeSet",FontSetFrame)
+    FrameScaleSet               = SETrackBar("FrameScaleSet",FontSetFrame)
 OnlyFrameBorder                 = SESetMenuFrame("OnlyFrameBorder",GeneralFrame)
 LevelSetFrame                   = SEScrollFrame("LevelSetFrame",GeneralFrame)
     LevelSetHeader              = FontString("LevelSetHeader",LevelSetFrame)
@@ -134,11 +135,12 @@ Style[FontStyleSet]                 = {
         location                    = {Anchor("LEFT",20,25,nil,"LEFT")}
     }
 }
-Style[FontSizeSet]                  = {
+Style[FrameScaleSet]                = {
     size                            = Size(150,20),
     location                        = { Anchor("RIGHT",-15,-10) },
-    minMaxValues                    = MinMax(10,16),
-    valueStep                       = 5,
+    minMaxValues                    = MinMax(0.5,2),
+    valueStep                       = .1,
+    obeyStepOnDrag                  = true,
     MinText                         = {
         text                        = "",
     },
@@ -146,7 +148,7 @@ Style[FontSizeSet]                  = {
         text                        = "",
     },
     label                           = {
-        text                        = L["Font Size"],
+        text                        = L["Frame Scale"],
         textcolor                   = Color(1,0.84,0,1),
         location                    = { Anchor("LEFT",0,20,nil,"LEFT") }
     }
@@ -249,11 +251,7 @@ function OnEnable(self)
         -- TrackBar
         __Async__()
         function LevelSetPartSize:OnValueChanged(value)
-            local a,b = math.modf(value)
-                if b>=0.5 then
-                    a = a + 1
-                end
-            _SVDB.LevelSetPartSize[i] = a
+            _SVDB.LevelSetPartSize[i] = value
         end
     end
 
@@ -265,7 +263,7 @@ function OnEnable(self)
 
     -- SavedVariables --
     FontStyleSet.SelectedValue = _SVDB.FontStyleSet
-    FontSizeSet:SetValue(_SVDB.FontSizeSet)
+    FrameScaleSet:SetValue(_SVDB.FrameScaleSet)
     __Async__()
     function FontStyleSet:OnSelectChanged(value)
         _SVDB.FontStyleSet = value
@@ -274,50 +272,20 @@ function OnEnable(self)
         [EquipInfoFontString]       = {
             location                = { Anchor("LEFT") },
             font                    = {
-                -- font                = SEFontStyle[1].value,
                 font                = SEFontStyle[_SVDB.FontStyleSet].value,
-                height              = _SVDB.FontSizeSet,
+                height              = 14,
             }
-        },
-    -- })
-    -- Style.UpdateSkin("Default",{
-        [StatsIconText]             = {
-            location                = { Anchor("CENTER") },
-            font                    = {
-                -- font                = SEFontStyle[1].value,
-                font                = SEFontStyle[_SVDB.FontStyleSet].value,
-                height              = _SVDB.FontSizeSet,
-            }
-        },
+        }
     })
     end
     __Async__()
-    function FontSizeSet:OnValueChanged(value)
-        local a,b = math.modf(value)
-            if b>=0.5 then
-                a = a + 1
-            end
-        _SVDB.FontSizeSet = a
-            -- 设置字体
-    Style.UpdateSkin("Default",{
-        [EquipInfoFontString]       = {
-            location                = { Anchor("LEFT") },
-            font                    = {
-                -- font                = SEFontStyle[1].value,
-                font                = SEFontStyle[_SVDB.FontStyleSet].value,
-                height              = _SVDB.FontSizeSet,
-            }
-        },
-    -- })
-    -- Style.UpdateSkin("Default",{
-        [StatsIconText]             = {
-            location                = { Anchor("CENTER") },
-            font                    = {
-                -- font                = SEFontStyle[1].value,
-                font                = SEFontStyle[_SVDB.FontStyleSet].value,
-                height              = _SVDB.FontSizeSet,
-            }
-        },
-    })
+    function FrameScaleSet:OnValueChanged(value)
+        if (PaperDollFrame and PaperDollFrame.ItemListFrame) then
+            PaperDollFrame.ItemListFrame:SetScale(value)
+        end
+        if (InspectPaperDollFrame and InspectPaperDollFrame.ItemListFrame) then
+            InspectPaperDollFrame.ItemListFrame:SetScale(value)
+        end
+        _SVDB.FrameScaleSet = value
     end
 end
