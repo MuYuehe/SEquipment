@@ -15,37 +15,7 @@ L = _Locale
 function OnLoad(self)
     _SVDB = SVManager("SEquipment_DB", "SEquipment_DB_Char")
 end
-----------------------------
---     Data Collection    --
-----------------------------
---裝備清單
-local slotButton = {
-    { index = 1, name = HEADSLOT, },
-    { index = 2, name = NECKSLOT, },
-    { index = 3, name = SHOULDERSLOT, },
-    { index = 5, name = CHESTSLOT, },
-    { index = 6, name = WAISTSLOT, },
-    { index = 7, name = LEGSSLOT, },
-    { index = 8, name = FEETSLOT, },
-    { index = 9, name = WRISTSLOT, },
-    { index = 10, name = HANDSSLOT, },
-    { index = 11, name = FINGER0SLOT, },
-    { index = 12, name = FINGER1SLOT, },
-    { index = 13, name = TRINKET0SLOT, },
-    { index = 14, name = TRINKET1SLOT, },
-    { index = 15, name = BACKSLOT, },
-    { index = 16, name = MAINHANDSLOT, },
-    { index = 17, name = SECONDARYHANDSLOT, },
-}
--- local EnchantParts = {
---     [5]  = { 1, CHESTSLOT },
---     [8]  = { 1, FEETSLOT },
---     [11] = { 1, FINGER0SLOT },
---     [12] = { 1, FINGER1SLOT },
---     [15] = { 1, BACKSLOT },
---     [16] = { 1, MAINHANDSLOT },
---     [17] = { 1, SECONDARYHANDSLOT },
--- }
+
 ----------------------------
 --     SavedVariables     --
 ----------------------------
@@ -107,7 +77,7 @@ local function Create_Item_List_Frame(parent)
             Style[Main_Frame.Name_Frame] = {
                 height = 288,
             }
-        for i, v in ipairs(slotButton) do
+        for i, v in ipairs(SlotButton) do
             local Per_Icon_Frame = SESetMenuFrame("Per_Icon_Frame"..i,Main_Frame.Icon_Frame)
                 Style[Per_Icon_Frame] = {
                     size = Size(72,18),
@@ -195,6 +165,7 @@ local function Create_Item_List_Frame(parent)
             Per_Name_Frame:SetScript("OnLeave",function (self)
                 GameTooltip:Hide()
             end)
+            Per_Name_Frame:Hide()
             Main_Frame["Icon"..i] = Per_Icon_Frame
             Main_Frame["Part" .. i] = Per_Part_Texture_Frame
             Main_Frame["Level"..i] = Per_Level_Frame
@@ -245,107 +216,121 @@ local function Create_Item_List_Frame(parent)
                 }
             Main_Frame["Stats"..i] = Per_Stats_Frame
         end
-        function parent:OnHide() Main_Frame:Hide() end
+        -- function parent:OnHide() Main_Frame:Hide() end
+        parent:SetScript("OnHide", function(self) Main_Frame:Hide() end)
         parent.ItemListFrame = Main_Frame
-        FireSystemEvent("MAIN_FRAME_CREATE", Main_Frame, parent, "MAIN_FRAME_CREATE")
+        FireSystemEvent("MAIN_FRAME_CREATED", Main_Frame, parent, "MAIN_FRAME_CREATED")
     end
 
     return parent.ItemListFrame
 end
 -- 初始化面板
-__SystemEvent__ "MAIN_FRAME_CREATE" "Main_FRAME_CHANGE" "INSPECT_FRAME_CHANGE"
+__SystemEvent__ "MAIN_FRAME_CREATED" "PAPERDOLLFRAME_SHOWN" "INSPECT_READY_COMPLETED_DONE"
 function MAIN_FRAME_STYLE(frame,parent,event)
     -- Header
+    local HeaderHeight = 32
     if _SVDB.SettingOption[2] then
         Style[frame.Header_Frame] = {
-            height = 32,
+            height = HeaderHeight,
         }
         frame.Header_Frame:Show()
     else
+        HeaderHeight = 0
         Style[frame.Header_Frame] = {
-            height = 0,
+            height = HeaderHeight,
         }
         frame.Header_Frame:Hide()
     end
-    frame.Header_Frame:InstantApplyStyle()
+    -- frame.Header_Frame:InstantApplyStyle()
     -- Icon
+    local IconWidth = 72
     if _SVDB.SettingOption[3] then
         Style[frame.Icon_Frame] = {
-            width = 72,
-            location = { Anchor("TOPLEFT",5,(-1)*(frame.Header_Frame:GetHeight()))}
+            width = IconWidth,
+            location = { Anchor("TOPLEFT",5,(-1)*(HeaderHeight))}
         }
         frame.Icon_Frame:Show()
     else
+        IconWidth = 0
         Style[frame.Icon_Frame] = {
-            width = 0,
+            width = IconWidth,
         }
         frame.Icon_Frame:Hide()
     end
-    frame.Icon_Frame:InstantApplyStyle()
+    -- frame.Icon_Frame:InstantApplyStyle()
     -- Part
+    local PartWidth = 36
     if _SVDB.SettingOption[4] then
         Style[frame.Part_Frame] = {
-            width = 36,
-            location = { Anchor("TOPLEFT",frame.Icon_Frame:GetWidth() + 5,(-1)*(frame.Header_Frame:GetHeight()))}
+            width = PartWidth,
+            location = { Anchor("TOPLEFT",IconWidth + 5,(-1)*(HeaderHeight))}
         }
         frame.Part_Frame:Show()
     else
+        PartWidth = 0
         Style[frame.Part_Frame] = {
-            width = 0,
+            width = PartWidth,
         }
         frame.Part_Frame:Hide()
     end
-    frame.Part_Frame:InstantApplyStyle()
+    -- frame.Part_Frame:InstantApplyStyle()
     -- Level
+    local LevelWidth = 36
     if _SVDB.SettingOption[5] then
         Style[frame.Level_Frame] = {
-            width = 36,
-            location = { Anchor("TOPLEFT",frame.Icon_Frame:GetWidth() + frame.Part_Frame:GetWidth() + 5,(-1)*(frame.Header_Frame:GetHeight()))}
+            width = LevelWidth,
+            location = { Anchor("TOPLEFT",IconWidth + PartWidth + 5,(-1)*(HeaderHeight))}
         }
         frame.Level_Frame:Show()
     else
+        LevelWidth = 0
         Style[frame.Level_Frame] = {
-            width = 0,
+            width = LevelWidth,
         }
         frame.Level_Frame:Hide()
     end
-    frame.Level_Frame:InstantApplyStyle()
+    -- frame.Level_Frame:InstantApplyStyle()
     -- Name
     Style[frame.Name_Frame] = {
-        location = { Anchor("TOPLEFT",frame.Icon_Frame:GetWidth() + frame.Part_Frame:GetWidth() + frame.Level_Frame:GetWidth() + 5,(-1)*(frame.Header_Frame:GetHeight()))}
+        location = { Anchor("TOPLEFT",IconWidth + PartWidth + LevelWidth + 5,(-1)*(HeaderHeight))}
     }
-    frame.Name_Frame:InstantApplyStyle()
+    -- frame.Name_Frame:InstantApplyStyle()
     -- Gem
+    local GemSuitHeight = 20
     if _SVDB.SettingOption[6] then
         Style[frame.Gem_Suit_Frame] = {
-            height = 20,
-            location = { Anchor("TOPLEFT",5,(-1)*(frame.Header_Frame:GetHeight() + 288)) }
+            height = GemSuitHeight,
+            location = { Anchor("TOPLEFT",5,(-1)*(HeaderHeight + 288)) }
         }
         frame.Gem_Suit_Frame:Show()
     else
+        GemSuitHeight = 0
         Style[frame.Gem_Suit_Frame] = {
-            height = 0,
+            height = GemSuitHeight,
         }
         frame.Gem_Suit_Frame:Hide()
     end
-    frame.Gem_Suit_Frame:InstantApplyStyle()
+    -- frame.Gem_Suit_Frame:InstantApplyStyle()
     -- Stats
+    local StatsHeight = 80
     if _SVDB.SettingOption[7] then
         Style[frame.Stats_Frame] = {
-            height = 80,
-            location = { Anchor("TOPLEFT",5,(-1)*(frame.Header_Frame:GetHeight() + frame.Gem_Suit_Frame:GetHeight() + 288))}
+            height = StatsHeight,
+            location = { Anchor("TOPLEFT",5,(-1)*(HeaderHeight + GemSuitHeight + 288))}
         }
         frame.Stats_Frame:Show()
     else
+        StatsHeight = 0
         Style[frame.Stats_Frame] = {
-            height = 0,
+            height = StatsHeight,
         }
         frame.Stats_Frame:Hide()
     end
-    frame.Stats_Frame:InstantApplyStyle()
+    -- frame.Stats_Frame:InstantApplyStyle()
+    frame.IniWidth = IconWidth + PartWidth + LevelWidth
     if _SVDB.SettingOption[1] then
         Style[frame] = {
-            height = frame.Header_Frame:GetHeight() + frame.Gem_Suit_Frame:GetHeight() + frame.Stats_Frame:GetHeight() + 288 + 5,
+            height = HeaderHeight + GemSuitHeight + StatsHeight + 293,
         }
         frame:Show()
     else
@@ -363,8 +348,8 @@ function MAIN_FRAME_STYLE(frame,parent,event)
             }
         }
     })
-    if event == "Main_FRAME_CHANGE" or event == "INSPECT_FRAME_CHANGE" then
-        FireSystemEvent("Main_FRAME_CHANGE_UPDATE", frame, parent, "Main_FRAME_CHANGE_UPDATE")
+    if event == "PAPERDOLLFRAME_SHOWN" or event == "INSPECT_READY_COMPLETED_DONE" then
+        FireSystemEvent("MAIN_FRAME_STYLE_UPDATE", frame, parent, "MAIN_FRAME_STYLE_UPDATE")
     end
 end
 -- 显示面板
@@ -390,7 +375,7 @@ function Show_Item_List_Frame(unit,parent)
     end
     local Sum_Crit,Sum_Haste,Sum_Mastery,Sum_Versa,Sum_Suit,Sum_Empty_Gem,Sum_Exist_Gem = {},{},{},{},{},{},{}
     -- 总计数,暴击,急速,精通,全能,宝石,套装
-    for i, v in ipairs(slotButton) do
+    for i, v in ipairs(SlotButton) do
         local link = GetInventoryItemLink(unit, v.index)
         local name,quality,itemType,equipLoc = Get_Item_Info(link)
         local SET_ITEM_QUALITY_COLOR
@@ -438,18 +423,29 @@ function Show_Item_List_Frame(unit,parent)
         local Per_Name_Frame = Main_Frame["Name"..i]
         Per_Name_Frame.link = link
         Per_Name_Frame.unit = unit
+        local GetWidthFontString = FontString("GetWidthFontString",UIParent)
+        GetWidthFontString:SetText(SET_ITEM_QUALITY_COLOR .. name)
+        GetWidthFontString:Hide()
+        local NameTextWidth = GetWidthFontString:GetStringWidth()
+        Per_Name_Frame.Iniwidth = NameTextWidth
+            Style[Per_Name_Frame] = {
+                width = NameTextWidth
+            }
             Style[Per_Name_Frame.Per_Name_Text] = {
                 text = SET_ITEM_QUALITY_COLOR..name
             }
-        Per_Name_Frame.Per_Name_Text:InstantApplyStyle()
-        Style[Per_Name_Frame] = {
-            width = Per_Name_Frame.Per_Name_Text:GetStringWidth()
-        }
-        Per_Name_Frame:InstantApplyStyle()
-        FireSystemEvent("ITEM_ICON_FRAME_UPDATE",Per_Icon_Frame)
-        FireSystemEvent("ITEM_PART_FRAME_UPDATE", Per_Part_Texture_Frame)
-        FireSystemEvent("ITEM_LEVEL_FRAME_UPDATE",Per_Level_Frame)
-        FireSystemEvent("ITEM_NAME_FRAME_UPDATE", Per_Name_Frame, v.index, GE, EmptyGemNumber, ExistGemNumber, EnchantInfo)
+        
+        -- Per_Name_Frame.Per_Name_Text:SetText(SET_ITEM_QUALITY_COLOR .. name)
+        -- local NameTextWidth = Per_Name_Frame.Per_Name_Text:GetStringWidth()
+        -- Per_Name_Frame.width = Per_Name_Frame
+        -- Per_Name_Frame.Per_Name_Text:InstantApplyStyle()
+        Per_Name_Frame:Show()
+        -- Per_Name_Frame:SetWidth(NameTextWidth)
+        -- Per_Name_Frame:InstantApplyStyle()
+        FireSystemEvent("PER_ITEM_ICON_FRAME_UPDATE",Per_Icon_Frame)
+        FireSystemEvent("PER_ITEM_PART_FRAME_UPDATE", Per_Part_Texture_Frame)
+        FireSystemEvent("PER_ITEM_LEVEL_FRAME_UPDATE", Per_Level_Frame)
+        FireSystemEvent("PER_ITEM_NAME_FRAME_UPDATE", Per_Name_Frame, v.index, GE, EmptyGemNumber, ExistGemNumber, EnchantInfo)
     end
     local Gem_Suit_Frame = Main_Frame.Gem_Suit_Frame
     if Sum_Table(Sum_Exist_Gem) + Sum_Table(Sum_Empty_Gem) == 0 then
@@ -480,35 +476,35 @@ function Show_Item_List_Frame(unit,parent)
             text = GetStatsPercent(Sum_Table(SUM_CHMV[i]),i,unit,specid)
         }
     end
-    
-    Main_Frame:Show()
-    FireSystemEvent("Main_FRAME_SHOWN",Main_Frame,parent)
+
+    FireSystemEvent("MAIN_FRAME_CREATE_COMPLETED",Main_Frame,parent)
 
     return Main_Frame
 end
 -- 设定边框
-__SystemEvent__ "Main_FRAME_SHOWN" "Main_FRAME_CHANGE_UPDATE"
+__SystemEvent__ "MAIN_FRAME_CREATE_COMPLETED" "MAIN_FRAME_STYLE_UPDATE"
 function Main_FRAME_STYLE(frame,parent)
     local Max_StringWidth = {}
-    for i, v in ipairs(slotButton) do
+    for i, v in ipairs(SlotButton) do
         local Per_Name_Frame = frame["Name"..i]
-        Max_StringWidth[i] = Per_Name_Frame:GetWidth()
+        Max_StringWidth[i] = tonumber(Per_Name_Frame.width)
     end
     Style[frame.Name_Frame] = {
         width = Get_Max_String_Width(Max_StringWidth)
     }
+    Style[frame.Header_Frame] = {
+        width = frame.IniWidth + Get_Max_String_Width(Max_StringWidth),
+    }
     Style[frame] = {
-        width = frame.Icon_Frame:GetWidth() + frame.Part_Frame:GetWidth() + frame.Level_Frame:GetWidth() + Get_Max_String_Width(Max_StringWidth) + 10,
+        width = frame.IniWidth + Get_Max_String_Width(Max_StringWidth) + 10,
     }
     -- frame:InstantApplyStyle()
-    Style[frame.Header_Frame] = {
-        width = frame.Icon_Frame:GetWidth() + frame.Part_Frame:GetWidth() + frame.Level_Frame:GetWidth() + Get_Max_String_Width(Max_StringWidth),
-    }
+    frame:Show()
 end
 
 PaperDollFrame:HookScript("OnShow",function (self)
     Show_Item_List_Frame("player",self)
-    FireSystemEvent("Main_FRAME_CHANGE", self.ItemListFrame, self, "Main_FRAME_CHANGE")
+    FireSystemEvent("PAPERDOLLFRAME_SHOWN", self.ItemListFrame, self, "PAPERDOLLFRAME_SHOWN")
 end)
 __SystemEvent__()
 function PLAYER_EQUIPMENT_CHANGED()
@@ -524,34 +520,34 @@ function NotifyInspect(unit)
         return
     end
         guids[guid] = guid
-    FireSystemEvent("UNIT_INSPECT_START", guid)
+    FireSystemEvent("NOTIFY_INSPECT_READY", guid)
 end
 
 __Async__()
 function OnEnable()
     while Wait("INSPECT_READY") do
         Next()
-        FireSystemEvent("UNIT_INSPECT_READY")
+        FireSystemEvent("INSPECT_READY_COMPLETED")
     end
 end
 __SystemEvent__()
 function UNIT_INVENTORY_CHANGED(unit)
     if InspectFrame and InspectFrame.unit and InspectFrame.unit == unit then
-        FireSystemEvent("UNIT_INVENTORY_UPDATE", UnitGUID(unit))
+        FireSystemEvent("UNIT_INVENTORY_CHANGED_COMPLETED", UnitGUID(unit))
     end
 end
 __SystemEvent__()
-function UNIT_INVENTORY_UPDATE(unit)
+function UNIT_INVENTORY_CHANGED_COMPLETED(unit)
     if InspectFrame and InspectFrame.unit and UnitGUID(InspectFrame.unit) == unit then
         local frame = Show_Item_List_Frame(InspectFrame.unit,InspectPaperDollFrame)
-        FireSystemEvent("UNIT_INVENTORY_COMPLETE",frame)
+        FireSystemEvent("UNIT_INVENTORY_CHANGED_COMPLETED_DONE",frame)
     end
 end
 __SystemEvent__()
-function UNIT_INSPECT_READY()
+function INSPECT_READY_COMPLETED()
     if InspectFrame and InspectFrame.unit then
         local frame = Show_Item_List_Frame(InspectFrame.unit, InspectPaperDollFrame)
-        FireSystemEvent("INSPECT_FRAME_CHANGE", frame, InspectPaperDollFrame)
+        FireSystemEvent("INSPECT_READY_COMPLETED_DONE", frame, InspectPaperDollFrame)
     end
 end
 __AddonSecureHook__ "Blizzard_InspectUI"
@@ -605,7 +601,7 @@ local function Create_Gem_Enchant(frame,index)
 end
 
 __SystemEvent__()
-function ITEM_NAME_FRAME_UPDATE(frame, index, table,emptygemnumber,existgemnumber,enchantinfo)
+function PER_ITEM_NAME_FRAME_UPDATE(frame, index, table,emptygemnumber,existgemnumber,enchantinfo)
     local startnumber = 1
     local Icon_List = Create_Gem_Enchant(frame, index)
     if table[1] ~= 0 then
@@ -643,8 +639,9 @@ function ITEM_NAME_FRAME_UPDATE(frame, index, table,emptygemnumber,existgemnumbe
         local Icon = Icon_List["Icon" .. frame.unit .. index .. i]
         Icon:Hide()
     end
-    local width = frame:GetWidth()
+    local Realwidth = tonumber(frame.Iniwidth) + (hidegemstartnumber - 1) * (16)
+    frame.width = Realwidth
     Style[frame] = {
-        width = width + (hidegemstartnumber - 1) * (16)
+        width = Realwidth
     }
 end

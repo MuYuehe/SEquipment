@@ -53,10 +53,10 @@ SEFontStyle={
 }
 -- 纹理路径
 TexturePath={
-    [[Interface\AddOns\SEquipment\statsicons\CRIT]],
-    [[Interface\AddOns\SEquipment\statsicons\HASTE]],
-    [[Interface\AddOns\SEquipment\statsicons\MASTERY]],
-    [[Interface\AddOns\SEquipment\statsicons\VERSATILITY]],
+    [[Interface\AddOns\SEquipment\Media\CRIT]],
+    [[Interface\AddOns\SEquipment\Media\HASTE]],
+    [[Interface\AddOns\SEquipment\Media\MASTERY]],
+    [[Interface\AddOns\SEquipment\Media\VERSATILITY]],
 }
 StatsName = {
     L["Crit"],
@@ -84,6 +84,34 @@ local Parts = {
     L["Main Hand"], L["Off Hand"],  L["Off Hand"],  "",
     "",             L["Main Hand"], "",             "",
 }
+--裝備清單
+SlotButton = {
+    { index = 1, name = HEADSLOT, },
+    { index = 2, name = NECKSLOT, },
+    { index = 3, name = SHOULDERSLOT, },
+    { index = 5, name = CHESTSLOT, },
+    { index = 6, name = WAISTSLOT, },
+    { index = 7, name = LEGSSLOT, },
+    { index = 8, name = FEETSLOT, },
+    { index = 9, name = WRISTSLOT, },
+    { index = 10, name = HANDSSLOT, },
+    { index = 11, name = FINGER0SLOT, },
+    { index = 12, name = FINGER1SLOT, },
+    { index = 13, name = TRINKET0SLOT, },
+    { index = 14, name = TRINKET1SLOT, },
+    { index = 15, name = BACKSLOT, },
+    { index = 16, name = MAINHANDSLOT, },
+    { index = 17, name = SECONDARYHANDSLOT, },
+}
+-- local EnchantParts = {
+--     [5]  = { 1, CHESTSLOT },
+--     [8]  = { 1, FEETSLOT },
+--     [11] = { 1, FINGER0SLOT },
+--     [12] = { 1, FINGER1SLOT },
+--     [15] = { 1, BACKSLOT },
+--     [16] = { 1, MAINHANDSLOT },
+--     [17] = { 1, SECONDARYHANDSLOT },
+-- }
 ----------------------------
 --        MainDialog      --
 --only one,can be defined --
