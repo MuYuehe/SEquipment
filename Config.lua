@@ -421,15 +421,21 @@ function GetEachEquipInfo(link)
     local SetNumber             = 0     --套装数量
     local ItemLevel             = 0
     local EnchantInfo           = ""
+    local isItemSet             = false --查看此装备是否是套装部件
+    local isPVPSet              = false --查看是否为PVP套装
+    local isPVESet              = false --查看是否是PVE套装
     if (not link) then
         return ItemLevel, CritNumber, HasteNumber, MasteryNumber, VersaNumber, EmptyGemNumber, SetNumber, EnchantInfo
     end
     for _,left,right in GetGameTooltipLines("Hyperlink",link) do
         if left then
             -- 拿到附魔信息
-            local isHover = string.match(left, ENCHANTS)
-            if isHover then
+            if string.match(left, ENCHANTS) then
                 EnchantInfo = left
+            end
+            -- 拿到套装部件
+            if string.match(left, WARDROBE_SETS) then
+                isItemSet = true
             end
             -- 爆击词条
             if string.find(left,STAT_CRITICAL_STRIKE) and string.find(left,"+") then
@@ -458,10 +464,15 @@ function GetEachEquipInfo(link)
             -- 查看套装件数(暴力判断)
             elseif string.find(left,"/5") and ItemLevel >= 239 then
                 SetNumber       = SetNumber + 1
+                isPVESet        = true
+
+            -- 判断此装备是否有PVP效果
+            elseif string.find(left,"PvP") then
+                isPVPSet = true
             end
         end
     end
-    return ItemLevel, CritNumber, HasteNumber, MasteryNumber, VersaNumber, EmptyGemNumber, SetNumber, EnchantInfo
+    return ItemLevel, CritNumber, HasteNumber, MasteryNumber, VersaNumber, EmptyGemNumber, SetNumber, EnchantInfo, isItemSet, isPVPSet, isPVESet
 end
 -- local textlefttext = gsub(ENCHANTED_TOOLTIP_LINE, "%%s", ".+")
 -- print(textlefttext)

@@ -73,13 +73,13 @@ local function Create_Item_List_Frame(parent)
                 },
                 backdropcolor               = Color(0,0,0,0.7),
                 backdropbordercolor         = Color(0,0,0,1),
-                location                    = { Anchor("TOPLEFT",0,0,parent:GetName(),"TOPRIGHT")}
+                location            = { Anchor("TOPLEFT", 0, 0, parent:GetName(), "TOPRIGHT") }
             }
         Main_Frame.Header_Frame = SESetMenuFrame("Header_Frame",Main_Frame)
         Main_Frame.Header_Frame.Header_Left_Text = EquipInfoFontString("Header_Left_Frame",Main_Frame.Header_Frame)
         Main_Frame.Header_Frame.Header_Right_Text = EquipInfoFontString("Header_Right_Frame",Main_Frame.Header_Frame)
             Style[Main_Frame.Header_Frame] = {
-                location = { Anchor("TOPLEFT",0,0)}
+                location = { Anchor("TOPLEFT",5,0)}
             }
             Style[Main_Frame.Header_Frame.Header_Left_Text] = {
                 -- 待填写
@@ -185,6 +185,10 @@ local function Create_Item_List_Frame(parent)
                 if self.link then
                     GameTooltip:SetOwner(self,"ANCHOR_RIGHT")
                     GameTooltip:SetInventoryItem(self:GetParent():GetParent().unit, self.index)
+                    -- local InsertText = _G["GameTooltipTextLeft2"]:GetText()
+                    -- InsertText = "\124cff1eff00下面是隐身的小胖球\124r\n"..InsertText
+                    -- _G["GameTooltipTextLeft2"]:SetText(InsertText)
+                    -- _G["GameTooltipTextLeft2"]:SetSpacing(200)
                     GameTooltip:Show()
                 end
             end)
@@ -254,7 +258,7 @@ function MAIN_FRAME_STYLE(frame,parent,event)
     -- Header
     if _SVDB.SettingOption[2] then
         Style[frame.Header_Frame] = {
-            height = 37,
+            height = 32,
         }
         frame.Header_Frame:Show()
     else
@@ -268,7 +272,7 @@ function MAIN_FRAME_STYLE(frame,parent,event)
     if _SVDB.SettingOption[3] then
         Style[frame.Icon_Frame] = {
             width = 72,
-            location = { Anchor("TOPLEFT",0,(-1)*(frame.Header_Frame:GetHeight()))}
+            location = { Anchor("TOPLEFT",5,(-1)*(frame.Header_Frame:GetHeight()))}
         }
         frame.Icon_Frame:Show()
     else
@@ -282,7 +286,7 @@ function MAIN_FRAME_STYLE(frame,parent,event)
     if _SVDB.SettingOption[4] then
         Style[frame.Part_Frame] = {
             width = 36,
-            location = { Anchor("TOPLEFT",frame.Icon_Frame:GetWidth(),(-1)*(frame.Header_Frame:GetHeight()))}
+            location = { Anchor("TOPLEFT",frame.Icon_Frame:GetWidth() + 5,(-1)*(frame.Header_Frame:GetHeight()))}
         }
         frame.Part_Frame:Show()
     else
@@ -296,7 +300,7 @@ function MAIN_FRAME_STYLE(frame,parent,event)
     if _SVDB.SettingOption[5] then
         Style[frame.Level_Frame] = {
             width = 36,
-            location = { Anchor("TOPLEFT",frame.Icon_Frame:GetWidth() + frame.Part_Frame:GetWidth(),(-1)*(frame.Header_Frame:GetHeight()))}
+            location = { Anchor("TOPLEFT",frame.Icon_Frame:GetWidth() + frame.Part_Frame:GetWidth() + 5,(-1)*(frame.Header_Frame:GetHeight()))}
         }
         frame.Level_Frame:Show()
     else
@@ -308,14 +312,14 @@ function MAIN_FRAME_STYLE(frame,parent,event)
     frame.Level_Frame:InstantApplyStyle()
     -- Name
     Style[frame.Name_Frame] = {
-        location = { Anchor("TOPLEFT",frame.Icon_Frame:GetWidth() + frame.Part_Frame:GetWidth() + frame.Level_Frame:GetWidth(),(-1)*(frame.Header_Frame:GetHeight()))}
+        location = { Anchor("TOPLEFT",frame.Icon_Frame:GetWidth() + frame.Part_Frame:GetWidth() + frame.Level_Frame:GetWidth() + 5,(-1)*(frame.Header_Frame:GetHeight()))}
     }
     frame.Name_Frame:InstantApplyStyle()
     -- Gem
     if _SVDB.SettingOption[6] then
         Style[frame.Gem_Suit_Frame] = {
             height = 20,
-            location = { Anchor("TOPLEFT",0,(-1)*(frame.Header_Frame:GetHeight() + 288)) }
+            location = { Anchor("TOPLEFT",5,(-1)*(frame.Header_Frame:GetHeight() + 288)) }
         }
         frame.Gem_Suit_Frame:Show()
     else
@@ -329,7 +333,7 @@ function MAIN_FRAME_STYLE(frame,parent,event)
     if _SVDB.SettingOption[7] then
         Style[frame.Stats_Frame] = {
             height = 80,
-            location = { Anchor("TOPLEFT",0,(-1)*(frame.Header_Frame:GetHeight() + frame.Gem_Suit_Frame:GetHeight() + 288))}
+            location = { Anchor("TOPLEFT",5,(-1)*(frame.Header_Frame:GetHeight() + frame.Gem_Suit_Frame:GetHeight() + 288))}
         }
         frame.Stats_Frame:Show()
     else
@@ -341,7 +345,7 @@ function MAIN_FRAME_STYLE(frame,parent,event)
     frame.Stats_Frame:InstantApplyStyle()
     if _SVDB.SettingOption[1] then
         Style[frame] = {
-            height = frame.Header_Frame:GetHeight() + frame.Gem_Suit_Frame:GetHeight() + frame.Stats_Frame:GetHeight() + 288,
+            height = frame.Header_Frame:GetHeight() + frame.Gem_Suit_Frame:GetHeight() + frame.Stats_Frame:GetHeight() + 288 + 5,
         }
         frame:Show()
     else
@@ -390,12 +394,16 @@ function Show_Item_List_Frame(unit,parent)
         local link = GetInventoryItemLink(unit, v.index)
         local name,quality,itemType,equipLoc = Get_Item_Info(link)
         local SET_ITEM_QUALITY_COLOR
-        if ITEM_QUALITY_COLORS[quality] then
+        local ItemLevel, CritNumber, HasteNumber, MasteryNumber, VersaNumber, EmptyGemNumber, SuitNumber, EnchantInfo, isItemSet, isPVPSet, isPVESet = GetEachEquipInfo(link)
+        if ITEM_QUALITY_COLORS[quality] and (not isItemSet) then
             SET_ITEM_QUALITY_COLOR = ITEM_QUALITY_COLORS[quality].hex
+        elseif isItemSet and (not isPVPSet) then
+            SET_ITEM_QUALITY_COLOR = "|cff2bae85"
+        elseif isItemSet and isPVPSet and (not isPVESet) then
+            SET_ITEM_QUALITY_COLOR = "|cffd5504d"
         else
             SET_ITEM_QUALITY_COLOR = ""
         end
-        local ItemLevel,CritNumber,HasteNumber,MasteryNumber,VersaNumber,EmptyGemNumber,SuitNumber,EnchantInfo = GetEachEquipInfo(link)
         if ItemLevel == 0 then
             ItemLevel = ""
         end
@@ -429,6 +437,7 @@ function Show_Item_List_Frame(unit,parent)
             }
         local Per_Name_Frame = Main_Frame["Name"..i]
         Per_Name_Frame.link = link
+        Per_Name_Frame.unit = unit
             Style[Per_Name_Frame.Per_Name_Text] = {
                 text = SET_ITEM_QUALITY_COLOR..name
             }
@@ -489,7 +498,7 @@ function Main_FRAME_STYLE(frame,parent)
         width = Get_Max_String_Width(Max_StringWidth)
     }
     Style[frame] = {
-        width = frame.Icon_Frame:GetWidth() + frame.Part_Frame:GetWidth() + frame.Level_Frame:GetWidth() + Get_Max_String_Width(Max_StringWidth),
+        width = frame.Icon_Frame:GetWidth() + frame.Part_Frame:GetWidth() + frame.Level_Frame:GetWidth() + Get_Max_String_Width(Max_StringWidth) + 10,
     }
     -- frame:InstantApplyStyle()
     Style[frame.Header_Frame] = {
@@ -554,14 +563,14 @@ end
 -- 模板
 local function Create_Gem_Enchant(frame,index)
     if not frame.iconframe then
-        local Icon_List = SESetMenuFrame("Icon_List"..index,frame)
+        local Icon_List = SESetMenuFrame("Icon_List"..frame.unit..index,frame)
         Style[Icon_List] = {
             size = Size(80,16),
             location = { Anchor("RIGHT")}
         }
         for i = 1, 5 do
-            local Icon = SESetMenuFrame("Icon" .. index .. i, Icon_List)
-            Icon.Icon_Texture = Texture("Icon_Texture"..index..i,Icon)
+            local Icon = SESetMenuFrame("Icon" .. frame.unit .. index .. i, Icon_List)
+            Icon.Icon_Texture = Texture("Icon_Texture" .. frame.unit .. index .. i, Icon)
             Style[Icon] = {
                 size = Size(12,12),
                 location = { Anchor("RIGHT",-(16)*(i-1),0)},
@@ -588,7 +597,7 @@ local function Create_Gem_Enchant(frame,index)
             Icon:SetScript("OnLeave", function(self)
                 GameTooltip:Hide()
             end)
-            Icon_List["Icon" .. index .. i] = Icon
+            Icon_List["Icon" .. frame.unit .. index .. i] = Icon
         end
         frame.iconframe = Icon_List
     end
@@ -600,17 +609,20 @@ function ITEM_NAME_FRAME_UPDATE(frame, index, table,emptygemnumber,existgemnumbe
     local startnumber = 1
     local Icon_List = Create_Gem_Enchant(frame, index)
     if table[1] ~= 0 then
-        local Icon = Icon_List["Icon"..index..1]
+        local Icon = Icon_List["Icon" .. frame.unit .. index .. 1]
         Icon.link = enchantinfo
         Style[Icon.Icon_Texture] = {
             File = GetItemIcon(128537) -- 这里仅仅展示一个附魔图标,没有实际意义
         }
         Icon:Show()
         startnumber = 2
+    else
+        local Icon = Icon_List["Icon" .. frame.unit .. index .. 1]
+        Icon.link = enchantinfo
     end
     local gemstartnumber = 2
     for i = startnumber, existgemnumber + startnumber - 1 do
-        local Icon = Icon_List["Icon"..index..i]
+        local Icon = Icon_List["Icon" .. frame.unit .. index .. i]
         Icon.link = select(2, GetItemInfo(table[gemstartnumber]))
         Style[Icon.Icon_Texture] = {
             File = GetItemIcon(table[gemstartnumber])
@@ -620,15 +632,15 @@ function ITEM_NAME_FRAME_UPDATE(frame, index, table,emptygemnumber,existgemnumbe
     end
     local hidegemstartnumber = startnumber + existgemnumber
     if emptygemnumber > 0 then
-        hidegemstartnumber = hidegemstartnumber + 1
-        local Icon = Icon_List["Icon" .. index .. (hidegemstartnumber-1)]
+        local Icon = Icon_List["Icon" .. frame.unit .. index .. (hidegemstartnumber)]
         Style[Icon.Icon_Texture] = {
             File = [[Interface\Cursor\Quest]],
         }
         Icon:Show()
+        hidegemstartnumber = hidegemstartnumber + 1
     end
     for i = hidegemstartnumber, 5 do
-        local Icon = Icon_List["Icon" .. index .. i]
+        local Icon = Icon_List["Icon" .. frame.unit .. index .. i]
         Icon:Hide()
     end
     local width = frame:GetWidth()
