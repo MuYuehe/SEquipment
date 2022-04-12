@@ -5,3 +5,7 @@ required-dependencies:
   - Scorpio
 
 manual-changelog: HistoryLog-CN.md
+
+ignore:
+  - *.code-workspace
+  - .vscode
