@@ -574,7 +574,7 @@ local function Create_Gem_Enchant(frame,index)
             Style[Icon.Icon_Texture] = {
                 size = Size(12,12),
                 -- 待填写
-                File = [[Interface\Cursor\Quest]],
+                -- File = [[Interface\Cursor\Quest]],
                 location = { Anchor("CENTER")},
                 Mask = [[Interface\FriendsFrame\Battlenet-Portrait]],
             }
