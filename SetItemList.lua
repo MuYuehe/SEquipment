@@ -373,7 +373,8 @@ function Show_Item_List_Frame(unit,parent)
             text = Get_Inspect_Item_Level(unit)
         }
     end
-    local Sum_Crit,Sum_Haste,Sum_Mastery,Sum_Versa,Sum_Suit,Sum_Empty_Gem,Sum_Exist_Gem = {},{},{},{},{},{},{}
+    local Sum_Crit,Sum_Haste,Sum_Mastery,Sum_Versa = 0,0,0,0
+    local Sum_Suit,Sum_Empty_Gem,Sum_Exist_Gem = 0,0,0
     -- 总计数,暴击,急速,精通,全能,宝石,套装
     for i, v in ipairs(SlotButton) do
         local link = GetInventoryItemLink(unit, v.index)
@@ -394,7 +395,15 @@ function Show_Item_List_Frame(unit,parent)
         end
         local Enchant,Gem1,Gem2,Gem3,Gem4,ExistGemNumber = Get_Equiped_Info(link)
         local GemTable = { Gem1, Gem2, Gem3, Gem4 }
-        Sum_Crit[i],Sum_Haste[i],Sum_Mastery[i],Sum_Versa[i],Sum_Suit[i],Sum_Empty_Gem[i],Sum_Exist_Gem[i] = CritNumber,HasteNumber,MasteryNumber,VersaNumber,SuitNumber,EmptyGemNumber,ExistGemNumber
+        -- [[*****]]
+        Sum_Crit = Sum_Crit + CritNumber
+        Sum_Haste = Sum_Haste + HasteNumber
+        Sum_Mastery = Sum_Mastery + MasteryNumber
+        Sum_Versa = Sum_Versa + VersaNumber
+        Sum_Suit = Sum_Suit + SuitNumber
+        Sum_Empty_Gem = Sum_Empty_Gem + EmptyGemNumber
+        Sum_Exist_Gem = Sum_Exist_Gem + ExistGemNumber
+
         local Per_Icon_Frame = Main_Frame["Icon"..i]
         local CHMV = {CritNumber,HasteNumber,MasteryNumber,VersaNumber}
         for j = 1, 4 do
@@ -448,32 +457,32 @@ function Show_Item_List_Frame(unit,parent)
         FireSystemEvent("PER_ITEM_NAME_FRAME_UPDATE", Per_Name_Frame, v.index, GemTable, EmptyGemNumber, EnchantInfo)
     end
     local Gem_Suit_Frame = Main_Frame.Gem_Suit_Frame
-    if Sum_Table(Sum_Exist_Gem) + Sum_Table(Sum_Empty_Gem) == 0 then
+    if Sum_Exist_Gem + Sum_Empty_Gem == 0 then
         Style[Gem_Suit_Frame.Gem_Text] = {
             text = ""
         }
     else
         Style[Gem_Suit_Frame.Gem_Text] = {
-            text = L["Gem"]..":"..Sum_Table(Sum_Exist_Gem).."/"..Sum_Table(Sum_Exist_Gem) + Sum_Table(Sum_Empty_Gem)
+            text = L["Gem"]..":"..Sum_Exist_Gem.."/"..Sum_Exist_Gem + Sum_Empty_Gem
         }
     end
-    if Sum_Table(Sum_Suit) == 0 then
+    if Sum_Suit == 0 then
         Style[Gem_Suit_Frame.Suit_Text] = {
             text = ""
         }
     else
         Style[Gem_Suit_Frame.Suit_Text] = {
-            text = L["Suit"]..":"..Sum_Table(Sum_Suit)
+            text = L["Suit"]..":"..Sum_Suit
         }
     end
     local SUM_CHMV = {Sum_Crit,Sum_Haste,Sum_Mastery,Sum_Versa}
     for i = 1, 4 do
         local Per_Stats_Frame = Main_Frame["Stats"..i]
         Style[Per_Stats_Frame.Two_Stats_Name] = {
-            text = tostring(Sum_Table(SUM_CHMV[i]))
+            text = tostring(SUM_CHMV[i])
         }
         Style[Per_Stats_Frame.Thr_Stats_Name] = {
-            text = GetStatsPercent(Sum_Table(SUM_CHMV[i]),i,unit,specid)
+            text = GetStatsPercent(SUM_CHMV[i],i,unit,specid)
         }
     end
 

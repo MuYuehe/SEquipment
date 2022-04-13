@@ -467,19 +467,19 @@ function GetEachEquipInfo(link)
             end
             -- 爆击词条
             if string.find(left,STAT_CRITICAL_STRIKE) and string.find(left,"+") then
-                CritNumber      = tonumber(string.match(left,"%d+"))
+                CritNumber      = CritNumber + tonumber(string.match(left,"%d+"))
 
             -- 急速词条
             elseif string.find(left,STAT_HASTE) and string.find(left,"+") then
-                HasteNumber     = tonumber(string.match(left,"%d+"))
+                HasteNumber     = HasteNumber + tonumber(string.match(left, "%d+"))
 
             -- 精通词条
             elseif string.find(left,STAT_MASTERY) and string.find(left,"+") then
-                MasteryNumber   = tonumber(string.match(left,"%d+"))
+                MasteryNumber   = MasteryNumber + tonumber(string.match(left, "%d+"))
 
             -- 全能词条
             elseif string.find(left,STAT_VERSATILITY) and string.find(left,"+") then
-                VersaNumber     = tonumber(string.match(left,"%d+"))
+                VersaNumber     = VersaNumber + tonumber(string.match(left, "%d+"))
 
             -- 物品装等
             elseif string.find(left,ITEM_LEVEL) then
