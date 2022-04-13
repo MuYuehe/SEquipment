@@ -78,7 +78,7 @@ L["BOTTOMLEFT"]                     = "BOTTOMLEFT"
 L["BOTTOMRIGHT"]                    = "BOTTOMRIGHT"
 L["Gem"]                            = "GemNum"
 L["Suit"]                           = "SuitNum"
-
+L["Empty GemSlot"]                  = "Empty GemSlot"
 
 
 
@@ -90,7 +90,7 @@ L["Log1 Time"]                      = "2022/4/12"
 L["Log1 Version"]                   = "V2.1.3\n"
 L["Log1 Text"]    = "1.The set items displayed on the panel are now more clearly colored, the PVE sets are dyed with copper green, and the PVP sets are dyed with orange red\n"
     .. "2.Adjusted the border a little bit, and now the information is a little bit inline, which is what V1.0.0 started to do\n"
-    -- .. "3.Added viewing gem enchantment information\n"
+    .. "3.Fixed the display rules for gem enchantment information\n"
     -- .. "4.Changed the set display style to now show the number of sets instead of the number of sets activated\n"
     -- .. "5.Consolidated player and target options, now they use unified options\n"
     -- .. "6.Update version number V2.1.0, this version is a medium version update, fixes a lot of errors and code redundancy\n"

@@ -582,7 +582,7 @@ local function Create_Gem_Enchant(frame,index)
                 if self.link then
                     local isHover = string.match(self.link, ENCHANTS)
                     GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-                    if isHover or self.link == "空槽" then
+                    if isHover or self.link == L["Empty GemSlot"] then
                         GameTooltip:SetText(self.link)
                     else
                         GameTooltip:SetHyperlink(select(2,GetItemInfo(self.link)))
@@ -618,7 +618,7 @@ function PER_ITEM_NAME_FRAME_UPDATE(frame, index, gemtable,emptygemnumber,enchan
        end
     end
     if emptygemnumber > 0 then
-        table.insert(UsefulInfo,"空槽")
+        table.insert(UsefulInfo, L["Empty GemSlot"])
         table.insert(TextureFile, [[Interface\Cursor\Quest]])
     end
     for i = 1, 5 do
