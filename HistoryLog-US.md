@@ -1,4 +1,7 @@
 "ChangeLog\n"
+"2022/4/12"  "V2.1.4\n"
+"1.Fixed an issue with incorrect attribute values\n"
+=================================================================
 "2022/4/12"  "V2.1.3\n"
 "1.The set items displayed on the panel are now more clearly colored, the PVE sets are dyed with copper green, and the PVP sets are dyed with orange red\n"
 "2.Adjusted the border a little bit, and now the information is a little bit inline, which is what V1.0.0 started to do\n"
