@@ -393,7 +393,7 @@ function Show_Item_List_Frame(unit,parent)
             ItemLevel = ""
         end
         local Enchant,Gem1,Gem2,Gem3,Gem4,ExistGemNumber = Get_Equiped_Info(link)
-        local GE = { Enchant, Gem1, Gem2, Gem3, Gem4 }
+        local GemTable = { Gem1, Gem2, Gem3, Gem4 }
         Sum_Crit[i],Sum_Haste[i],Sum_Mastery[i],Sum_Versa[i],Sum_Suit[i],Sum_Empty_Gem[i],Sum_Exist_Gem[i] = CritNumber,HasteNumber,MasteryNumber,VersaNumber,SuitNumber,EmptyGemNumber,ExistGemNumber
         local Per_Icon_Frame = Main_Frame["Icon"..i]
         local CHMV = {CritNumber,HasteNumber,MasteryNumber,VersaNumber}
@@ -445,7 +445,7 @@ function Show_Item_List_Frame(unit,parent)
         FireSystemEvent("PER_ITEM_ICON_FRAME_UPDATE",Per_Icon_Frame)
         FireSystemEvent("PER_ITEM_PART_FRAME_UPDATE", Per_Part_Texture_Frame)
         FireSystemEvent("PER_ITEM_LEVEL_FRAME_UPDATE", Per_Level_Frame)
-        FireSystemEvent("PER_ITEM_NAME_FRAME_UPDATE", Per_Name_Frame, v.index, GE, EmptyGemNumber, ExistGemNumber, EnchantInfo)
+        FireSystemEvent("PER_ITEM_NAME_FRAME_UPDATE", Per_Name_Frame, v.index, GemTable, EmptyGemNumber, EnchantInfo)
     end
     local Gem_Suit_Frame = Main_Frame.Gem_Suit_Frame
     if Sum_Table(Sum_Exist_Gem) + Sum_Table(Sum_Empty_Gem) == 0 then
@@ -582,10 +582,10 @@ local function Create_Gem_Enchant(frame,index)
                 if self.link then
                     local isHover = string.match(self.link, ENCHANTS)
                     GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-                    if isHover or self.link == "" then
+                    if isHover or self.link == "空槽" then
                         GameTooltip:SetText(self.link)
                     else
-                        GameTooltip:SetHyperlink(self.link)
+                        GameTooltip:SetHyperlink(select(2,GetItemInfo(self.link)))
                     end
                     GameTooltip:Show()
                 end
@@ -601,45 +601,39 @@ local function Create_Gem_Enchant(frame,index)
 end
 
 __SystemEvent__()
-function PER_ITEM_NAME_FRAME_UPDATE(frame, index, table,emptygemnumber,existgemnumber,enchantinfo)
-    local startnumber = 1
+function PER_ITEM_NAME_FRAME_UPDATE(frame, index, gemtable,emptygemnumber,enchantinfo)
     local Icon_List = Create_Gem_Enchant(frame, index)
-    if table[1] ~= 0 then
-        local Icon = Icon_List["Icon" .. frame.unit .. index .. 1]
-        Icon.link = enchantinfo
-        Style[Icon.Icon_Texture] = {
-            File = GetItemIcon(128537) -- 这里仅仅展示一个附魔图标,没有实际意义
-        }
-        Icon:Show()
-        startnumber = 2
-    else
-        local Icon = Icon_List["Icon" .. frame.unit .. index .. 1]
-        Icon.link = enchantinfo
+    -- 拿到有用数据
+    -- 是否有附魔,几个镶嵌的宝石,是否有空宝石槽
+    local UsefulInfo = {}
+    local TextureFile = {}
+    if enchantinfo ~= "" then
+        table.insert(UsefulInfo, enchantinfo)
+        table.insert(TextureFile, GetItemIcon(128537))
     end
-    local gemstartnumber = 2
-    for i = startnumber, existgemnumber + startnumber - 1 do
-        local Icon = Icon_List["Icon" .. frame.unit .. index .. i]
-        Icon.link = select(2, GetItemInfo(table[gemstartnumber]))
-        Style[Icon.Icon_Texture] = {
-            File = GetItemIcon(table[gemstartnumber])
-        }
-        gemstartnumber = gemstartnumber + 1
-        Icon:Show()
+    for _, value in ipairs(gemtable) do
+       if value ~= 0 then
+           table.insert(UsefulInfo,value)
+           table.insert(TextureFile, GetItemIcon(value))
+       end
     end
-    local hidegemstartnumber = startnumber + existgemnumber
     if emptygemnumber > 0 then
-        local Icon = Icon_List["Icon" .. frame.unit .. index .. (hidegemstartnumber)]
-        Style[Icon.Icon_Texture] = {
-            File = [[Interface\Cursor\Quest]],
-        }
-        Icon:Show()
-        hidegemstartnumber = hidegemstartnumber + 1
+        table.insert(UsefulInfo,"空槽")
+        table.insert(TextureFile, [[Interface\Cursor\Quest]])
     end
-    for i = hidegemstartnumber, 5 do
+    for i = 1, 5 do
         local Icon = Icon_List["Icon" .. frame.unit .. index .. i]
-        Icon:Hide()
+        if i <= #UsefulInfo then
+            Icon.link = UsefulInfo[i]
+            Style[Icon.Icon_Texture] = {
+                File = TextureFile[i]
+            }
+            Icon:Show()
+        else
+            Icon:Hide()
+        end
     end
-    local Realwidth = tonumber(frame.Iniwidth) + (hidegemstartnumber - 1) * (16)
+    local Realwidth = tonumber(frame.Iniwidth) + (#UsefulInfo) * (16)
     frame.width = Realwidth
     Style[frame] = {
         width = Realwidth
