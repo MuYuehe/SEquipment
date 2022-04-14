@@ -148,7 +148,7 @@ local function Create_Item_List_Frame(parent)
                     location = { Anchor("TOPLEFT",0,(-18)*(i-1))}
                 }
                 Style[Per_Name_Frame.Per_Name_Text] = {
-                    location = { Anchor("LEFT")}
+                    location = { Anchor("LEFT")},
                     -- 待填写
                 }
             Per_Name_Frame:SetScript("OnEnter",function (self)
@@ -185,7 +185,11 @@ local function Create_Item_List_Frame(parent)
                 -- 待填写
             }
             Style[Main_Frame.Gem_Suit_Frame.Suit_Text] = {
-                location = { Anchor("RIGHT")}
+                location = { Anchor("LEFT",80)},
+                font                    = {
+                    font                = SEFontStyle[1].value,
+                    height              = 10,
+                }
                 -- 待填写
             }
         
@@ -207,11 +211,13 @@ local function Create_Item_List_Frame(parent)
                 text = StatsLongName[i]..":"
                 }
                 Style[Per_Stats_Frame.Two_Stats_Name] = {
-                    location = { Anchor("LEFT",50)}
+                    location = { Anchor("LEFT",50)},
+                    textcolor = Color(0,1,0)
                     -- 待填写
                 }
                 Style[Per_Stats_Frame.Thr_Stats_Name] = {
-                    location = { Anchor("LEFT",100)}
+                    location = { Anchor("LEFT",100)},
+                    textcolor = Color(0, 1, 0)
                     -- 待填写
                 }
             Main_Frame["Stats"..i] = Per_Stats_Frame
@@ -374,20 +380,28 @@ function Show_Item_List_Frame(unit,parent)
         }
     end
     local Sum_Crit,Sum_Haste,Sum_Mastery,Sum_Versa = 0,0,0,0
-    local Sum_Suit,Sum_Empty_Gem,Sum_Exist_Gem = 0,0,0
+    local Sum_Empty_Gem,Sum_Exist_Gem = 0,0
+    local ItemSetIdTable = {} --词条表
     -- 总计数,暴击,急速,精通,全能,宝石,套装
     for i, v in ipairs(SlotButton) do
         local link = GetInventoryItemLink(unit, v.index)
         local name,quality,itemType,equipLoc = Get_Item_Info(link)
         local SET_ITEM_QUALITY_COLOR
-        local ItemLevel, CritNumber, HasteNumber, MasteryNumber, VersaNumber, EmptyGemNumber, SuitNumber, EnchantInfo, isItemSet, isPVPSet, isPVESet = GetEachEquipInfo(link)
-        if ITEM_QUALITY_COLORS[quality] and (not isItemSet) then
+        local ItemLevel, CritNumber, HasteNumber, MasteryNumber, VersaNumber, EmptyGemNumber, EnchantInfo, isPVPSet, ItemSetId = GetEachEquipInfo(link)
+        if ItemSetId ~= "" then
+            table.insert(ItemSetIdTable, GetItemSetInfo(ItemSetId))
+        end
+        if ITEM_QUALITY_COLORS[quality] and ItemSetId == "" then
+            -- 非套装
             SET_ITEM_QUALITY_COLOR = ITEM_QUALITY_COLORS[quality].hex
-        elseif isItemSet and (not isPVPSet) then
-            SET_ITEM_QUALITY_COLOR = "|cff2bae85"
-        elseif isItemSet and isPVPSet and (not isPVESet) then
+        elseif ItemSetId ~= "" and isPVPSet then
+            -- PVP套装
             SET_ITEM_QUALITY_COLOR = "|cffd5504d"
+        elseif ItemSetId ~= "" and (not isPVPSet) then
+            -- 非PVP套装
+            SET_ITEM_QUALITY_COLOR = "|cff2bae85"
         else
+            -- 没拿到装备信息
             SET_ITEM_QUALITY_COLOR = ""
         end
         if ItemLevel == 0 then
@@ -400,7 +414,6 @@ function Show_Item_List_Frame(unit,parent)
         Sum_Haste = Sum_Haste + HasteNumber
         Sum_Mastery = Sum_Mastery + MasteryNumber
         Sum_Versa = Sum_Versa + VersaNumber
-        Sum_Suit = Sum_Suit + SuitNumber
         Sum_Empty_Gem = Sum_Empty_Gem + EmptyGemNumber
         Sum_Exist_Gem = Sum_Exist_Gem + ExistGemNumber
 
@@ -466,13 +479,13 @@ function Show_Item_List_Frame(unit,parent)
             text = L["Gem"]..":"..Sum_Exist_Gem.."/"..Sum_Exist_Gem + Sum_Empty_Gem
         }
     end
-    if Sum_Suit == 0 then
+    if #ItemSetIdTable == 0 then
         Style[Gem_Suit_Frame.Suit_Text] = {
             text = ""
         }
     else
         Style[Gem_Suit_Frame.Suit_Text] = {
-            text = L["Suit"]..":"..Sum_Suit
+            text = table.concat(Get_Same_Mate(ItemSetIdTable))
         }
     end
     local SUM_CHMV = {Sum_Crit,Sum_Haste,Sum_Mastery,Sum_Versa}
@@ -570,7 +583,7 @@ local function Create_Gem_Enchant(frame,index)
     if not frame.iconframe then
         local Icon_List = SESetMenuFrame("Icon_List"..frame.unit..index,frame)
         Style[Icon_List] = {
-            size = Size(80,16),
+            height = 16,
             location = { Anchor("RIGHT")}
         }
         for i = 1, 5 do
@@ -630,6 +643,9 @@ function PER_ITEM_NAME_FRAME_UPDATE(frame, index, gemtable,emptygemnumber,enchan
         table.insert(UsefulInfo, L["Empty GemSlot"])
         table.insert(TextureFile, [[Interface\Cursor\Quest]])
     end
+    Style[Icon_List] = {
+        width = (#UsefulInfo) * (16)
+    }
     for i = 1, 5 do
         local Icon = Icon_List["Icon" .. frame.unit .. index .. i]
         if i <= #UsefulInfo then

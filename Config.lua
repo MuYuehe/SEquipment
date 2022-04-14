@@ -24,7 +24,11 @@ end
 --     Data Collection    --
 ----------------------------
 local standardFont
+local leftbrackets = "("
+local rightbrackets = ")"
 if _Locale("zhCN") then
+    leftbrackets = "（"
+    rightbrackets = "）"
     standardFont="Fonts\\ARKai_T.ttf"
 elseif _Locale("zhTW") then
     standardFont = "Fonts\\blei00d.TTF"
@@ -446,24 +450,22 @@ function GetEachEquipInfo(link)
     local MasteryNumber         = 0
     local VersaNumber           = 0
     local EmptyGemNumber        = 0     --未镶嵌宝石数量
-    local SetNumber             = 0     --套装数量
     local ItemLevel             = 0
     local EnchantInfo           = ""
-    local isItemSet             = false --查看此装备是否是套装部件
-    local isPVPSet              = false --查看是否为PVP套装
-    local isPVESet              = false --查看是否是PVE套装
+    local isPVPSet              = false --查看是否为具有PVP属性
+    local ItemSetId             = ""
     if (not link) then
-        return ItemLevel, CritNumber, HasteNumber, MasteryNumber, VersaNumber, EmptyGemNumber, SetNumber, EnchantInfo
+        return ItemLevel, CritNumber, HasteNumber, MasteryNumber, VersaNumber, EmptyGemNumber, EnchantInfo, isPVPSet, ItemSetId
     end
+    -- 拿到套装的ID,不是套装的返回值为 nil
+    ItemSetId                   = select(16,GetItemInfo(link))
+    -- 保持返回值一致性
+    if ItemSetId == nil then ItemSetId = "" end
     for _,left,right in GetGameTooltipLines("Hyperlink",link) do
         if left then
             -- 拿到附魔信息
             if string.match(left, ENCHANTS) then
                 EnchantInfo = left
-            end
-            -- 拿到套装部件
-            if string.match(left, WARDROBE_SETS) then
-                isItemSet = true
             end
             -- 爆击词条
             if string.find(left,STAT_CRITICAL_STRIKE) and string.find(left,"+") then
@@ -488,19 +490,14 @@ function GetEachEquipInfo(link)
             -- 未镶嵌宝石数目
             elseif IsDominationGem(left,Sockets) then
                 EmptyGemNumber  = EmptyGemNumber + 1
-
-            -- 查看套装件数(暴力判断)
-            elseif string.find(left,"/5") and ItemLevel >= 239 then
-                SetNumber       = SetNumber + 1
-                isPVESet        = true
-
+            
             -- 判断此装备是否有PVP效果
             elseif string.find(left,"PvP") then
                 isPVPSet = true
             end
         end
     end
-    return ItemLevel, CritNumber, HasteNumber, MasteryNumber, VersaNumber, EmptyGemNumber, SetNumber, EnchantInfo, isItemSet, isPVPSet, isPVESet
+    return ItemLevel, CritNumber, HasteNumber, MasteryNumber, VersaNumber, EmptyGemNumber, EnchantInfo, isPVPSet, ItemSetId
 end
 -- local textlefttext = gsub(ENCHANTED_TOOLTIP_LINE, "%%s", ".+")
 -- print(textlefttext)
@@ -671,6 +668,37 @@ function Get_Max_String_Width(table)
         end
     end
     return String
+end
+function Get_Same_Mate(list)
+    local currentValue = {}
+    local resultTable = {}
+    for _, value in ipairs(list) do
+        -- 判断是否在当前表中
+        local boolean = true
+        for _, v in ipairs(currentValue) do
+            if v == value then
+                boolean = false
+                break
+            end
+        end
+        while boolean do
+            -- 不在当前表则嵌入表
+            table.insert(currentValue, value)
+            local time = 0
+            -- 找到相同元素
+            for i, v in ipairs(list) do
+                if v == value then
+                    time = time + 1
+                end
+            end
+            if time >= 1 then
+                table.insert(resultTable, value..leftbrackets..time..rightbrackets)
+            end
+            -- 防止死循环
+            break
+        end
+    end
+    return resultTable
 end
 ----------------------------
 -- Set Level To Container --
