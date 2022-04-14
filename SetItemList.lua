@@ -223,7 +223,7 @@ local function Create_Item_List_Frame(parent)
             Main_Frame["Stats"..i] = Per_Stats_Frame
         end
         -- function parent:OnHide() Main_Frame:Hide() end
-        parent:SetScript("OnHide", function(self) Main_Frame:Hide() end)
+        parent:HookScript("OnHide", function(self) Main_Frame:Hide() end)
         parent.ItemListFrame = Main_Frame
         FireSystemEvent("MAIN_FRAME_CREATED", Main_Frame, parent, "MAIN_FRAME_CREATED")
     end
