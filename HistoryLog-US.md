@@ -1,4 +1,7 @@
 "ChangeLog\n"
+"2022/4/14"  "V2.1.5\n"
+"1.Solved the problem of plug-in polluting blz, and it will be abnormal when switching its own panel\n"
+=================================================================
 "2022/4/12"  "V2.1.4\n"
 "1.Fixed an issue with incorrect attribute values\n"
 =================================================================

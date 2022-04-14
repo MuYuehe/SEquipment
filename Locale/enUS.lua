@@ -86,9 +86,9 @@ L["Empty GemSlot"]                  = "Empty GemSlot"
 --                   ChangeLog                  --
 --------------------------------------------------
 L["Log"]                            = "ChangeLog\n"
-L["Log1 Time"]                      = "2022/4/12"
-L["Log1 Version"]                   = "V2.1.4\n"
-L["Log1 Text"]    = "1.Fixed an issue with incorrect attribute values\n"
+L["Log1 Time"]                      = "2022/4/14"
+L["Log1 Version"]                   = "V2.1.5\n"
+L["Log1 Text"]    = "1.Solved the problem of plug-in polluting blz, and it will be abnormal when switching its own panel\n"
     -- .. "2.Adjusted the border a little bit, and now the information is a little bit inline, which is what V1.0.0 started to do\n"
     -- .. "3.Fixed the display rules for gem enchantment information\n"
     -- .. "4.Changed the set display style to now show the number of sets instead of the number of sets activated\n"
