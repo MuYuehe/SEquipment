@@ -555,13 +555,13 @@ end
 __SystemEvent__()
 function UNIT_INVENTORY_CHANGED(unit)
     if InspectFrame and InspectFrame.unit and InspectFrame.unit == unit then
-        FireSystemEvent("UNIT_INVENTORY_CHANGED_COMPLETED", UnitGUID(unit))
+        FireSystemEvent("UNIT_INVENTORY_CHANGED_COMPLETED", unit)
     end
 end
 __SystemEvent__()
 function UNIT_INVENTORY_CHANGED_COMPLETED(unit)
-    if InspectFrame and InspectFrame.unit and UnitGUID(InspectFrame.unit) == unit then
-        local frame = Show_Item_List_Frame(InspectFrame.unit,InspectPaperDollFrame)
+    if InspectFrame and InspectFrame.unit and InspectFrame.unit == unit then
+        local frame = Show_Item_List_Frame(unit, InspectPaperDollFrame)
         FireSystemEvent("UNIT_INVENTORY_CHANGED_COMPLETED_DONE",frame)
     end
 end
