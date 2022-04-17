@@ -110,7 +110,7 @@ local function Create_Item_List_Frame(parent)
                 Style[Per_Part_Texture_Frame] = {
                     backdrop            = {
                         bgFile   = [[Interface\Tooltips\UI-Tooltip-Backgroung]],
-                        edgeFile = [["Interface\Buttons\WHITE8X8"]],
+                        edgeFile = [[Interface\Buttons\WHITE8X8]],
                         tile     = true,
                         tileSize = 0,
                         edgeSize = 1,
