@@ -89,7 +89,7 @@ function OnLoad(self)
             15,
         },
         FontStyleSet = 1,
-        FrameScaleSet = 15,
+        FrameScaleSet = 1,
     }
 end
 ----------------------------
