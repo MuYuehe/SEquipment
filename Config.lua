@@ -78,6 +78,21 @@ ItemLocation = {
     "TOP","BOTTOM","LEFT","RIGHT","CENTER",
     "TOPLEFT","TOPRIGHT","BOTTOMLEFT","BOTTOMRIGHT",
 }
+LevelSetPartHeaderText = {
+    L["Level Self"], L["Level Target"], L["Level Bag"],
+    L["Level Bank"], L["Level GB"], L["Level Guild"],
+    L["Level Chat"]
+}
+EquipNameLocation = {
+    L["TOP"], L["BOTTOM"], L["LEFT"], L["RIGHT"], L["CENTER"], L["TOPLEFT"],
+    L["TOPRIGHT"], L["BOTTOMLEFT"], L["BOTTOMRIGHT"],
+}
+Options = {
+    L["Show List Module"], L["Show Specialization"],
+    L["Show Stats Icon"], L["Show Slots"],
+    L["Show Level Module"], L["Show GemEnchant"],
+    L["Show Attributes"],
+}
 -- 不要模仿
 local Parts = {
     L["Head"],      L["Neck"],      L["Shoulders"], "",

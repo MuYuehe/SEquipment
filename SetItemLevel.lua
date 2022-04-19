@@ -6,7 +6,7 @@
 --========================================================--
 
 --========================================================--
-Scorpio  "BaseConfig.MainInterface.General.SetItemLevel"  ""
+Scorpio "BaseConfig.SEquipment.SetItemLevel" ""
 --========================================================--
 L = _Locale
 

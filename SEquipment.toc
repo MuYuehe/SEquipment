@@ -15,11 +15,13 @@ Locale\zhCN.lua
 
 # Config files
 Config.lua
+SEquipment.lua
+Template.lua
 
 # Page files
-MainInterface.lua
-Home.lua
-General.lua
+# MainInterface.lua
+# Home.lua
+# General.lua
 SetItemLevel.lua
-UnitOption.lua
+# UnitOption.lua
 SetItemList.lua
