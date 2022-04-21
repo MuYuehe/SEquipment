@@ -12,16 +12,10 @@
 # Localization files
 Locale\enUS.lua
 Locale\zhCN.lua
+Locale\zhTW.lua
 
 # Config files
 Config.lua
 SEquipment.lua
 Template.lua
-
-# Page files
-# MainInterface.lua
-# Home.lua
-# General.lua
 SetItemLevel.lua
-# UnitOption.lua
-SetItemList.lua

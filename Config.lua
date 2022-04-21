@@ -23,6 +23,7 @@ end
 ----------------------------
 --     Data Collection    --
 ----------------------------
+NUM_RESET = 0
 local standardFont
 local leftbrackets = "("
 local rightbrackets = ")"
@@ -54,25 +55,6 @@ SEFontStyle={
 		text	= "Morpheus",
 		value	= "Fonts\\MORPHEUS.ttf"
 	}
-}
--- 纹理路径
-TexturePath={
-    [[Interface\AddOns\SEquipment\Media\CRIT]],
-    [[Interface\AddOns\SEquipment\Media\HASTE]],
-    [[Interface\AddOns\SEquipment\Media\MASTERY]],
-    [[Interface\AddOns\SEquipment\Media\VERSATILITY]],
-}
-StatsName = {
-    L["Crit"],
-    L["Haste"],
-    L["Mastery"],
-    L["Versatility"],
-}
-StatsLongName = {
-    L["CritLong"],L["HasteLong"],L["MasteryLong"],L["VersatilityLong"],
-}
-StatsIconColor = {
-    {r=1,g=0.5,b=0.3,},{r=0.9,g=1,b=0.1,},{r=0.8,g=0.1,b=1,},{r=0.1,g=0.3,b=1,},
 }
 ItemLocation = {
     "TOP","BOTTOM","LEFT","RIGHT","CENTER",
@@ -183,222 +165,25 @@ local BaseStats = {
     [72]  = { 1.4, 11, 5, },
     [73]  = { 0.5, 4, 5, },
 }
-----------------------------
---        MainDialog      --
---only one,can be defined --
-----------------------------
-class "SEDialog" { Dialog }
-Style.UpdateSkin("Default",{
-    [SEDialog]                      = {
-        size                        = Size(600,400),
-        resizable                   = false,
-        -- 标准件正常情况没有Header
-        Header                      = {
-            text                    = "",
-        },
-        CloseButton                 = {
-            location                = { },
-        },
-    }
-})
-----------------------------
---        MenuFrame       --
--- Frame used in set menu --
-----------------------------
-class "SESetMenuFrame" { Frame }
-Style.UpdateSkin("Default",{
-    [SESetMenuFrame]                = {
-        backdrop={
-            bgFile                  = [[Interface\Tooltips\UI-Tooltip-Backgroung]],
-            edgeFile                = [[Interface\Tooltips\UI-Tooltip-Border]],
-            tile                    = true,
-            tileSize                = 0,
-            edgeSize                = 15,
-            insets                  = {
-                                        left    = 0,
-                                        right   = 0,
-                                        top     = 0,
-                                        bottom  = 0,
-            },
-        },
-        backdropcolor               = Color(0,0,0,0),
-        backdropbordercolor         = Color(0,0,0,0),
-    }
-})
-----------------------------
---         Button         --
-----------------------------
-class "SEButton" { UIPanelButton }
-Style.UpdateSkin("Default",{
-    [SEButton]                      = {
-        size                        = Size(80,20),
-        text                        = "",
-    }
-})
-----------------------------
---       CheckButton      --
-----------------------------
-class "SECheckButton" { UICheckButton }
-Style.UpdateSkin("Default",{
-    [SECheckButton]                 = {
-        size                        = Size(32,32),
-        -- Checked                     = true,
-    }
-})
-----------------------------
---         ComboBox       --
-----------------------------
-class "SEComboBox" { ComboBox }
-Style.UpdateSkin("Default",{
-    [SEComboBox]                    = {
-        -- height=50,
-    }
-})
-----------------------------
---         TrackBar       --
-----------------------------
-class "SETrackBar" { TrackBar }
-Style.UpdateSkin("Default",{
-    [SETrackBar]                    = {
-        valueStep                   = 5,
-    }
-})
-----------------------------
---     FauxScrollFrame    --
-----------------------------
-class "SEScrollFrame" { FauxScrollFrame }
-Style.UpdateSkin("Default",{
-    [SEScrollFrame]                 = {
-        backdrop={
-            bgFile                  = [[Interface\Tooltips\UI-Tooltip-Backgroung]],
-            edgeFile                = [[Interface\Tooltips\UI-Tooltip-Border]],
-            tile                    = true,
-            tileSize                = 0,
-            edgeSize                = 15,
-            insets                  = { left    =1,
-                                        right   =1,
-                                        top     =1,
-                                        bottom  =1,
-                                    }
-        },
-        backdropcolor               = Color(0,0,0,0),
-        backdropbordercolor         = Color(1,1,1,1),
-        ScrollBar                   = {
-            location                = {
-                                        Anchor("TOPRIGHT", -5, -15, nil, "TOPRIGHT"),
-                                        Anchor("BOTTOMRIGHT", -5, 15, nil, "BOTTOMRIGHT"),
-            },
-        },
-    }
-})
-----------------------------
---     TreeNodeClasses    --
-----------------------------
-            -- usage --
--- Style.ActiveSkin("SETreeNode",Tree) --
-Style.RegisterSkin("SETreeNode",{
-    [TreeView.TreeNodeClasses[1]]   = {
-        inherit="default",
-        Toggle                      = {
-            location                = { Anchor("TOPLEFT", 0, -2) },
-        },
-        ButtonText                  = {
-            location                = { Anchor("LEFT",15,0) }
-        }
-    },
-})
-----------------------------
---        StatsIcon       --
---    Frame,Texture,Text  --
-----------------------------
-class "StatsIconFrame"      { Frame }
-Style.UpdateSkin("Default",{
-    [StatsIconFrame]                = {
-        backdrop={
-            bgFile                  = [[Interface\Tooltips\UI-Tooltip-Backgroung]],
-            edgeFile                = [[Interface\Tooltips\UI-Tooltip-Border]],
-            tile                    = true,
-            tileSize                = 0,
-            edgeSize                = 15,
-            insets                  = {
-                                        left    = 0,
-                                        right   = 0,
-                                        top     = 0,
-                                        bottom  = 0,
-                                    },
-        },
-        backdropcolor               = Color(0,0,0,0),
-        backdropbordercolor         = Color(0,0,0,0),
-        size                        = Size(18,18),
-        EnableMouseClicks           = true,
-        EnableMouse                 = true,
-    },
-})
-
-----------------------------
---        EquipInfo       --
---     Part,Level,Name    --
-----------------------------
-class "EquipInfoFrame"          { Frame }
-class "EquipInfoPartAndLevel"   { Frame }
-class "EquipInfoFontString"     { FontString }
-Style.UpdateSkin("Default",{
-    [EquipInfoFrame]                = {
-        backdrop={
-            bgFile                  = [[Interface\Tooltips\UI-Tooltip-Backgroung]],
-            edgeFile                = [[Interface\Tooltips\UI-Tooltip-Border]],
-            tile                    = true,
-            tileSize                = 0,
-            edgeSize                = 15,
-            insets                  = {
-                                        left    = 0,
-                                        right   = 0,
-                                        top     = 0,
-                                        bottom  = 0,
-                                    },
-        },
-        backdropcolor               = Color(0,0,0,0),
-        backdropbordercolor         = Color(0,0,0,0),
-        height                      = 18,
-    },
-    [EquipInfoPartAndLevel]         = {
-        backdrop={
-            bgFile                  = [[Interface\Tooltips\UI-Tooltip-Backgroung]],
-            edgeFile                = [[Interface\Tooltips\UI-Tooltip-Border]],
-            tile                    = true,
-            tileSize                = 0,
-            edgeSize                = 15,
-            insets                  = {
-                                        left    = 0,
-                                        right   = 0,
-                                        top     = 0,
-                                        bottom  = 0,
-                                    },
-        },
-        backdropcolor               = Color(0,0,0,0),
-        backdropbordercolor         = Color(0,0,0,0),
-        width                       = 36,
-        height                      = 18,
-    },
-})
-------------------
--- 整合字体设置  --
-------------------
--- function OnEnable(self)
-    Style.UpdateSkin("Default",{
-        [EquipInfoFontString]       = {
-            location                = { Anchor("LEFT") },
-            font                    = {
-                font                = SEFontStyle[1].value,
-                height              = 14,
-            }
-        }
-    })
--- end
 -----------------------------------------------------------
 --                      Function                         --
 -----------------------------------------------------------
-
+class "SEFontString" { FontString }
+class "SGFontString" { FontString }
+Style.UpdateSkin("Default", {
+    [SEFontString] = {
+        font     = {
+            font   = SEFontStyle[1].value,
+            height = 14,
+        }
+    },
+    [SGFontString] = {
+        font     = {
+            font   = SEFontStyle[1].value,
+            height = 12,
+        }
+    }
+})
 ----------------------------
 --      GetEquipInfo      --
 --  Name,Quality,EquipLoc --
@@ -434,17 +219,16 @@ function Get_Inspect_Item_Level(unit)
 end
 ----------------------------
 --    GetEquipedGemInfo   --
---       Enchant,Gem      --
+--           Gem          --
 ----------------------------
 function Get_Equiped_Info(link)
-    local Enchant           = 0
     local Gem1              = 0
     local Gem2              = 0
     local Gem3              = 0
     local Gem4              = 0
     local ExistGemNumber    = 0
     if not link then
-        return Enchant,Gem1,Gem2,Gem3,Gem4,ExistGemNumber
+        return Gem1,Gem2,Gem3,Gem4,ExistGemNumber
     end
     local linkinfo          = {}--非返回值
     for i, v in pairs({strsplit(":", link)}) do
@@ -472,11 +256,9 @@ function Get_Equiped_Info(link)
         elseif k == 7 and v ~= 1 then
             Gem4            = v
             ExistGemNumber  = ExistGemNumber + 1
-        elseif k == 3 and v ~= 1 then
-            Enchant         = v
         end
     end
-    return Enchant,Gem1,Gem2,Gem3,Gem4,ExistGemNumber
+    return Gem1,Gem2,Gem3,Gem4,ExistGemNumber
 end
 ----------------------------
 --       GetSpecInfo      --
@@ -674,6 +456,21 @@ function Sum_Table(table)
         end
     end
     return sum
+end
+function Get_FontString_Width(text)
+    local GetWidthFontString = FontString("GetWidthFontString")
+    GetWidthFontString:SetText(text)
+    GetWidthFontString:Hide()
+    return GetWidthFontString:GetStringWidth()
+end
+function Get_Useful_Info(table)
+    local number = 0
+    for index, value in ipairs(table) do
+        if not (value == "" or value == 0) then
+            number = number + 1
+        end
+    end
+    return number
 end
 function Get_Max_String_Width(table)
     local String = 0

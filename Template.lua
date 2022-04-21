@@ -8,7 +8,7 @@
 --========================================================--
 Scorpio "BaseConfig.SEquipment.Template" ""
 --========================================================--
-L = _Locale
+L                    = _Locale
 -----------------------------------------------------------
 --                                                       --
 -----------------------------------------------------------
@@ -18,9 +18,9 @@ SCROLLFRAME_BACKDROP = {
     tile     = true,
     tileSize = 0,
     edgeSize = 15,
-    insets   = { left = 5, right = 5, top = 5, bottom = 5, }
+    insets   = { left = 2, right = 2, top = 2, bottom = 2, }
 }
-BACKDROP = {
+BACKDROP             = {
     bgFile   = [[Interface\chatframe\chatframebackground]],
     edgeFile = [[Interface\Tooltips\UI-Tooltip-Border]],
     tile     = true,
@@ -225,6 +225,324 @@ Style.UpdateSkin("Default", {
         backdropbordercolor = Color(1, 1, 1, 0.3),
     },
     [CheckButton_Widget] = {
-        size     = Size(32, 32),
-    }
+        size = Size(32, 32),
+    },
+    [MainFrame] = {
+        backdrop            = SCROLLFRAME_BACKDROP,
+        backdropcolor       = Color(0, 0, 0, 0.7),
+        backdropbordercolor = Color(0, 0, 0, 1),
+        TopFrame            = {
+            location = { Anchor("TOPLEFT", 5, 0) },
+            Left_Info = {
+                location = { Anchor("LEFT") },
+            },
+            Right_Info = {
+                location = { Anchor("RIGHT") },
+            }
+        },
+        EquipListFrame      = {
+            size                = Size(100, 288),
+            backdrop            = BACKDROP,
+            backdropcolor       = Color(0, 0, 0, 0),
+            backdropbordercolor = Color(0, 0, 0, 0),
+        },
+        GemSuitFrame        = {
+            width               = 150,
+            backdrop            = BACKDROP,
+            backdropcolor       = Color(0, 0, 0, 0),
+            backdropbordercolor = Color(0, 0, 0, 0),
+            Left_Info           = {
+                location = { Anchor("LEFT") },
+            },
+            Right_Info          = {
+                location = { Anchor("LEFT", 80) },
+            }
+        },
+        BottomFrame         = {
+            width               = 150,
+            backdrop            = BACKDROP,
+            backdropcolor       = Color(0, 0, 0, 0),
+            backdropbordercolor = Color(0, 0, 0, 0),
+            Crit                = {
+                size                = Size(150, 20),
+                location            = { Anchor("TOPLEFT") },
+                backdrop            = BACKDROP,
+                backdropcolor       = Color(0, 0, 0, 0),
+                backdropbordercolor = Color(0, 0, 0, 0),
+                Title               = {
+                    location = { Anchor("LEFT") },
+                    text = L["CritLong"],
+                },
+                Number              = {
+                    location = { Anchor("LEFT", 50, 0) },
+                    textcolor = Color(0, 1, 0),
+                },
+                Percent             = {
+                    location = { Anchor("LEFT", 100, 0) },
+                    textcolor = Color(0, 1, 0),
+                },
+            },
+            Haste               = {
+                size                = Size(150, 20),
+                location            = { Anchor("TOPLEFT", 0, -20) },
+                backdrop            = BACKDROP,
+                backdropcolor       = Color(0, 0, 0, 0),
+                backdropbordercolor = Color(0, 0, 0, 0),
+                Title               = {
+                    location = { Anchor("LEFT") },
+                    text = L["HasteLong"],
+                },
+                Number              = {
+                    location = { Anchor("LEFT", 50, 0) },
+                    textcolor = Color(0, 1, 0)
+                },
+                Percent             = {
+                    location = { Anchor("LEFT", 100, 0) },
+                    textcolor = Color(0, 1, 0)
+                },
+            },
+            Mastery             = {
+                size                = Size(150, 20),
+                location            = { Anchor("TOPLEFT", 0, -40) },
+                backdrop            = BACKDROP,
+                backdropcolor       = Color(0, 0, 0, 0),
+                backdropbordercolor = Color(0, 0, 0, 0),
+                Title               = {
+                    location = { Anchor("LEFT") },
+                    text = L["MasteryLong"],
+                },
+                Number              = {
+                    location = { Anchor("LEFT", 50, 0) },
+                    textcolor = Color(0, 1, 0)
+                },
+                Percent             = {
+                    location = { Anchor("LEFT", 100, 0) },
+                    textcolor = Color(0, 1, 0)
+                },
+            },
+            Versa               = {
+                size                = Size(150, 20),
+                location            = { Anchor("TOPLEFT", 0, -60) },
+                backdrop            = BACKDROP,
+                backdropcolor       = Color(0, 0, 0, 0),
+                backdropbordercolor = Color(0, 0, 0, 0),
+                Title               = {
+                    location = { Anchor("LEFT") },
+                    text = L["VersatilityLong"],
+                },
+                Number              = {
+                    location = { Anchor("LEFT", 50, 0) },
+                    textcolor = Color(0, 1, 0)
+                },
+                Percent             = {
+                    location = { Anchor("LEFT", 100, 0) },
+                    textcolor = Color(0, 1, 0)
+                },
+            },
+        },
+    },
+    [Per_Equip] = {
+        height              = 18,
+        backdrop            = BACKDROP,
+        backdropcolor       = Color(0, 0, 0, 0),
+        backdropbordercolor = Color(0, 0, 0, 0),
+        IconFrame           = {
+            height              = 18,
+            location            = { Anchor("LEFT") },
+            backdrop            = BACKDROP,
+            backdropcolor       = Color(0, 0, 0, 0),
+            backdropbordercolor = Color(0, 0, 0, 0),
+            Crit                = {
+                size                = Size(18, 18),
+                location            = { Anchor("LEFT", 0, 0) },
+                backdrop            = BACKDROP,
+                backdropcolor       = Color(0, 0, 0, 0),
+                backdropbordercolor = Color(0, 0, 0, 0),
+                texture             = {
+                    File = [[Interface\AddOns\SEquipment\Media\CRIT]],
+                    SetAllPoints = true,
+                },
+                Info                = {
+                    location = { Anchor("CENTER") },
+                    text = L["Crit"],
+                    textcolor = Color(1, 0.5, 0.3),
+                }
+            },
+            Haste               = {
+                size                = Size(18, 18),
+                location            = { Anchor("LEFT", 18, 0) },
+                backdrop            = BACKDROP,
+                backdropcolor       = Color(0, 0, 0, 0),
+                backdropbordercolor = Color(0, 0, 0, 0),
+                texture             = {
+                    File = [[Interface\AddOns\SEquipment\Media\HASTE]],
+                    SetAllPoints = true,
+                },
+                Info                = {
+                    location = { Anchor("CENTER") },
+                    text = L["Haste"],
+                    textcolor = Color(0.9, 1, 0.1),
+                }
+            },
+            Mastery             = {
+                size                = Size(18, 18),
+                location            = { Anchor("LEFT", 36, 0) },
+                backdrop            = BACKDROP,
+                backdropcolor       = Color(0, 0, 0, 0),
+                backdropbordercolor = Color(0, 0, 0, 0),
+                texture             = {
+                    File = [[Interface\AddOns\SEquipment\Media\MASTERY]],
+                    SetAllPoints = true,
+                },
+                Info                = {
+                    location = { Anchor("CENTER") },
+                    text = L["Mastery"],
+                    textcolor = Color(0.8, 0.1, 1),
+                }
+            },
+            Versa               = {
+                size                = Size(18, 18),
+                location            = { Anchor("LEFT", 54, 0) },
+                backdrop            = BACKDROP,
+                backdropcolor       = Color(0, 0, 0, 0),
+                backdropbordercolor = Color(0, 0, 0, 0),
+                texture             = {
+                    File = [[Interface\AddOns\SEquipment\Media\VERSATILITY]],
+                    SetAllPoints = true,
+                },
+                Info                = {
+                    location = { Anchor("CENTER") },
+                    text = L["Versatility"],
+                    textcolor = Color(0.1, 0.3, 1),
+                }
+            },
+        },
+        PartFrame           = {
+            height              = 18,
+            backdrop            = BACKDROP,
+            backdropcolor       = Color(0, 0, 0),
+            backdropbordercolor = Color(0, 0, 0),
+            TextureFrame        = {
+                size                = Size(34, 16),
+                location            = { Anchor("CENTER") },
+                backdrop            = {
+                    bgFile   = [[Interface\chatframe\chatframebackground]],
+                    edgeFile = [[Interface\Buttons\WHITE8X8]],
+                    tile     = true,
+                    tileSize = 0,
+                    edgeSize = 1,
+                    insets   = {
+                        left   = 0,
+                        right  = 0,
+                        top    = 0,
+                        bottom = 0,
+                    },
+                },
+                backdropcolor       = Color(0, 0.9, 0.9, 0.2),
+                backdropbordercolor = Color(0, 0.9, 0.9, 0.7),
+                Info                = {
+                    location = { Anchor("CENTER") },
+                    textcolor = Color(0, 0.8, 1, 1),
+                }
+            },
+        },
+        LevelFrame          = {
+            height              = 18,
+            backdrop            = BACKDROP,
+            backdropcolor       = Color(0, 0, 0, 0),
+            backdropbordercolor = Color(0, 0, 0, 0),
+            Info                = {
+                location = { Anchor("CENTER") },
+                textcolor = Color(1, 1, 1)
+            }
+        },
+        NameFrame           = {
+            height              = 18,
+            backdrop            = BACKDROP,
+            backdropcolor       = Color(0, 0, 0, 0),
+            backdropbordercolor = Color(0, 0, 0, 0),
+            Info                = {
+                location = { Anchor("LEFT") },
+            },
+        },
+        GemEnFrame          = {
+            height              = 12,
+            backdrop            = BACKDROP,
+            backdropcolor       = Color(0, 0, 0, 0),
+            backdropbordercolor = Color(0, 0, 0, 0),
+            Enchant             = {
+                height              = 12,
+                location            = { Anchor("LEFT") },
+                backdrop            = BACKDROP,
+                backdropcolor       = Color(0, 0, 0, 0),
+                backdropbordercolor = Color(0, 0, 0, 0),
+                texture             = {
+                    size = Size(12, 12),
+                    location = { Anchor("CENTER") },
+                    File = [[Interface\Cursor\Quest]],
+                    Mask = [[Interface\FriendsFrame\Battlenet-Portrait]],
+                }
+            },
+            Gem1                = {
+                height              = 12,
+                backdrop            = BACKDROP,
+                backdropcolor       = Color(0, 0, 0, 0),
+                backdropbordercolor = Color(0, 0, 0, 0),
+                texture             = {
+                    size = Size(12, 12),
+                    location = { Anchor("CENTER") },
+                    File = [[Interface\Cursor\Quest]],
+                    Mask = [[Interface\FriendsFrame\Battlenet-Portrait]],
+                }
+            },
+            Gem2                = {
+                height              = 12,
+                backdrop            = BACKDROP,
+                backdropcolor       = Color(0, 0, 0, 0),
+                backdropbordercolor = Color(0, 0, 0, 0),
+                texture             = {
+                    size = Size(12, 12),
+                    location = { Anchor("CENTER") },
+                    File = [[Interface\Cursor\Quest]],
+                    Mask = [[Interface\FriendsFrame\Battlenet-Portrait]],
+                }
+            },
+            Gem3                = {
+                height              = 12,
+                backdrop            = BACKDROP,
+                backdropcolor       = Color(0, 0, 0, 0),
+                backdropbordercolor = Color(0, 0, 0, 0),
+                texture             = {
+                    size = Size(12, 12),
+                    location = { Anchor("CENTER") },
+                    File = [[Interface\Cursor\Quest]],
+                    Mask = [[Interface\FriendsFrame\Battlenet-Portrait]],
+                }
+            },
+            Gem4                = {
+                height              = 12,
+                backdrop            = BACKDROP,
+                backdropcolor       = Color(0, 0, 0, 0),
+                backdropbordercolor = Color(0, 0, 0, 0),
+                texture             = {
+                    size = Size(12, 12),
+                    location = { Anchor("CENTER") },
+                    File = [[Interface\Cursor\Quest]],
+                    Mask = [[Interface\FriendsFrame\Battlenet-Portrait]],
+                }
+            },
+            Empty               = {
+                height              = 12,
+                backdrop            = BACKDROP,
+                backdropcolor       = Color(0, 0, 0, 0),
+                backdropbordercolor = Color(0, 0, 0, 0),
+                texture             = {
+                    size = Size(12, 12),
+                    location = { Anchor("CENTER") },
+                    File = [[Interface\Cursor\Quest]],
+                    Mask = [[Interface\FriendsFrame\Battlenet-Portrait]],
+                }
+            },
+        },
+    },
 })

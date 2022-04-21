@@ -4,10 +4,10 @@ enable-nolib-creation: no
 required-dependencies:
   - Scorpio
 
-manual-changelog: CurseUpdateLog.md
+manual-changelog: HistoryLog\CurseLog.md
 
 ignore:
   - .vscode
   - pkgmeta.yaml
   - .pkgmeta
-  - CurseUpdateLog.md
+  - HistoryLog\CurseLog.md
