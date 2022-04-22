@@ -348,8 +348,6 @@ function GetEachEquipInfo(link)
     end
     return ItemLevel, CritNumber, HasteNumber, MasteryNumber, VersaNumber, EmptyGemNumber, EnchantInfo, isPVPSet, ItemSetId
 end
--- local textlefttext = gsub(ENCHANTED_TOOLTIP_LINE, "%%s", ".+")
--- print(textlefttext)
 -- 判断表中有无元素
 function IsDominationGem(meta,table)
     for _, value in ipairs(table) do
