@@ -56,18 +56,13 @@ SEFontStyle={
 		value	= "Fonts\\MORPHEUS.ttf"
 	}
 }
-ItemLocation = {
-    "TOP","BOTTOM","LEFT","RIGHT","CENTER",
-    "TOPLEFT","TOPRIGHT","BOTTOMLEFT","BOTTOMRIGHT",
-}
+LevelLocation     = { "TOP","BOTTOM", }
+PartLocation      = { "BOTTOM", "TOP", }
+EquipInfoLocation = { L["TOP"], L["BOTTOM"], }
 LevelSetPartHeaderText = {
     L["Level Self"], L["Level Target"], L["Level Bag"],
     L["Level Bank"], L["Level GB"], L["Level Guild"],
     L["Level Chat"]
-}
-EquipNameLocation = {
-    L["TOP"], L["BOTTOM"], L["LEFT"], L["RIGHT"], L["CENTER"], L["TOPLEFT"],
-    L["TOPRIGHT"], L["BOTTOMLEFT"], L["BOTTOMRIGHT"],
 }
 Options = {
     L["Show List Module"], L["Show Specialization"],
@@ -194,6 +189,7 @@ function Get_Item_Info(link)
     local itemType  = ""
     local equipLoc  = ""
     if link then
+        if not C_Item.IsItemDataCachedByID(link) then return name,quality,itemType,equipLoc end
         name,_,quality  = GetItemInfo(link)
         itemType        = select(6,GetItemInfo(link))
         local invType   = C_Item.GetItemInventoryTypeByID(link)
@@ -517,7 +513,7 @@ end
 function Set_Per_Item_Level(self,link,number)
     local leveltext                             = FontString("leveltext",self)
     local parttext                              = FontString("parttext",self)
-    if link and _SVDB.IsLevelShow[number] then
+    if link and _SVDB and _SVDB.IsLevelShow[number] then
         local name,quality,itemType,equipLoc    = Get_Item_Info(link)
         if not (itemType == WEAPON or itemType == ARMOR) then
             Style[leveltext]                    = {
@@ -535,7 +531,7 @@ function Set_Per_Item_Level(self,link,number)
         local SET_ITEM_QUALITY_COLOR            = ITEM_QUALITY_COLORS[quality].hex
         Style[leveltext]                        = {
             text                                = SET_ITEM_QUALITY_COLOR..tostring(itemlevel),
-            location                            = { Anchor(ItemLocation[_SVDB.LevelSetPartLocation[number]])},
+            location                            = { Anchor(LevelLocation[_SVDB.LevelSetPartLocation[number]])},
             font                                = {
                 font                            = SEFontStyle[_SVDB.FontStyleSet].value,
                 height                          = _SVDB.LevelSetPartSize[number],
@@ -545,10 +541,10 @@ function Set_Per_Item_Level(self,link,number)
         }
         Style[parttext]                         = {
             text                                = SET_ITEM_QUALITY_COLOR..equipLoc,
-            location                            = { Anchor("TOP")},
+            location                            = { Anchor(PartLocation[_SVDB.LevelSetPartLocation[number]]) },
             font                                = {
                 font                            = SEFontStyle[_SVDB.FontStyleSet].value,
-                height                          = 14,
+                height                          = _SVDB.LevelSetPartSize[number] - 4,
                 monochrome                      = false,
                 outline                         = "NORMAL"
             }

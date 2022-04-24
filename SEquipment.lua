@@ -26,7 +26,11 @@ function OnLoad(self)
             2, --guild bank
         },
         LevelSetPartSize = {
-            15, 15, 15, 15, 15, 15, 15,
+            15, --self
+            15, --target
+            15, --bag
+            15, --bank
+            15, --guild bank
         },
         SettingOption = {
             true, true, true, true, true, true, true,
@@ -34,6 +38,13 @@ function OnLoad(self)
         FontStyleSet = 1,
         FrameScaleSet = 1,
     }
+    Clamp(_SVDB.FrameScaleSet, 0.5, 2)
+    for _, value in ipairs(_SVDB.LevelSetPartSize) do
+        Clamp(value, 10, 20)
+    end
+    for _, value in ipairs(_SVDB.LevelSetPartLocation) do
+        Clamp(value, 1, 2)
+    end
 end
 
 -----------------------------------------------------------
@@ -245,7 +256,7 @@ for index, value in ipairs(LevelSetPartHeaderText) do
         widget:GetChild("combobox"):Hide()
         widget:GetChild("trackbar"):Hide()
     end
-    for k, v in ipairs(EquipNameLocation) do
+    for k, v in ipairs(EquipInfoLocation) do
         widget:Set_ComboBox(k, v)
     end
     function widget:OnValueChanged(val, meta)
@@ -273,7 +284,7 @@ SEMainUI:SetScript("OnShow",function (self)
     Style[child].combobox.SelectedValue = _SVDB.FontStyleSet
     Style[child].trackbar.value         = _SVDB.FrameScaleSet
     for index, _ in ipairs(LevelSetPartHeaderText) do
-        child                               = GeneralFrame:GetChild("SecondFrame").ScrollChild:GetChild("widget" .. index)
+              child                         = GeneralFrame:GetChild("SecondFrame").ScrollChild:GetChild("widget" .. index)
         Style[child].checkbutton.checked    = _SVDB.IsLevelShow[index]
         Style[child].combobox.SelectedValue = _SVDB.LevelSetPartLocation[index]
         Style[child].trackbar.value         = _SVDB.LevelSetPartSize[index]
@@ -333,8 +344,10 @@ class "MainFrame" (function(_ENV)
     function Set_Gem_Info(self, val1,val2)
         if val1 + val2 == 0 then
             Style[self:GetChild("GemSuitFrame"):GetChild("Left_Info")].text = ""
+            Style[self:GetChild("GemSuitFrame"):GetChild("Right_Info")].location = { Anchor("LEFT") }
         else
             Style[self:GetChild("GemSuitFrame"):GetChild("Left_Info")].text = L["Gem"] .. ":" .. val1 .. "/" .. val1 + val2
+            Style[self:GetChild("GemSuitFrame"):GetChild("Right_Info")].location = { Anchor("LEFT", 80, 0) }
         end
     end
     -- 设定套装信息
@@ -740,7 +753,7 @@ function Show_Item_List_Frame(unit,parent)
         Per_Equip_Frame:Set_Icon_Show_Hide(CHMV)
         Per_Equip_Frame:Set_Part_Info(equipLoc)
         Per_Equip_Frame:Set_Level_Info(tostring(ItemLevel))
-        Per_Equip_Frame:Set_Name_Info(SET_ITEM_QUALITY_COLOR .. name .. "|r")
+        Per_Equip_Frame:Set_Name_Info(SET_ITEM_QUALITY_COLOR .. name)
         Per_Equip_Frame:Set_Gem_En_Icon(GemTable)
         Per_Equip_Frame:Refresh()
     end
@@ -776,7 +789,7 @@ function Style_Change_(frame)
         Max_StringWidth[k] = tonumber(Per_Equip_Frame.WholeWidth)
     end
     frame:Refresh_Ox(Get_Max_String_Width(Max_StringWidth))
-    frame:Show()
+    if not _SVDB.SettingOption[1] then frame:Hide() else frame:Show() end
 end
 -- Player Show
 __SecureHook__()

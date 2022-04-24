@@ -51,8 +51,8 @@ Style.UpdateSkin("Default", {
             text     = L["Exit"],
         },
         Info        = {
-            location = { Anchor("BOTTOMLEFT", 15, 15) },
-            text = L["Log1 Version"],
+            location  = { Anchor("BOTTOMLEFT", 15, 15) },
+            text      = L["Log1 Version"],
             textcolor = Color(0.5, 0.5, 0.5, 1),
         }
     },
@@ -124,8 +124,8 @@ Style.UpdateSkin("Default", {
             backdropcolor       = Color(0, 0, 0, 0),
             backdropbordercolor = Color(1, 1, 1, 0.3),
             Info                = {
-                location = { Anchor("TOPLEFT", 5, 15) },
-                text = L["Font Set"],
+                location  = { Anchor("TOPLEFT", 5, 15) },
+                text      = L["Font Set"],
                 textcolor = Color(1, 1, 1, 1)
             },
             combobox            = {
@@ -211,8 +211,7 @@ Style.UpdateSkin("Default", {
         trackbar            = {
             size     = Size(130, 20),
             location = { Anchor("BOTTOM", 0, 25) },
-
-            minMaxValues   = MinMax(1, 50),
+            minMaxValues   = MinMax(10, 20),
             valueStep      = 1,
             obeyStepOnDrag = true,
         }
@@ -232,8 +231,8 @@ Style.UpdateSkin("Default", {
         backdropcolor       = Color(0, 0, 0, 0.7),
         backdropbordercolor = Color(0, 0, 0, 1),
         TopFrame            = {
-            location = { Anchor("TOPLEFT", 5, 0) },
-            Left_Info = {
+            location   = { Anchor("TOPLEFT", 5, 0) },
+            Left_Info  = {
                 location = { Anchor("LEFT") },
             },
             Right_Info = {
@@ -255,7 +254,6 @@ Style.UpdateSkin("Default", {
                 location = { Anchor("LEFT") },
             },
             Right_Info          = {
-                location = { Anchor("LEFT", 80) },
             }
         },
         BottomFrame         = {
@@ -271,14 +269,14 @@ Style.UpdateSkin("Default", {
                 backdropbordercolor = Color(0, 0, 0, 0),
                 Title               = {
                     location = { Anchor("LEFT") },
-                    text = L["CritLong"],
+                    text     = L["CritLong"],
                 },
                 Number              = {
-                    location = { Anchor("LEFT", 50, 0) },
+                    location  = { Anchor("LEFT", 50, 0) },
                     textcolor = Color(0, 1, 0),
                 },
                 Percent             = {
-                    location = { Anchor("LEFT", 100, 0) },
+                    location  = { Anchor("LEFT", 100, 0) },
                     textcolor = Color(0, 1, 0),
                 },
             },
@@ -290,14 +288,14 @@ Style.UpdateSkin("Default", {
                 backdropbordercolor = Color(0, 0, 0, 0),
                 Title               = {
                     location = { Anchor("LEFT") },
-                    text = L["HasteLong"],
+                    text     = L["HasteLong"],
                 },
                 Number              = {
-                    location = { Anchor("LEFT", 50, 0) },
+                    location  = { Anchor("LEFT", 50, 0) },
                     textcolor = Color(0, 1, 0)
                 },
                 Percent             = {
-                    location = { Anchor("LEFT", 100, 0) },
+                    location  = { Anchor("LEFT", 100, 0) },
                     textcolor = Color(0, 1, 0)
                 },
             },
@@ -309,14 +307,14 @@ Style.UpdateSkin("Default", {
                 backdropbordercolor = Color(0, 0, 0, 0),
                 Title               = {
                     location = { Anchor("LEFT") },
-                    text = L["MasteryLong"],
+                    text     = L["MasteryLong"],
                 },
                 Number              = {
-                    location = { Anchor("LEFT", 50, 0) },
+                    location  = { Anchor("LEFT", 50, 0) },
                     textcolor = Color(0, 1, 0)
                 },
                 Percent             = {
-                    location = { Anchor("LEFT", 100, 0) },
+                    location  = { Anchor("LEFT", 100, 0) },
                     textcolor = Color(0, 1, 0)
                 },
             },
@@ -328,14 +326,14 @@ Style.UpdateSkin("Default", {
                 backdropbordercolor = Color(0, 0, 0, 0),
                 Title               = {
                     location = { Anchor("LEFT") },
-                    text = L["VersatilityLong"],
+                    text     = L["VersatilityLong"],
                 },
                 Number              = {
-                    location = { Anchor("LEFT", 50, 0) },
+                    location  = { Anchor("LEFT", 50, 0) },
                     textcolor = Color(0, 1, 0)
                 },
                 Percent             = {
-                    location = { Anchor("LEFT", 100, 0) },
+                    location  = { Anchor("LEFT", 100, 0) },
                     textcolor = Color(0, 1, 0)
                 },
             },
@@ -359,12 +357,12 @@ Style.UpdateSkin("Default", {
                 backdropcolor       = Color(0, 0, 0, 0),
                 backdropbordercolor = Color(0, 0, 0, 0),
                 texture             = {
-                    File = [[Interface\AddOns\SEquipment\Media\CRIT]],
+                    File         = [[Interface\AddOns\SEquipment\Media\CRIT]],
                     SetAllPoints = true,
                 },
                 Info                = {
-                    location = { Anchor("CENTER") },
-                    text = L["Crit"],
+                    location  = { Anchor("CENTER") },
+                    text      = L["Crit"],
                     textcolor = Color(1, 0.5, 0.3),
                 }
             },
@@ -375,12 +373,12 @@ Style.UpdateSkin("Default", {
                 backdropcolor       = Color(0, 0, 0, 0),
                 backdropbordercolor = Color(0, 0, 0, 0),
                 texture             = {
-                    File = [[Interface\AddOns\SEquipment\Media\HASTE]],
+                    File         = [[Interface\AddOns\SEquipment\Media\HASTE]],
                     SetAllPoints = true,
                 },
                 Info                = {
-                    location = { Anchor("CENTER") },
-                    text = L["Haste"],
+                    location  = { Anchor("CENTER") },
+                    text      = L["Haste"],
                     textcolor = Color(0.9, 1, 0.1),
                 }
             },
@@ -391,12 +389,12 @@ Style.UpdateSkin("Default", {
                 backdropcolor       = Color(0, 0, 0, 0),
                 backdropbordercolor = Color(0, 0, 0, 0),
                 texture             = {
-                    File = [[Interface\AddOns\SEquipment\Media\MASTERY]],
+                    File         = [[Interface\AddOns\SEquipment\Media\MASTERY]],
                     SetAllPoints = true,
                 },
                 Info                = {
-                    location = { Anchor("CENTER") },
-                    text = L["Mastery"],
+                    location  = { Anchor("CENTER") },
+                    text      = L["Mastery"],
                     textcolor = Color(0.8, 0.1, 1),
                 }
             },
@@ -407,12 +405,12 @@ Style.UpdateSkin("Default", {
                 backdropcolor       = Color(0, 0, 0, 0),
                 backdropbordercolor = Color(0, 0, 0, 0),
                 texture             = {
-                    File = [[Interface\AddOns\SEquipment\Media\VERSATILITY]],
+                    File         = [[Interface\AddOns\SEquipment\Media\VERSATILITY]],
                     SetAllPoints = true,
                 },
                 Info                = {
-                    location = { Anchor("CENTER") },
-                    text = L["Versatility"],
+                    location  = { Anchor("CENTER") },
+                    text      = L["Versatility"],
                     textcolor = Color(0.1, 0.3, 1),
                 }
             },
@@ -441,7 +439,7 @@ Style.UpdateSkin("Default", {
                 backdropcolor       = Color(0, 0.9, 0.9, 0.2),
                 backdropbordercolor = Color(0, 0.9, 0.9, 0.7),
                 Info                = {
-                    location = { Anchor("CENTER") },
+                    location  = { Anchor("CENTER") },
                     textcolor = Color(0, 0.8, 1, 1),
                 }
             },
@@ -452,7 +450,7 @@ Style.UpdateSkin("Default", {
             backdropcolor       = Color(0, 0, 0, 0),
             backdropbordercolor = Color(0, 0, 0, 0),
             Info                = {
-                location = { Anchor("CENTER") },
+                location  = { Anchor("CENTER") },
                 textcolor = Color(1, 1, 1)
             }
         },
@@ -477,10 +475,10 @@ Style.UpdateSkin("Default", {
                 backdropcolor       = Color(0, 0, 0, 0),
                 backdropbordercolor = Color(0, 0, 0, 0),
                 texture             = {
-                    size = Size(12, 12),
+                    size     = Size(12, 12),
                     location = { Anchor("CENTER") },
-                    File = [[Interface\Cursor\Quest]],
-                    Mask = [[Interface\FriendsFrame\Battlenet-Portrait]],
+                    File     = [[Interface\Cursor\Quest]],
+                    Mask     = [[Interface\FriendsFrame\Battlenet-Portrait]],
                 }
             },
             Gem1                = {
@@ -489,10 +487,10 @@ Style.UpdateSkin("Default", {
                 backdropcolor       = Color(0, 0, 0, 0),
                 backdropbordercolor = Color(0, 0, 0, 0),
                 texture             = {
-                    size = Size(12, 12),
+                    size     = Size(12, 12),
                     location = { Anchor("CENTER") },
-                    File = [[Interface\Cursor\Quest]],
-                    Mask = [[Interface\FriendsFrame\Battlenet-Portrait]],
+                    File     = [[Interface\Cursor\Quest]],
+                    Mask     = [[Interface\FriendsFrame\Battlenet-Portrait]],
                 }
             },
             Gem2                = {
@@ -501,10 +499,10 @@ Style.UpdateSkin("Default", {
                 backdropcolor       = Color(0, 0, 0, 0),
                 backdropbordercolor = Color(0, 0, 0, 0),
                 texture             = {
-                    size = Size(12, 12),
+                    size     = Size(12, 12),
                     location = { Anchor("CENTER") },
-                    File = [[Interface\Cursor\Quest]],
-                    Mask = [[Interface\FriendsFrame\Battlenet-Portrait]],
+                    File     = [[Interface\Cursor\Quest]],
+                    Mask     = [[Interface\FriendsFrame\Battlenet-Portrait]],
                 }
             },
             Gem3                = {
@@ -513,10 +511,10 @@ Style.UpdateSkin("Default", {
                 backdropcolor       = Color(0, 0, 0, 0),
                 backdropbordercolor = Color(0, 0, 0, 0),
                 texture             = {
-                    size = Size(12, 12),
+                    size     = Size(12, 12),
                     location = { Anchor("CENTER") },
-                    File = [[Interface\Cursor\Quest]],
-                    Mask = [[Interface\FriendsFrame\Battlenet-Portrait]],
+                    File     = [[Interface\Cursor\Quest]],
+                    Mask     = [[Interface\FriendsFrame\Battlenet-Portrait]],
                 }
             },
             Gem4                = {
@@ -525,10 +523,10 @@ Style.UpdateSkin("Default", {
                 backdropcolor       = Color(0, 0, 0, 0),
                 backdropbordercolor = Color(0, 0, 0, 0),
                 texture             = {
-                    size = Size(12, 12),
+                    size     = Size(12, 12),
                     location = { Anchor("CENTER") },
-                    File = [[Interface\Cursor\Quest]],
-                    Mask = [[Interface\FriendsFrame\Battlenet-Portrait]],
+                    File     = [[Interface\Cursor\Quest]],
+                    Mask     = [[Interface\FriendsFrame\Battlenet-Portrait]],
                 }
             },
             Empty               = {
@@ -537,10 +535,10 @@ Style.UpdateSkin("Default", {
                 backdropcolor       = Color(0, 0, 0, 0),
                 backdropbordercolor = Color(0, 0, 0, 0),
                 texture             = {
-                    size = Size(12, 12),
+                    size     = Size(12, 12),
                     location = { Anchor("CENTER") },
-                    File = [[Interface\Cursor\Quest]],
-                    Mask = [[Interface\FriendsFrame\Battlenet-Portrait]],
+                    File     = [[Interface\Cursor\Quest]],
+                    Mask     = [[Interface\FriendsFrame\Battlenet-Portrait]],
                 }
             },
         },
