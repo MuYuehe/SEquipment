@@ -1,6 +1,9 @@
 ChangeLog
-2022/4/22  V2.2.0
+2022/4/24  V2.2.0
 1.Fully update the code, the function has not changed, just make the code logic easier to read
+2.Partial text position can be moved now
+3.Delete the position of some parts, now only two options of "top" and "bottom" are retained, and the text of equipment parts will change with the level position
+4.The comprehensive optimization of the code is completed. At that time, the update progress of this plug-in will slow down. In the future, only maintenance updates will be made after the game version is updated, and new functions will not be added or deleted (except localization).
 =================================================================
 2022/4/14  V2.1.5
 1.Solved the problem of plug-in polluting blz, and it will be abnormal when switching its own panel
