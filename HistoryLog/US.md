@@ -1,4 +1,8 @@
 ChangeLog
+2022/10/1  V2.3.0 Beta
+1. For the emergency maintenance of 10.0, some functions are lost due to API changes.
+2. Subsequent equipment level display will be released when 10.0 is officially launched.
+=================================================================
 2022/4/24  V2.2.0
 1.Fully update the code, the function has not changed, just make the code logic easier to read
 2.Partial text position can be moved now

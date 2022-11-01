@@ -60,10 +60,13 @@ LevelLocation     = { "TOP","BOTTOM", }
 PartLocation      = { "BOTTOM", "TOP", }
 EquipInfoLocation = { L["TOP"], L["BOTTOM"], }
 LevelSetPartHeaderText = {
-    L["Level Self"], L["Level Target"], L["Level Bag"],
-    L["Level Bank"], L["Level GB"], L["Level Guild"],
-    L["Level Chat"]
+    L["Level Self"], L["Level Target"]
 }
+-- LevelSetPartHeaderText = {
+--     L["Level Self"], L["Level Target"], L["Level Bag"],
+--     L["Level Bank"], L["Level GB"], L["Level Guild"],
+--     L["Level Chat"]
+-- }
 Options = {
     L["Show List Module"], L["Show Specialization"],
     L["Show Stats Icon"], L["Show Slots"],
@@ -356,88 +359,88 @@ end
 ----------------------------
 --     GetStatsPercent    --
 ----------------------------
-function GetStatsPercent(number,statsname,unit,SpecID)
-    if not BaseStats[SpecID] then
-        return ""
-    end
-    local _,_,raceID = UnitRace(unit)
-    local Percent = 0
-    if raceID == 1 then
-        number = number * (1 + 0.02)
-    end
-    if statsname == 1 or statsname == 3 then
-        -- 暴击 精通
-        if number <=1050 then
-            Percent = number/35
-        elseif number > 1050 and number <= 1400 then
-            Percent = 30 + (number-1050)*0.9/35
-        elseif number > 1400 and number <= 1750 then
-            Percent = 39 + (number-1400)*0.8/35
-        elseif number > 1750 and number <= 2100 then
-            Percent = 47 + (number-1750)*0.7/35
-        elseif number > 2100 and number <= 2800 then
-            Percent = 54 + (number-2100)*0.6/35
-        elseif number > 2800 and number <= 7000 then
-            Percent = 66 + (number-2800)*0.5/35
-        else
-            Percent = 126
-        end
-        if statsname == 3 and BaseStats[SpecID][1] then
-            Percent = Percent * BaseStats[SpecID][1] --XXX精通系数 GetMasteryEffect()
-        end
-    elseif statsname == 2 then
-        -- 急速
-        if number <=990 then
-            Percent = number/33
-        elseif number > 990 and number <= 1320 then
-            Percent = 30 + (number-990)*0.9/33
-        elseif number > 1320 and number <= 1650 then
-            Percent = 39 + (number-1320)*0.8/33
-        elseif number > 1650 and number <= 1980 then
-            Percent = 47 + (number-1650)*0.7/33
-        elseif number > 1980 and number <= 2640 then
-            Percent = 54 + (number-1980)*0.6/33
-        elseif number > 2640 and number <= 6600 then
-            Percent = 66 + (number-2640)*0.5/33
-        else
-            Percent = 126
-        end
-    elseif statsname == 4 then
-        -- 全能
-        if number <=1200 then
-            Percent = number/40
-        elseif number > 1200 and number <= 1600 then
-            Percent = 30 + (number-1200)*0.9/40
-        elseif number > 1600 and number <= 2000 then
-            Percent = 39 + (number-1600)*0.8/40
-        elseif number > 2000 and number <= 2400 then
-            Percent = 47 + (number-200)*0.7/40
-        elseif number > 2400 and number <= 3200 then
-            Percent = 54 + (number-2400)*0.6/40
-        elseif number > 3200 and number <= 8000 then
-            Percent = 66 + (number-3200)*0.5/40
-        else
-            Percent = 126
-        end
-    end
-    if statsname == 1 and BaseStats[SpecID][3] then
-        Percent = Percent + BaseStats[SpecID][3]
-        if raceID == 10 or raceID == 4 or raceID == 12 then
-            Percent = Percent + 1
-        end
-    elseif statsname == 2 then
-        if raceID == 7 then
-            Percent = Percent + 1
-        end
-    elseif statsname == 3 and BaseStats[SpecID][2] then
-        Percent = Percent + BaseStats[SpecID][2]
-    elseif statsname == 4 then
-        if raceID == 28 or raceID == 32 then
-            Percent = Percent + 1
-        end
-    end
-    return ("%.1f"):format(Percent).."%"
-end
+-- function GetStatsPercent(number,statsname,unit,SpecID)
+--     if not BaseStats[SpecID] then
+--         return ""
+--     end
+--     local _,_,raceID = UnitRace(unit)
+--     local Percent = 0
+--     if raceID == 1 then
+--         number = number * (1 + 0.02)
+--     end
+--     if statsname == 1 or statsname == 3 then
+--         -- 暴击 精通
+--         if number <=1050 then
+--             Percent = number/35
+--         elseif number > 1050 and number <= 1400 then
+--             Percent = 30 + (number-1050)*0.9/35
+--         elseif number > 1400 and number <= 1750 then
+--             Percent = 39 + (number-1400)*0.8/35
+--         elseif number > 1750 and number <= 2100 then
+--             Percent = 47 + (number-1750)*0.7/35
+--         elseif number > 2100 and number <= 2800 then
+--             Percent = 54 + (number-2100)*0.6/35
+--         elseif number > 2800 and number <= 7000 then
+--             Percent = 66 + (number-2800)*0.5/35
+--         else
+--             Percent = 126
+--         end
+--         if statsname == 3 and BaseStats[SpecID][1] then
+--             Percent = Percent * BaseStats[SpecID][1] --XXX精通系数 GetMasteryEffect()
+--         end
+--     elseif statsname == 2 then
+--         -- 急速
+--         if number <=990 then
+--             Percent = number/33
+--         elseif number > 990 and number <= 1320 then
+--             Percent = 30 + (number-990)*0.9/33
+--         elseif number > 1320 and number <= 1650 then
+--             Percent = 39 + (number-1320)*0.8/33
+--         elseif number > 1650 and number <= 1980 then
+--             Percent = 47 + (number-1650)*0.7/33
+--         elseif number > 1980 and number <= 2640 then
+--             Percent = 54 + (number-1980)*0.6/33
+--         elseif number > 2640 and number <= 6600 then
+--             Percent = 66 + (number-2640)*0.5/33
+--         else
+--             Percent = 126
+--         end
+--     elseif statsname == 4 then
+--         -- 全能
+--         if number <=1200 then
+--             Percent = number/40
+--         elseif number > 1200 and number <= 1600 then
+--             Percent = 30 + (number-1200)*0.9/40
+--         elseif number > 1600 and number <= 2000 then
+--             Percent = 39 + (number-1600)*0.8/40
+--         elseif number > 2000 and number <= 2400 then
+--             Percent = 47 + (number-200)*0.7/40
+--         elseif number > 2400 and number <= 3200 then
+--             Percent = 54 + (number-2400)*0.6/40
+--         elseif number > 3200 and number <= 8000 then
+--             Percent = 66 + (number-3200)*0.5/40
+--         else
+--             Percent = 126
+--         end
+--     end
+--     if statsname == 1 and BaseStats[SpecID][3] then
+--         Percent = Percent + BaseStats[SpecID][3]
+--         if raceID == 10 or raceID == 4 or raceID == 12 then
+--             Percent = Percent + 1
+--         end
+--     elseif statsname == 2 then
+--         if raceID == 7 then
+--             Percent = Percent + 1
+--         end
+--     elseif statsname == 3 and BaseStats[SpecID][2] then
+--         Percent = Percent + BaseStats[SpecID][2]
+--     elseif statsname == 4 then
+--         if raceID == 28 or raceID == 32 then
+--             Percent = Percent + 1
+--         end
+--     end
+--     return ("%.1f"):format(Percent).."%"
+-- end
 
 ----------------------------
 --      Pure Function     --

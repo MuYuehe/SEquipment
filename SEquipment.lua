@@ -759,7 +759,7 @@ function Show_Item_List_Frame(unit,parent)
     end
     -- 获取总属性值集合
     local SUM_CHMV = { Sum_Crit, Sum_Haste, Sum_Mastery, Sum_Versa }
-    local SUM_CHMV_PERCENT = { GetStatsPercent(Sum_Crit, 1, unit, specid), GetStatsPercent(Sum_Haste, 2, unit, specid), GetStatsPercent(Sum_Mastery, 3, unit, specid), GetStatsPercent(Sum_Versa, 4, unit, specid)}
+    -- local SUM_CHMV_PERCENT = { GetStatsPercent(Sum_Crit, 1, unit, specid), GetStatsPercent(Sum_Haste, 2, unit, specid), GetStatsPercent(Sum_Mastery, 3, unit, specid), GetStatsPercent(Sum_Versa, 4, unit, specid)}
     -- 显示天赋,平均装等信息
     Main_Frame:Set_Spec_Info(specname)
     if unit == "player" then
@@ -771,7 +771,7 @@ function Show_Item_List_Frame(unit,parent)
     Main_Frame:Set_Gem_Info(Sum_Exist_Gem, Sum_Empty_Gem)
     Main_Frame:Set_Suit_Info(table.concat(Get_Same_Mate(ItemSetIdTable)))
     Main_Frame:Set_Stat_Number(SUM_CHMV)
-    Main_Frame:Set_Stat_Percent(SUM_CHMV_PERCENT)
+    -- Main_Frame:Set_Stat_Percent(SUM_CHMV_PERCENT)
     FireSystemEvent("MAIN_FRAME_COMPLETED",Main_Frame)
 
     return Main_Frame
