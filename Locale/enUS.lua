@@ -86,11 +86,11 @@ L["Empty GemSlot"]            = "Empty GemSlot"
 --                   ChangeLog                  --
 --------------------------------------------------
 L["Log"]          = "ChangeLog\n"
-L["Log1 Time"]    = "2022/4/24"
-L["Log1 Version"] = "V2.2.0\n"
-L["Log1 Text"]    = "1.Fully update the code, the function has not changed, just make the code logic easier to read\n"
-    .. "2.Partial text position can be moved now\n"
-    .. '3.Delete the position of some parts, now only two options of "top" and "bottom" are retained, and the text of equipment parts will change with the level position\n'
-    .. "4.The comprehensive optimization of the code is completed. At that time, the update progress of this plug-in will slow down. In the future, only maintenance updates will be made after the game version is updated, and new functions will not be added or deleted (except localization)\n"
+L["Log1 Time"]    = "2022/10/1"
+L["Log1 Version"] = "V2.3.0 Beta\n"
+L["Log1 Text"]    = "1.For the emergency maintenance of 10.0, some functions are lost due to API changes.\n"
+    .. "2.Subsequent equipment level display will be released when 10.0 is officially launched.\n"
+    -- .. '3.Delete the position of some parts, now only two options of "top" and "bottom" are retained, and the text of equipment parts will change with the level position\n'
+    -- .. "4.The comprehensive optimization of the code is completed. At that time, the update progress of this plug-in will slow down. In the future, only maintenance updates will be made after the game version is updated, and new functions will not be added or deleted (except localization)\n"
     -- .. "5.Consolidated player and target options, now they use unified options\n"
     -- .. "6.Update version number V2.1.0, this version is a medium version update, fixes a lot of errors and code redundancy\n"
