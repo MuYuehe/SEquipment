@@ -49,7 +49,6 @@ function PaperDollFrame:OnShow()
 		local itemLink = GetInventoryItemLink("player", i)
 		Make_Per_ItemFrame(i, itemLink, "player", PlayerInfoFrame)
 	end
-	print(L["crit"])
 end
 
 __SystemEvent__ "PLAYER_EQUIPMENT_CHANGED" __Async__()
