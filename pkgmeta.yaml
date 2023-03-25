@@ -4,9 +4,7 @@ enable-nolib-creation: no
 required-dependencies:
   - Scorpio
 
-# manual-changelog: HistoryLog\CurseLog.md
+manual-changelog: changelog.txt
 
-ignore:
-  - .vscode
-  - pkgmeta.yaml
-  - .pkgmeta
+<!-- ignore:
+   -->
