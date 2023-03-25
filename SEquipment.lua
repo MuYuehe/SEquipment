@@ -1,23 +1,23 @@
 Scorpio "SEquipment" ""
 
-
 function OnLoad(self)
     _Addon:SetSavedVariable("SEquipment_DB") -- Bind the saved variable where the config is saved
     :UseConfigPanel()                  -- Enable the auto-gen config panel
 end
-
 --- Declare a slash command to open the config panel
 __SlashCmd__ "se"
 function OnSlashCmdOpen()
 	_Addon:ShowConfigUI()
 end
 
-
 __Config__(_Config, RangeValue[{0.5, 2, 0.1}], 1)
 function MainScale(scale)
     assert(scale == _Config.MainScale:GetValue())
 end
--- Font Style
+__Config__(_Config, "titleUnitInfo", RangeValue[{10, 20, 1}], 15)
+function SetTitleUnitInfo(size)
+	assert(size == _Config.titleUnitInfo:GetValue())
+end
 __Config__(_Config, "levelFontsize", RangeValue[{10, 20, 1}], 15)
 function SetLevelFontSize(size)
 	assert(size == _Config.levelFontsize:GetValue())

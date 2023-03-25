@@ -537,7 +537,7 @@ Style.UpdateSkin("Default",{
         height                      = 20, --决定把这个大小固定下来
         font                        = {
             Text                    = Wow.FromUIProperty("unitInfo"),
-            -- Font                    = _Config.titleUnitInfo:Map(function(size) return { font = "Fonts\\FRIZQT__.TTF", height = size} end),
+            Font                    = _Config.titleUnitInfo:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
             -- TextColor               = _Config.titleUnitInfoColor,
             location                = { Anchor("LEFT") },
         },
@@ -562,7 +562,7 @@ Style.UpdateSkin("Default",{
                 },
                 font                = {
                     Text            = STATS_FONT[1],
-                    Font            = _Config.statsIconFontsize:Map(function(size) return { font = "Fonts\\FRIZQT__.TTF", height = size} end),
+                    Font            = _Config.statsIconFontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
                     TextColor       = _Config.critIconColor,
                     location        = { Anchor("CENTER") },
                 }
@@ -577,7 +577,7 @@ Style.UpdateSkin("Default",{
                 },
                 font                = {
                     Text            = STATS_FONT[2],
-                    Font            = _Config.statsIconFontsize:Map(function(size) return { font = "Fonts\\FRIZQT__.TTF", height = size} end),
+                    Font            = _Config.statsIconFontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
                     TextColor       = _Config.hasteIconColor,
                     location        = { Anchor("CENTER") },
                 }
@@ -592,7 +592,7 @@ Style.UpdateSkin("Default",{
                 },
                 font                = {
                     Text            = STATS_FONT[3],
-                    Font            = _Config.statsIconFontsize:Map(function(size) return { font = "Fonts\\FRIZQT__.TTF", height = size} end),
+                    Font            = _Config.statsIconFontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
                     TextColor       = _Config.MasteryIconColor,
                     location        = { Anchor("CENTER") },
                 }
@@ -607,7 +607,7 @@ Style.UpdateSkin("Default",{
                 },
                 font                = {
                     Text            = STATS_FONT[4],
-                    Font            = _Config.statsIconFontsize:Map(function(size) return { font = "Fonts\\FRIZQT__.TTF", height = size} end),
+                    Font            = _Config.statsIconFontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
                     TextColor       = _Config.VersaIconColor,
                     location        = { Anchor("CENTER") },
                 }
@@ -624,7 +624,7 @@ Style.UpdateSkin("Default",{
                 Size                = Size(PER_ITEM_HEIGHT * 2, PER_ITEM_HEIGHT),
                 font                = {
                     Text            = Wow.FromUIProperty("itemLevl"),
-                    Font            = _Config.levelFontsize:Map(function(size) return { font = "Fonts\\FRIZQT__.TTF", height = size} end),
+                    Font            = _Config.levelFontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
                     TextColor       = _Config.levelFontColor,
                     location        = { Anchor("CENTER")},
                 },
@@ -639,7 +639,7 @@ Style.UpdateSkin("Default",{
                 Visible             = _Config.ShowEquipmentName, --控制是否可见
                 Height              = PER_ITEM_HEIGHT,
                 font                = {
-                    Font            = _Config.nameFontsize:Map(function(size) return { font = "Fonts\\FRIZQT__.TTF", height = size} end),
+                    Font            = _Config.nameFontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
                     TextColor       = Wow.FromUIProperty("itemQuality"):Map("x=>ITEM_QUALITY_COLORS[x]"),
                     location        = { Anchor("LEFT")},
                 },
@@ -712,7 +712,7 @@ Style.UpdateSkin("Default",{
                 Size                = Size(50, 20), --此处直接固定了,影响不大
                 font                = {
                     Text            = Wow.FromUIProperty("critName"),
-                    Font            = _Config.statsFontsize:Map(function(size) return { font = "Fonts\\FRIZQT__.TTF", height = size} end),
+                    Font            = _Config.statsFontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
                     TextColor       = _Config.statsFontColor,
                     location        = { Anchor("LEFT")},
                 }
@@ -722,7 +722,7 @@ Style.UpdateSkin("Default",{
                 Size                = Size(50, 20), --此处直接固定了,影响不大
                 font                = {
                     Text            = Wow.FromUIProperty("critPercent"),
-                    Font            = _Config.statsFontsize:Map(function(size) return { font = "Fonts\\FRIZQT__.TTF", height = size} end),
+                    Font            = _Config.statsFontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
                     TextColor       = _Config.statsFontColor,
                     location        = { Anchor("LEFT")},
                 }
@@ -732,7 +732,7 @@ Style.UpdateSkin("Default",{
                 Size                = Size(50, 20), --此处直接固定了,影响不大
                 font                = {
                     Text            = Wow.FromUIProperty("critNumber"),
-                    Font            = _Config.statsFontsize:Map(function(size) return { font = "Fonts\\FRIZQT__.TTF", height = size} end),
+                    Font            = _Config.statsFontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
                     TextColor       = _Config.statsFontColor,
                     location        = { Anchor("LEFT")},
                 }
@@ -747,7 +747,7 @@ Style.UpdateSkin("Default",{
                 Size                = Size(50, 20), --此处直接固定了,影响不大
                 font                = {
                     Text            = Wow.FromUIProperty("hasteName"),
-                    Font            = _Config.statsFontsize:Map(function(size) return { font = "Fonts\\FRIZQT__.TTF", height = size} end),
+                    Font            = _Config.statsFontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
                     TextColor       = _Config.statsFontColor,
                     location        = { Anchor("LEFT")},
                 }
@@ -757,7 +757,7 @@ Style.UpdateSkin("Default",{
                 Size                = Size(50, 20), --此处直接固定了,影响不大
                 font                = {
                     Text            = Wow.FromUIProperty("hastePercent"),
-                    Font            = _Config.statsFontsize:Map(function(size) return { font = "Fonts\\FRIZQT__.TTF", height = size} end),
+                    Font            = _Config.statsFontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
                     TextColor       = _Config.statsFontColor,
                     location        = { Anchor("LEFT")},
                 }
@@ -767,7 +767,7 @@ Style.UpdateSkin("Default",{
                 Size                = Size(50, 20), --此处直接固定了,影响不大
                 font                = {
                     Text            = Wow.FromUIProperty("hasteNumber"),
-                    Font            = _Config.statsFontsize:Map(function(size) return { font = "Fonts\\FRIZQT__.TTF", height = size} end),
+                    Font            = _Config.statsFontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
                     TextColor       = _Config.statsFontColor,
                     location        = { Anchor("LEFT")},
                 }
@@ -782,7 +782,7 @@ Style.UpdateSkin("Default",{
                 Size                = Size(50, 20), --此处直接固定了,影响不大
                 font                = {
                     Text            = Wow.FromUIProperty("masteryName"),
-                    Font            = _Config.statsFontsize:Map(function(size) return { font = "Fonts\\FRIZQT__.TTF", height = size} end),
+                    Font            = _Config.statsFontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
                     TextColor       = _Config.statsFontColor,
                     location        = { Anchor("LEFT")},
                 }
@@ -792,7 +792,7 @@ Style.UpdateSkin("Default",{
                 Size                = Size(50, 20), --此处直接固定了,影响不大
                 font                = {
                     Text            = Wow.FromUIProperty("masteryPercent"),
-                    Font            = _Config.statsFontsize:Map(function(size) return { font = "Fonts\\FRIZQT__.TTF", height = size} end),
+                    Font            = _Config.statsFontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
                     TextColor       = _Config.statsFontColor,
                     location        = { Anchor("LEFT")},
                 }
@@ -802,7 +802,7 @@ Style.UpdateSkin("Default",{
                 Size                = Size(50, 20), --此处直接固定了,影响不大
                 font                = {
                     Text            = Wow.FromUIProperty("masteryNumber"),
-                    Font            = _Config.statsFontsize:Map(function(size) return { font = "Fonts\\FRIZQT__.TTF", height = size} end),
+                    Font            = _Config.statsFontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
                     TextColor       = _Config.statsFontColor,
                     location        = { Anchor("LEFT")},
                 }
@@ -817,7 +817,7 @@ Style.UpdateSkin("Default",{
                 Size                = Size(50, 20), --此处直接固定了,影响不大
                 font                = {
                     Text            = Wow.FromUIProperty("versaName"),
-                    Font            = _Config.statsFontsize:Map(function(size) return { font = "Fonts\\FRIZQT__.TTF", height = size} end),
+                    Font            = _Config.statsFontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
                     TextColor       = _Config.statsFontColor,
                     location        = { Anchor("LEFT")},
                 }
@@ -827,7 +827,7 @@ Style.UpdateSkin("Default",{
                 Size                = Size(50, 20), --此处直接固定了,影响不大
                 font                = {
                     Text            = Wow.FromUIProperty("versaPercent"),
-                    Font            = _Config.statsFontsize:Map(function(size) return { font = "Fonts\\FRIZQT__.TTF", height = size} end),
+                    Font            = _Config.statsFontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
                     TextColor       = _Config.statsFontColor,
                     location        = { Anchor("LEFT")},
                 }
@@ -837,7 +837,7 @@ Style.UpdateSkin("Default",{
                 Size                = Size(50, 20), --此处直接固定了,影响不大
                 font                = {
                     Text            = Wow.FromUIProperty("versaNumber"),
-                    Font            = _Config.statsFontsize:Map(function(size) return { font = "Fonts\\FRIZQT__.TTF", height = size} end),
+                    Font            = _Config.statsFontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
                     TextColor       = _Config.statsFontColor,
                     location        = { Anchor("LEFT")},
                 }

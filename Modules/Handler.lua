@@ -75,7 +75,7 @@ function EVENT_INSPECT_READY(guid)
 		className = select(2, GetSpecializationInfoByID(id))
 	end
 	local avgItemLevelEquipped = C_PaperDollInfo.GetInspectItemLevel(inspectUnit);
-	TargetTileFrame.unitInfo = string.format("|c%s%s-%d", argbHex, className, floor(avgItemLevelEquipped))
+	TargetTileFrame.unitInfo = string.format("|c%s%s%d", argbHex, className, floor(avgItemLevelEquipped))
 
 	if TargetInfoFrame:GetParent() == InspectFrame then
 		return
@@ -106,5 +106,5 @@ function Hook_PaperDollFrame_SetItemLevel(statFrame, unit)
 		className = select(2, GetSpecializationInfoByID(id))
 	end
 	local avgItemLevel, avgItemLevelEquipped, avgItemLevelPvP = GetAverageItemLevel();
-	PlayerTileFrame.unitInfo = string.format("|c%s%s-%d(%d)", argbHex, className, floor(avgItemLevelEquipped),floor(avgItemLevel))
+	PlayerTileFrame.unitInfo = string.format("|c%s%s%d(%d)", argbHex, className, floor(avgItemLevelEquipped),floor(avgItemLevel))
 end
