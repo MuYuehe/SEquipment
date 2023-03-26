@@ -1,8 +1,8 @@
 Scorpio "SEquipment.core.handler" ""
 
-------------------------------------------------------
+--======================--
 -- Specialized Func
-------------------------------------------------------
+--======================--
 local function Make_Per_ItemFrame(slotID,itemLink, unit,parent)
 
 	local table = { slotID = slotID }
@@ -13,9 +13,9 @@ local function Make_Per_ItemFrame(slotID,itemLink, unit,parent)
 	local perSlotFrame = PerSlotFrame(unit .. "Slot" .. slotID, parent)
 	perSlotFrame.data = table
 end
--- =========== --
+--======================--
 -- 初始化预加载 --
--- =========== --
+--======================--
 function OnEnable()
 	-- Player 初始化
 	PlayerInfoFrame = UnitInfoFrame("PlayerInfoFrame", PaperDollFrame)
@@ -31,17 +31,9 @@ function OnEnable()
 		Make_Per_ItemFrame(i, nil, "target", TargetInfoFrame)
 	end
 end
-
-__SecureHook__ "PaperDollFrame_UpdateStats" __Async__()
-function Hook_PaperDollFrame_UpdateStats()
-	Next()
-
-	PlayerStatsInfoFrame.critData = {P_GetCritChance("player")}
-	PlayerStatsInfoFrame.hasteData = {P_GetHaste("player")}
-	PlayerStatsInfoFrame.versaData = {P_GetVersa("player")}
-	PlayerStatsInfoFrame.masteryData = {P_GetMastery("player")}
-end
-
+--======================--
+-- self
+--======================--
 -- 包装
 PaperDollFrame = GetWrapperUI(PaperDollFrame)
 function PaperDollFrame:OnShow()
@@ -58,7 +50,30 @@ function EVENT_PLAYER_EQUIPMENT_CHANGED(slotId)
 	Make_Per_ItemFrame(slotId, itemLink, "player", PlayerInfoFrame)
 end
 
+__SecureHook__ "PaperDollFrame_UpdateStats" __Async__()
+function Hook_PaperDollFrame_UpdateStats()
+	Next()
+
+	PlayerStatsInfoFrame.critData = {P_GetCritChance("player")}
+	PlayerStatsInfoFrame.hasteData = {P_GetHaste("player")}
+	PlayerStatsInfoFrame.versaData = {P_GetVersa("player")}
+	PlayerStatsInfoFrame.masteryData = {P_GetMastery("player")}
+end
+-- 自身获取专精/平均等级/最大等级
+__SecureHook__ "PaperDollFrame_SetItemLevel"
+function Hook_PaperDollFrame_SetItemLevel(statFrame, unit)
+	local id = GetInspectSpecialization(unit)
+	local className, classFilename = UnitClass(unit)
+	local argbHex = select(4,GetClassColor(classFilename))
+	if id ~= 0 then
+		className = select(2, GetSpecializationInfoByID(id))
+	end
+	local avgItemLevel, avgItemLevelEquipped, avgItemLevelPvP = GetAverageItemLevel();
+	PlayerTileFrame.unitInfo = string.format("|c%s%s%d(%d)", argbHex, className, floor(avgItemLevelEquipped),floor(avgItemLevel))
+end
+--======================--
 -- target
+--======================--
 local inspectUnit = ""
 __SystemEvent__ "INSPECT_READY"
 function EVENT_INSPECT_READY(guid)
@@ -94,17 +109,4 @@ function Hook_InspectPaperDollItemSlotButton_Update(button)
 	local itemLink = GetInventoryItemLink(inspectUnit, slotID)
 
 	Make_Per_ItemFrame(slotID, itemLink, "target", TargetInfoFrame)
-end
-
--- 自身获取专精/平均等级/最大等级
-__SecureHook__ "PaperDollFrame_SetItemLevel"
-function Hook_PaperDollFrame_SetItemLevel(statFrame, unit)
-	local id = GetInspectSpecialization(unit)
-	local className, classFilename = UnitClass(unit)
-	local argbHex = select(4,GetClassColor(classFilename))
-	if id ~= 0 then
-		className = select(2, GetSpecializationInfoByID(id))
-	end
-	local avgItemLevel, avgItemLevelEquipped, avgItemLevelPvP = GetAverageItemLevel();
-	PlayerTileFrame.unitInfo = string.format("|c%s%s%d(%d)", argbHex, className, floor(avgItemLevelEquipped),floor(avgItemLevel))
 end

@@ -1,23 +1,16 @@
 Scorpio "SEquipment.core" ""
-
+--======================--
+import "SEquipment.data"
+import "SEquipment.Layout"
+--======================--
 L = _Locale
-------------------------------------------------------
+--======================--
 -- Constant
-------------------------------------------------------
--- to stats texture
-STATS_TEXTURE = "Interface/AddOns/SEquipment/Modules/Texture/crit"
-
-STATS_FONT = {
-    L["crit"],
-    L["haste"],
-    L["mastery"],
-    L["versa"],
-}
-
+--======================--
 PER_ITEM_HEIGHT = 20
-------------------------------------------------------
+--======================--
 -- Api
-------------------------------------------------------
+--======================--
 -- 获取暴击
 function P_GetCritChance(unit)
 	if unit ~= "player" then
@@ -96,15 +89,15 @@ function P_GetVersa(unit)
 	-- 总全能率,额外全能数,伤害治疗提高率,减伤率
 	return format("%.1f", versatilityDamageBonus), versatility,format("%.1f", versatilityDamageTakenReduction),ITEM_MOD_VERSATILITY
 end
--- itemLink info
-local itemLink_string = { "start", "itemID", "enchantID", "gemID1", "gemID2", "gemID3", "gemID4" }
--- GetItemInfo info
-local itemLink_api = { "itemName", "itemLink", "itemQuality" }
 
 -- get one piece equip`s info
 function P_GetItemFrame_Per(itemLink,slotID)
 	if (not itemLink) then return end
 
+    -- itemLink info
+    local itemLink_string = { "start", "itemID", "enchantID", "gemID1", "gemID2", "gemID3", "gemID4" }
+    -- GetItemInfo info
+    local itemLink_api = { "itemName", "itemLink", "itemQuality" }
 	-- get realLevel
 	local effectLevel = GetDetailedItemLevelInfo(itemLink)
     local itemLink_dictionary = Dictionary(itemLink_string, {strsplit(":",itemLink)})
@@ -121,10 +114,9 @@ function P_GetItemFrame_Per(itemLink,slotID)
 
 	return dict
 end
-
-------------------------------------------------------
+--======================--
 -- Default Class
-------------------------------------------------------
+--======================--
 class "UnitInfoFrame" (function (_ENV)
     inherit "Frame"
 
@@ -258,7 +250,7 @@ class "PerSlotFrame" (function (_ENV)
         -- ==================== --
         -- 标记套装
         local setID = select(16, GetItemInfo(self.itemLink))
-        if SET_DATA[setID] then
+        if SEData.GetSetID(setID) then
             self:GetChild("EquipInfoFrame"):GetChild("NameFrame"):GetChild("font"):SetTextColor(0.93, 0.38, 0.35)
         else
             local r, g, b = ITEM_QUALITY_COLORS[self.itemQuality].r, ITEM_QUALITY_COLORS[self.itemQuality].g, ITEM_QUALITY_COLORS[self.itemQuality].b
@@ -511,11 +503,9 @@ class "TitleFrame" (function (_ENV)
         -- ^.^
     end
 end)
-------------------------------------------------------
+--======================--
 -- Default Style
-------------------------------------------------------
-import "SEquipment.Layout"
-
+--======================--
 Style.UpdateSkin("Default",{
     [UnitInfoFrame] = {
         location                    = _Config.location:Map(function(loc)
@@ -566,12 +556,12 @@ Style.UpdateSkin("Default",{
                 id                  = 1,
                 Size                = Size(PER_ITEM_HEIGHT, PER_ITEM_HEIGHT),
                 texture             = {
-                    file            = STATS_TEXTURE,
+                    file            = SEData.GetStatsTexture(),
                     SetAllPoints    = true,
                     VertexColor     = _Config.critIconColor,
                 },
                 font                = {
-                    Text            = STATS_FONT[1],
+                    Text            = SEData.GetStatsFont(1),
                     Font            = _Config.statsIconFontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
                     TextColor       = _Config.critIconColor,
                     location        = { Anchor("CENTER") },
@@ -581,12 +571,12 @@ Style.UpdateSkin("Default",{
                 id                  = 2,
                 Size                = Size(PER_ITEM_HEIGHT, PER_ITEM_HEIGHT),
                 texture             = {
-                    file            = STATS_TEXTURE,
+                    file            = SEData.GetStatsTexture(),
                     SetAllPoints    = true,
                     VertexColor     = _Config.hasteIconColor,
                 },
                 font                = {
-                    Text            = STATS_FONT[2],
+                    Text            = SEData.GetStatsFont(2),
                     Font            = _Config.statsIconFontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
                     TextColor       = _Config.hasteIconColor,
                     location        = { Anchor("CENTER") },
@@ -596,12 +586,12 @@ Style.UpdateSkin("Default",{
                 id                  = 3,
                 Size                = Size(PER_ITEM_HEIGHT, PER_ITEM_HEIGHT),
                 texture             = {
-                    file            = STATS_TEXTURE,
+                    file            = SEData.GetStatsTexture(),
                     SetAllPoints    = true,
                     VertexColor     = _Config.MasteryIconColor,
                 },
                 font                = {
-                    Text            = STATS_FONT[3],
+                    Text            = SEData.GetStatsFont(3),
                     Font            = _Config.statsIconFontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
                     TextColor       = _Config.MasteryIconColor,
                     location        = { Anchor("CENTER") },
@@ -611,12 +601,12 @@ Style.UpdateSkin("Default",{
                 id                  = 4,
                 Size                = Size(PER_ITEM_HEIGHT, PER_ITEM_HEIGHT),
                 texture             = {
-                    file            = STATS_TEXTURE,
+                    file            = SEData.GetStatsTexture(),
                     SetAllPoints    = true,
                     VertexColor     = _Config.VersaIconColor,
                 },
                 font                = {
-                    Text            = STATS_FONT[4],
+                    Text            = SEData.GetStatsFont(4),
                     Font            = _Config.statsIconFontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
                     TextColor       = _Config.VersaIconColor,
                     location        = { Anchor("CENTER") },

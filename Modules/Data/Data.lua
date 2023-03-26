@@ -1,3 +1,11 @@
+Scorpio "SEquipment.data" ""
+--======================--
+namespace  "SEquipment.data"
+--======================--
+L = _Locale
+--======================--
+-- Constant
+--======================--
 SET_DATA = {
     [1525] = "狂怒风暴护甲",
     [1524] = "狂怒风暴之鳞",
@@ -26,3 +34,22 @@ SET_DATA = {
     [1513] = "破龙者的外衣",
     [1520] = "巨龙驭手护甲",
 }
+
+STATS_FONT = {
+    L["crit"],
+    L["haste"],
+    L["mastery"],
+    L["versa"],
+}
+
+STATS_TEXTURE = "Interface/AddOns/SEquipment/Modules/Texture/crit"
+--======================--
+-- Class
+--======================--
+class "SEData" (function (_ENV)
+    function GetSetID(id)       return SET_DATA[id]     end
+    function GetSetTable()      return SET_DATA         end
+    function GetStatsFont(id)   return STATS_FONT[id]   end
+    function GetStatsFontTable()     return STATS_FONT       end
+    function GetStatsTexture()  return STATS_TEXTURE    end
+end)

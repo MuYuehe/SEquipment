@@ -1,8 +1,9 @@
 Scorpio "SEquipment.horizontalLayoutManager" ""
-
+--======================--
 namespace "SEquipment.Layout"
+--======================--
 import "Scorpio.UI.Layout"
-
+--======================--
 class "HorizontalLayoutManager"   (function(_ENV)
 
     extend "ILayoutManager"
