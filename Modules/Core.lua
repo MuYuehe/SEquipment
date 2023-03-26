@@ -256,6 +256,15 @@ class "PerSlotFrame" (function (_ENV)
         self.itemName   = table["itemName"]
         self.itemQuality= table["itemQuality"]
         -- ==================== --
+        -- 标记套装
+        local setID = select(16, GetItemInfo(self.itemLink))
+        if SET_DATA[setID] then
+            self:GetChild("EquipInfoFrame"):GetChild("NameFrame"):GetChild("font"):SetTextColor(0.93, 0.38, 0.35)
+        else
+            local r, g, b = ITEM_QUALITY_COLORS[self.itemQuality].r, ITEM_QUALITY_COLORS[self.itemQuality].g, ITEM_QUALITY_COLORS[self.itemQuality].b
+            self:GetChild("EquipInfoFrame"):GetChild("NameFrame"):GetChild("font"):SetTextColor(r, g, b)
+        end
+        -- ==================== --
         self.hasCrit    = table["ITEM_MOD_CRIT_RATING_SHORT"] ~= nil
         self.hasHaste   = table["ITEM_MOD_HASTE_RATING_SHORT"] ~= nil
         self.hasMastery = table["ITEM_MOD_MASTERY_RATING_SHORT"] ~= nil
@@ -266,6 +275,7 @@ class "PerSlotFrame" (function (_ENV)
         self.gemID3     = table["gemID3"]
         self.gemID4     = table["gemID4"]
         self.hasEnchant = table["enchantID"] ~= ""
+        -- ==================== --
         if self.gemID1 == "" and self.gemID2 == "" and self.gemID3 == ""
                 and self.gemID4 == "" and ( not self.hasEnchant)
                 or ( not self.isExtraInfoShown) then
@@ -640,7 +650,7 @@ Style.UpdateSkin("Default",{
                 Height              = PER_ITEM_HEIGHT,
                 font                = {
                     Font            = _Config.nameFontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
-                    TextColor       = Wow.FromUIProperty("itemQuality"):Map("x=>ITEM_QUALITY_COLORS[x]"),
+                    -- TextColor       = Wow.FromUIProperty("itemQuality"):Map("x=>ITEM_QUALITY_COLORS[x]"),
                     location        = { Anchor("LEFT")},
                 },
             },
