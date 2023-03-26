@@ -69,6 +69,21 @@ function ShowStatsFrame(enabled)
     assert(enabled == _Config.ShowStatsFrame:GetValue())
 end
 
+__Config__(_Config, "showpaperdoll", true)
+function ShowPaperDoll(enabled)
+    assert(enabled == _Config.showpaperdoll:GetValue())
+end
+
+__Config__(_Config, "showbag", true)
+function ShowBag(enabled)
+    assert(enabled == _Config.showbag:GetValue())
+end
+
+__Config__(_Config, "showbank", true)
+function ShowBank(enabled)
+    assert(enabled == _Config.showbank:GetValue())
+end
+
 -- 四个图标的颜色,等级和等级背景, 属性字体颜色
 -- The data type is a color
 __Config__(_Config, "critIconColor", ColorType, {r = 1, g = 0.5, b = 0.3})

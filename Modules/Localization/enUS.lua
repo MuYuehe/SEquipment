@@ -27,3 +27,7 @@ L["crit"]                   = "C"
 L["haste"]                  = "H"
 L["mastery"]                = "M"
 L["versa"]                  = "V"
+
+L["showpaperdoll"]          = "PaperDoll Info"
+L["showbag"]                = "Bag Info"
+L["showbank"]               = "Bank Info"

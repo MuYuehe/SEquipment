@@ -27,3 +27,7 @@ L["crit"]                   = "致"
 L["haste"]                  = "速"
 L["mastery"]                = "精"
 L["versa"]                  = "臨"
+
+L["showpaperdoll"]          = "人物面板資訊"
+L["showbag"]                = "包裹資訊"
+L["showbank"]               = "銀行資訊"
