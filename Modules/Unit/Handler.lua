@@ -47,14 +47,13 @@ end
 --======================--
 -- target
 --======================--
-local inspectUnit = ""
 __SystemEvent__ "INSPECT_READY"
 function EVENT_INSPECT_READY(guid)
 	if not (InspectFrame and InspectFrame.unit and UnitGUID(InspectFrame.unit) == guid) then
 		return
 	end
 	-- 获取InspectFrame的unit
-	inspectUnit = InspectFrame.unit
+	local inspectUnit = InspectFrame.unit
 	-- 获取unit的class以及平均等级
 	local argbHex, specName = GetUnitSpec(inspectUnit)
 	local avgItemLevelEquipped = C_PaperDollInfo.GetInspectItemLevel(inspectUnit);
@@ -70,19 +69,24 @@ end
 -- 大统一了
 --======================--
 __SecureHook__ "SetItemButtonQuality" __Async__()
-function Hook_SetItemButtonQuality(button, quality, itemLink, ...)
+function Hook_SetItemButtonQuality(self, quality, itemLink, ...)
 	Next()
-	local slotID = button:GetID()
+	
+	if self.isBag then return end
+
+	local slotID = self:GetID()
 
 	if slotID == 4 or slotID == 19 then return end
 
-	local buttonParentName = button:GetParent():GetName()
+	local containerName = self:GetParent():GetName()
 
-	if buttonParentName == "PaperDollItemsFrame" then
+	if string.find(containerName, "PaperDoll") and (not string.find(containerName, "Inspect")) then
 		Make_Per_ItemFrame(slotID, GetInventoryItemLink("player", slotID), "player", PlayerInfoFrame)
+		return
 	end
 
-	if buttonParentName == "InspectPaperDollItemsFrame" then
-		Make_Per_ItemFrame(slotID, GetInventoryItemLink(inspectUnit, slotID), "target", TargetInfoFrame)
+	if string.find(containerName, "InspectPaperDoll") then
+		Make_Per_ItemFrame(slotID, GetInventoryItemLink(InspectFrame and InspectFrame.unit, slotID), "target", TargetInfoFrame)
+		return
 	end
 end

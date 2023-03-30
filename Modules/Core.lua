@@ -120,3 +120,15 @@ function GetUnitSpec(unit)
 
 	return argbHex, specName
 end
+
+-- 获取tooltip含关键字的行
+function GetLevelLine(tooltip, keyword)
+    local line, text
+    for i = 2, tooltip:NumLines(), 1 do
+        line = _G[tooltip:GetName() .. "TextLeft" .. i]
+        text = line:GetText() or ""
+        if string.find(text, keyword) then
+            return line, _G[tooltip:GetName() .. "TextRight" .. i]
+        end
+    end
+end

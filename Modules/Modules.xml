@@ -6,4 +6,10 @@
 
     <Include    file = "Unit\Unit.xml"  />
     <Include    file = "Bag\Bag.xml"    />
+    <Include    file = "Tooltip\Tooltip.xml"    />
+
+
+
+
+    <!-- <Include    file = "Test\Test.xml"    /> -->
 </Ui>

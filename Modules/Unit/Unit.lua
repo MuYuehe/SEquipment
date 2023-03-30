@@ -160,10 +160,10 @@ class "PerSlotFrame" (function (_ENV)
         self.gemID2     = table["gemID2"]
         self.gemID3     = table["gemID3"]
         self.gemID4     = table["gemID4"]
-        self.hasEnchant = table["enchantID"] ~= ""
+        self.hasEnchant = table["enchantID"]
         -- ==================== --
         if self.gemID1 == "" and self.gemID2 == "" and self.gemID3 == ""
-                and self.gemID4 == "" and ( not self.hasEnchant)
+                and self.gemID4 == "" and self.hasEnchant == ""
                 or ( not self.isExtraInfoShown) then
             self:GetChild("ExtraInfoFrame"):Hide()
         else
@@ -172,7 +172,7 @@ class "PerSlotFrame" (function (_ENV)
         -- ==================== --
         self:Show()
     end}
-    property "nameFontsize" { type = Number, default = 15, handler = function(self, size)
+    property "namefontsize" { type = Number, default = 15, handler = function(self, size)
         if self:GetChild("EquipInfoFrame"):GetChild("NameFrame"):GetWidth() < 1 then
             return
         end
@@ -278,9 +278,11 @@ class "PerSlotFrame" (function (_ENV)
         self:GetChild("ExtraInfoFrame"):GetChild("Gem4Frame"):Show()
         self:GetChild("ExtraInfoFrame"):GetChild("Gem4Frame"):GetChild("texture"):SetTexture(GetItemIcon(id))
     end}
-    property "hasEnchant" { type = Boolean, handler = function(self, bol)
+    property "hasEnchant" { type = Number + String, handler = function(self, id)
         -- 通过判断bol是否为真,控制附魔frame得显示与隐藏
-        if bol then
+        if id ~= "" then
+            -- print(id)
+            -- print(GetItemLink(id))
             self:GetChild("ExtraInfoFrame"):GetChild("EnchFrame"):Show()
         else
             self:GetChild("ExtraInfoFrame"):GetChild("EnchFrame"):Hide()
@@ -416,8 +418,8 @@ Style.UpdateSkin("Default",{
             edgeSize                = 10,
             insets                  = {left = 2,right = 2,top = 2, bottom = 2}
         },
-        backdropbordercolor         = _Config.unitInfoBorderColor,
-        backdropcolor               = _Config.unitInfoBackColor,
+        backdropbordercolor         = _Config.unitinfobordercolor,
+        backdropcolor               = _Config.unitinfobackcolor,
         padding                     = {
             top                     = 2,
             left                    = 5,
@@ -431,13 +433,13 @@ Style.UpdateSkin("Default",{
         height                      = 20, --决定把这个大小固定下来
         font                        = {
             Text                    = Wow.FromUIProperty("unitInfo"),
-            Font                    = _Config.titleUnitInfo:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
-            -- TextColor               = _Config.titleUnitInfoColor,
+            Font                    = _Config.titleunitinfo:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
+            -- TextColor               = _Config.titleunitinfoColor,
             location                = { Anchor("LEFT") },
         },
     },
     [PerSlotFrame] = {
-        nameFontsize                = _Config.nameFontsize,
+        namefontsize                = _Config.namefontsize,
         LayoutManager               = HorizontalLayoutManager(false, false),
         width                       = 1,
         -- 属性图标样式
@@ -452,12 +454,12 @@ Style.UpdateSkin("Default",{
                 texture             = {
                     file            = SEData.GetStatsTexture(),
                     SetAllPoints    = true,
-                    VertexColor     = _Config.critIconColor,
+                    VertexColor     = _Config.criticoncolor,
                 },
                 font                = {
                     Text            = SEData.GetStatsFont(1),
-                    Font            = _Config.statsIconFontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
-                    TextColor       = _Config.critIconColor,
+                    Font            = _Config.statsiconfontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
+                    TextColor       = _Config.criticoncolor,
                     location        = { Anchor("CENTER") },
                 }
             },
@@ -467,12 +469,12 @@ Style.UpdateSkin("Default",{
                 texture             = {
                     file            = SEData.GetStatsTexture(),
                     SetAllPoints    = true,
-                    VertexColor     = _Config.hasteIconColor,
+                    VertexColor     = _Config.hasteiconcolor,
                 },
                 font                = {
                     Text            = SEData.GetStatsFont(2),
-                    Font            = _Config.statsIconFontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
-                    TextColor       = _Config.hasteIconColor,
+                    Font            = _Config.statsiconfontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
+                    TextColor       = _Config.hasteiconcolor,
                     location        = { Anchor("CENTER") },
                 }
             },
@@ -482,12 +484,12 @@ Style.UpdateSkin("Default",{
                 texture             = {
                     file            = SEData.GetStatsTexture(),
                     SetAllPoints    = true,
-                    VertexColor     = _Config.MasteryIconColor,
+                    VertexColor     = _Config.masteryiconcolor,
                 },
                 font                = {
                     Text            = SEData.GetStatsFont(3),
-                    Font            = _Config.statsIconFontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
-                    TextColor       = _Config.MasteryIconColor,
+                    Font            = _Config.statsiconfontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
+                    TextColor       = _Config.masteryiconcolor,
                     location        = { Anchor("CENTER") },
                 }
             },
@@ -497,12 +499,12 @@ Style.UpdateSkin("Default",{
                 texture             = {
                     file            = SEData.GetStatsTexture(),
                     SetAllPoints    = true,
-                    VertexColor     = _Config.VersaIconColor,
+                    VertexColor     = _Config.versaiconcolor,
                 },
                 font                = {
                     Text            = SEData.GetStatsFont(4),
-                    Font            = _Config.statsIconFontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
-                    TextColor       = _Config.VersaIconColor,
+                    Font            = _Config.statsiconfontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
+                    TextColor       = _Config.versaiconcolor,
                     location        = { Anchor("CENTER") },
                 }
             },
@@ -518,22 +520,22 @@ Style.UpdateSkin("Default",{
                 Size                = Size(PER_ITEM_HEIGHT * 2, PER_ITEM_HEIGHT),
                 font                = {
                     Text            = Wow.FromUIProperty("itemLevl"),
-                    Font            = _Config.levelFontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
-                    TextColor       = _Config.levelFontColor,
+                    Font            = _Config.levelfontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
+                    TextColor       = _Config.levelfontcolor,
                     location        = { Anchor("CENTER")},
                 },
                 backdrop            = {
                     bgFile          = [[Interface/AddOns/SEquipment/Modules/Texture/background]],
                     insets          = {left = 5,right = 5,top = 2, bottom = 2}
                 },
-                backdropcolor       = _Config.levelBackColor,
+                backdropcolor       = _Config.levelbackcolor,
             },
             NameFrame               = {
                 id                  = 2,
                 Visible             = _Config.ShowEquipmentName, --控制是否可见
                 Height              = PER_ITEM_HEIGHT,
                 font                = {
-                    Font            = _Config.nameFontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
+                    Font            = _Config.namefontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
                     -- TextColor       = Wow.FromUIProperty("itemQuality"):Map("x=>ITEM_QUALITY_COLORS[x]"),
                     location        = { Anchor("LEFT")},
                 },
@@ -606,8 +608,8 @@ Style.UpdateSkin("Default",{
                 Size                = Size(50, 20), --此处直接固定了,影响不大
                 font                = {
                     Text            = Wow.FromUIProperty("critName"),
-                    Font            = _Config.statsFontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
-                    TextColor       = _Config.statsFontColor,
+                    Font            = _Config.statsfontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
+                    TextColor       = _Config.statsfontcolor,
                     location        = { Anchor("LEFT")},
                 }
             },
@@ -616,8 +618,8 @@ Style.UpdateSkin("Default",{
                 Size                = Size(50, 20), --此处直接固定了,影响不大
                 font                = {
                     Text            = Wow.FromUIProperty("critPercent"),
-                    Font            = _Config.statsFontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
-                    TextColor       = _Config.statsFontColor,
+                    Font            = _Config.statsfontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
+                    TextColor       = _Config.statsfontcolor,
                     location        = { Anchor("LEFT")},
                 }
             },
@@ -626,8 +628,8 @@ Style.UpdateSkin("Default",{
                 Size                = Size(50, 20), --此处直接固定了,影响不大
                 font                = {
                     Text            = Wow.FromUIProperty("critNumber"),
-                    Font            = _Config.statsFontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
-                    TextColor       = _Config.statsFontColor,
+                    Font            = _Config.statsfontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
+                    TextColor       = _Config.statsfontcolor,
                     location        = { Anchor("LEFT")},
                 }
             },
@@ -641,8 +643,8 @@ Style.UpdateSkin("Default",{
                 Size                = Size(50, 20), --此处直接固定了,影响不大
                 font                = {
                     Text            = Wow.FromUIProperty("hasteName"),
-                    Font            = _Config.statsFontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
-                    TextColor       = _Config.statsFontColor,
+                    Font            = _Config.statsfontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
+                    TextColor       = _Config.statsfontcolor,
                     location        = { Anchor("LEFT")},
                 }
             },
@@ -651,8 +653,8 @@ Style.UpdateSkin("Default",{
                 Size                = Size(50, 20), --此处直接固定了,影响不大
                 font                = {
                     Text            = Wow.FromUIProperty("hastePercent"),
-                    Font            = _Config.statsFontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
-                    TextColor       = _Config.statsFontColor,
+                    Font            = _Config.statsfontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
+                    TextColor       = _Config.statsfontcolor,
                     location        = { Anchor("LEFT")},
                 }
             },
@@ -661,8 +663,8 @@ Style.UpdateSkin("Default",{
                 Size                = Size(50, 20), --此处直接固定了,影响不大
                 font                = {
                     Text            = Wow.FromUIProperty("hasteNumber"),
-                    Font            = _Config.statsFontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
-                    TextColor       = _Config.statsFontColor,
+                    Font            = _Config.statsfontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
+                    TextColor       = _Config.statsfontcolor,
                     location        = { Anchor("LEFT")},
                 }
             },
@@ -676,8 +678,8 @@ Style.UpdateSkin("Default",{
                 Size                = Size(50, 20), --此处直接固定了,影响不大
                 font                = {
                     Text            = Wow.FromUIProperty("masteryName"),
-                    Font            = _Config.statsFontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
-                    TextColor       = _Config.statsFontColor,
+                    Font            = _Config.statsfontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
+                    TextColor       = _Config.statsfontcolor,
                     location        = { Anchor("LEFT")},
                 }
             },
@@ -686,8 +688,8 @@ Style.UpdateSkin("Default",{
                 Size                = Size(50, 20), --此处直接固定了,影响不大
                 font                = {
                     Text            = Wow.FromUIProperty("masteryPercent"),
-                    Font            = _Config.statsFontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
-                    TextColor       = _Config.statsFontColor,
+                    Font            = _Config.statsfontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
+                    TextColor       = _Config.statsfontcolor,
                     location        = { Anchor("LEFT")},
                 }
             },
@@ -696,8 +698,8 @@ Style.UpdateSkin("Default",{
                 Size                = Size(50, 20), --此处直接固定了,影响不大
                 font                = {
                     Text            = Wow.FromUIProperty("masteryNumber"),
-                    Font            = _Config.statsFontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
-                    TextColor       = _Config.statsFontColor,
+                    Font            = _Config.statsfontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
+                    TextColor       = _Config.statsfontcolor,
                     location        = { Anchor("LEFT")},
                 }
             },
@@ -711,8 +713,8 @@ Style.UpdateSkin("Default",{
                 Size                = Size(50, 20), --此处直接固定了,影响不大
                 font                = {
                     Text            = Wow.FromUIProperty("versaName"),
-                    Font            = _Config.statsFontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
-                    TextColor       = _Config.statsFontColor,
+                    Font            = _Config.statsfontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
+                    TextColor       = _Config.statsfontcolor,
                     location        = { Anchor("LEFT")},
                 }
             },
@@ -721,8 +723,8 @@ Style.UpdateSkin("Default",{
                 Size                = Size(50, 20), --此处直接固定了,影响不大
                 font                = {
                     Text            = Wow.FromUIProperty("versaPercent"),
-                    Font            = _Config.statsFontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
-                    TextColor       = _Config.statsFontColor,
+                    Font            = _Config.statsfontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
+                    TextColor       = _Config.statsfontcolor,
                     location        = { Anchor("LEFT")},
                 }
             },
@@ -731,8 +733,8 @@ Style.UpdateSkin("Default",{
                 Size                = Size(50, 20), --此处直接固定了,影响不大
                 font                = {
                     Text            = Wow.FromUIProperty("versaNumber"),
-                    Font            = _Config.statsFontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
-                    TextColor       = _Config.statsFontColor,
+                    Font            = _Config.statsfontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
+                    TextColor       = _Config.statsfontcolor,
                     location        = { Anchor("LEFT")},
                 }
             },
