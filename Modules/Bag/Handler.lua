@@ -5,7 +5,8 @@ function Hook_SetItemButtonQuality(self, quality, itemIDOrLink, ...)
     Next()
 
     if self.isBag or (not itemIDOrLink) then
-        if self.buttonFrame and self.buttonFrame:IsVisible() then self.buttonFrame:Hide() end
+        
+        if self.buttonFrame then self.buttonFrame:Hide() end
         return
     end
 
@@ -42,9 +43,18 @@ function Hook_SetItemButtonQuality(self, quality, itemIDOrLink, ...)
             return
         end
     end
+
     local table = GetItemUseInfo(itemIDOrLink, buttonID)
     table["width"] = width
     table["height"] = height
     self.buttonFrame.data = table
     self.buttonFrame:Show()
+end
+
+-- 夭寿的InspectPaperDollItemSlotButton_Update在button.hasItem = nil的情况不走SetItemButtonQuality
+__AddonSecureHook__ ("Blizzard_InspectUI", "InspectPaperDollItemSlotButton_Update")
+function Hook_InspectPaperDollItemSlotButton_Update(self)
+    if not self.hasItem and self.buttonFrame then
+        self.buttonFrame:Hide()
+    end
 end
