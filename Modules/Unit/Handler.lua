@@ -73,6 +73,7 @@ end
 
 __SecureHook__ "PaperDollItemSlotButton_Update"
 function Hook_PaperDollItemSlotButton_Update(self)
+	if self.isBag then return end
 	local slotID = self:GetID()
 	if slotID == 4 or slotID == 19 then
 		return
