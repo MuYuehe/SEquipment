@@ -5,14 +5,15 @@ function Hook_SetItemButtonQuality(self, quality, itemIDOrLink, ...)
     Next()
 
     if self.isBag or (not itemIDOrLink) then
-        
         if self.buttonFrame then self.buttonFrame:Hide() end
         return
     end
 
     local buttonID = self:GetID()
-    local bagID = self:GetBagID()
     local buttonName = self:GetName()
+    if not buttonID or not buttonName then return end
+
+    local bagID = self:GetBagID()
     if not self.buttonFrame then self.buttonFrame = ButtonInfo(buttonName .. "Info", self) end
 
     local width, height = self:GetSize()
