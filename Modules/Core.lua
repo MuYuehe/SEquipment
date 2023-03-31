@@ -132,7 +132,8 @@ function GetUnitSpec(unit)
 			specName = select(2, GetSpecializationInfoByID(specID))
 		end
 	end
-	return specName or UnitClass(unit) or ""
+	local className = UnitClass(unit)
+	return specName or className or ""
 end
 
 -- 获取职业颜色
