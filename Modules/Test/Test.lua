@@ -10,7 +10,7 @@ Scorpio "SEquipment.Test" ""
 --     -- C_Container.GetContainerItemInfo(bagID, self:GetID()) --10.0加入的新api,与GetContainerItemInfo不同
 -- end
 
-__SystemEvent__ "NAME_PLATE_UNIT_ADDED" "FORBIDDEN_NAME_PLATE_UNIT_ADDED" "TEST_NOTYFI"
+__SystemEvent__ "NAME_PLATE_UNIT_ADDED" "FORBIDDEN_NAME_PLATE_UNIT_ADDED"
 function EVENT_NAME_PLATE_UNIT_ADDED(unitToken)
     local namePlateFrameBase = C_NamePlate.GetNamePlateForUnit(unitToken, issecure());
     if not namePlateFrameBase.f then

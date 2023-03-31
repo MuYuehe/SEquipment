@@ -108,27 +108,36 @@ function GetItemUseInfo(itemLink,slotID, unit)
 	return dict
 end
 
--- 获取职业专精名称,没有转职则用职业名代替
-function GetUnitSpec(unit)
-	local id = GetInspectSpecialization(unit)
-	local specName = select(2, GetSpecializationInfoByID(id))
-	local className, classFilename = UnitClass(unit)
-	local argbHex = select(4,GetClassColor(classFilename))
-	if specName == "" or specName == nil then
-		specName = className
-	end
-
-	return argbHex, specName
-end
-
 -- 获取tooltip含关键字的行
 function GetLevelLine(tooltip, keyword)
     local line, text
-    for i = 2, tooltip:NumLines(), 1 do
+    for i = 2, tooltip:NumLines() do
         line = _G[tooltip:GetName() .. "TextLeft" .. i]
         text = line:GetText() or ""
         if string.find(text, keyword) then
             return line, _G[tooltip:GetName() .. "TextRight" .. i]
         end
     end
+end
+
+-- 获取unit专精
+function GetUnitSpec(unit)
+	local specID, specName
+	if unit =="player" then
+		specID = GetSpecialization()
+		specName = select(2, GetSpecializationInfoByID(specID))
+	else
+		specID = GetInspectSpecialization(unit)
+		if specID and specID > 0 then
+			specName = select(2, GetSpecializationInfoByID(specID))
+		end
+	end
+	return specName or UnitClass(unit) or ""
+end
+
+-- 获取职业颜色
+function GettUnitColor(unit)
+	local _, classFilename = UnitClass(unit)
+	local argbHex = select(4,GetClassColor(classFilename))
+	return "|c" .. argbHex or ""
 end

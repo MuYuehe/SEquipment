@@ -40,9 +40,9 @@ end
 -- 自身获取专精/平均等级/最大等级
 __SecureHook__ "PaperDollFrame_SetItemLevel"
 function Hook_PaperDollFrame_SetItemLevel(statFrame, unit)
-	local argbHex, specName = GetUnitSpec(unit)
-	local avgItemLevel, avgItemLevelEquipped, avgItemLevelPvP = GetAverageItemLevel();
-	PlayerTileFrame.unitInfo = string.format("|c%s%s%d(%d)", argbHex, specName, floor(avgItemLevelEquipped),floor(avgItemLevel))
+	local argbHex, specName = GettUnitColor(unit), GetUnitSpec(unit)
+	local avgItemLevel, avgItemLevelEquipped = GetAverageItemLevel()
+	PlayerTileFrame.unitInfo = string.format("%s%s%d(%d)", argbHex, specName, floor(avgItemLevelEquipped),floor(avgItemLevel))
 end
 --======================--
 -- target
@@ -53,11 +53,11 @@ function EVENT_INSPECT_READY(guid)
 		return
 	end
 	-- 获取InspectFrame的unit
-	local inspectUnit = InspectFrame.unit
+	local unit = InspectFrame.unit
 	-- 获取unit的class以及平均等级
-	local argbHex, specName = GetUnitSpec(inspectUnit)
-	local avgItemLevelEquipped = C_PaperDollInfo.GetInspectItemLevel(inspectUnit);
-	TargetTileFrame.unitInfo = string.format("|c%s%s%d", argbHex, specName, floor(avgItemLevelEquipped))
+	local argbHex, specName = GettUnitColor(unit), GetUnitSpec(unit)
+	local avgItemLevelEquipped = C_PaperDollInfo.GetInspectItemLevel(unit)
+	TargetTileFrame.unitInfo = string.format("%s%s%d", argbHex, specName, floor(avgItemLevelEquipped))
 	-- TargetInfoFrame设置parent,如果已经设置了不再继续
 	if TargetInfoFrame:GetParent() == InspectFrame then
 		return
