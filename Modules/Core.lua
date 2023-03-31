@@ -132,7 +132,7 @@ function GetUnitSpec(unit)
 			specName = select(2, GetSpecializationInfoByID(specID))
 		end
 	end
-	local className = UnitClass(unit)
+	local className, classFilename, classID = UnitClass(unit)
 	return specName or className or ""
 end
 
