@@ -10,4 +10,4 @@
 *.code-workspace
 
 # SEquipment
-.Modules/Test/*
+Modules/Test
