@@ -75,11 +75,9 @@ function Hook_SetItemButtonQuality(self, quality, itemLink, ...)
 	if self.isBag then return end
 
 	local slotID = self:GetID()
-
 	if slotID == 4 or slotID == 19 then return end
 
 	local containerName = self:GetParent():GetName()
-
 	if string.find(containerName, "PaperDoll") and (not string.find(containerName, "Inspect")) then
 		Make_Per_ItemFrame(slotID, GetInventoryItemLink("player", slotID), "player", PlayerInfoFrame)
 		return
@@ -89,4 +87,12 @@ function Hook_SetItemButtonQuality(self, quality, itemLink, ...)
 		Make_Per_ItemFrame(slotID, GetInventoryItemLink(InspectFrame and InspectFrame.unit, slotID), "target", TargetInfoFrame)
 		return
 	end
+end
+
+-- 结果还是要另行处理(希望找到下一个完美hook)
+__AddonSecureHook__ ("Blizzard_InspectUI", "InspectPaperDollItemSlotButton_Update")
+function Hook_InspectPaperDollItemSlotButton_Update(self)
+    if not self.hasItem  then
+        Make_Per_ItemFrame(self:GetID(), nil, "target", TargetInfoFrame)
+    end
 end
