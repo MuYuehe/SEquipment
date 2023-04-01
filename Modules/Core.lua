@@ -121,6 +121,7 @@ function GetLevelLine(tooltip, keyword)
 end
 
 -- 获取unit专精
+__Arguments__{NEString}
 function GetUnitSpec(unit)
 	local specID, specName
 	if unit =="player" then
@@ -132,7 +133,7 @@ function GetUnitSpec(unit)
 			specName = select(2, GetSpecializationInfoByID(specID))
 		end
 	end
-	local className, classFilename, classID = UnitClass(unit)
+	local className = UnitClass(unit)
 	return specName or className or ""
 end
 

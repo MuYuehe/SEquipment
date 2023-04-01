@@ -1,7 +1,7 @@
 Scorpio "SEquipment.core.tooltip.handler" ""
 
 local guids = {}
-__SecureHook__ (GameTooltip, "ProcessInfo")
+__SecureHook__ (GameTooltip, "ProcessInfo") __Async__()
 function Hook_GameTooltip_ProcessInfo(self, info)
 
     if not _Config.showtooltiplevel:GetValue() then return end
@@ -18,16 +18,20 @@ function Hook_GameTooltip_ProcessInfo(self, info)
     end
     if not CanInspect(unitId) or not UnitIsVisible(unitId) then return end
 
+    AddExtraLine(guid, "...")
+    Delay(1)
+    if guid ~= UnitGUID("mouseover") then
+        return
+    end
     ClearInspectPlayer()
     NotifyInspect(unitId)
-    AddExtraLine(guid, "...")
 end
 __SecureHook__ "NotifyInspect" __Async__()
 function Hook_NotifyInspect(unitid)
-    local guid = UnitGUID(unitid)
-    if not guid then
+    if not unitid or not UnitGUID(unitid) then
         return
     end
+    local guid = UnitGUID(unitid)
     local data = guids[guid]
     if not data then
         data = {
@@ -42,20 +46,14 @@ function Hook_NotifyInspect(unitid)
     local inspectGuid = NextEvent("INSPECT_READY")
     if guid ~= inspectGuid then return end
 
-    local unitId = UnitTokenFromGUID(guid)
-    local specName = GetUnitSpec(unitId)
-    local argbHex = GettUnitColor(unitId)
-    local avgItemLevelEquipped = C_PaperDollInfo.GetInspectItemLevel(unitId)
+    local specName = GetUnitSpec(unitid)
+    local argbHex = GettUnitColor(unitid)
+    local avgItemLevelEquipped = C_PaperDollInfo.GetInspectItemLevel(unitid)
     data.avgItemLevelEquipped = avgItemLevelEquipped
     data.specName = specName
     data.argbHex = argbHex
     data.guid = guid
 
-    FireSystemEvent("INSPECT_READY_END", data)
-end
-
-__SystemEvent__ "INSPECT_READY_END"
-function EVENT_INSPECT_READY_END(data)
     if data.guid == UnitGUID("mouseover") then
         AddExtraLine(data.guid, data.avgItemLevelEquipped, data.specName, data.argbHex)
     end
