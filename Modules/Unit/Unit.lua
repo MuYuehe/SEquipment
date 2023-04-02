@@ -140,6 +140,7 @@ class "PerSlotFrame" (function (_ENV)
         -- ==================== --
         self.itemLevl   = table["itemRealLevel"]
         self.itemName   = table["itemName"]
+        self.itemEquipLoc= _G[table["itemEquipLoc"]]
         self.itemQuality= table["itemQuality"]
         -- ==================== --
         -- 标记套装
@@ -201,6 +202,7 @@ class "PerSlotFrame" (function (_ENV)
                 self:GetChild("EquipInfoFrame"):GetChild("NameFrame"):GetChild("font"):GetStringWidth())
         end)
     end}
+    property "itemEquipLoc" {type = String, default = ""}
     __Observable__()
     property "itemQuality"  { type = Number, default = 0 }
     property "hasCrit"      { type = Boolean, handler = function(self, bol)
@@ -289,7 +291,8 @@ class "PerSlotFrame" (function (_ENV)
         end
         self:GetChild("ExtraInfoFrame"):GetChild("EnchFrame"):GetChild("texture"):SetTexture("Interface/ICONS/inv_misc_enchantedscroll")
     end}
-
+    __Observable__()
+    property "bgColor" {type = Table, default = {0,0,0,0}}
 
     __Template__ {
         StatsIconFrame = Frame,
@@ -334,12 +337,24 @@ class "PerSlotFrame" (function (_ENV)
     }
 
     function __ctor(self)
+        self.OnEnter                                                    =   function(self)
+            self:GetChild("EquipInfoFrame"):GetChild("LevlFrame"):GetChild("font"):SetText(self.itemEquipLoc)
+            self.bgColor = {0,0,0,0.3}
+        end
+        self.OnLeave                                                    =   function(self)
+            self:GetChild("EquipInfoFrame"):GetChild("LevlFrame"):GetChild("font"):SetText(self.itemLevl)
+            self.bgColor = {0,0,0,0}
+        end
         self:GetChild("EquipInfoFrame"):GetChild("NameFrame").OnEnter   =   function()
+            self:GetChild("EquipInfoFrame"):GetChild("LevlFrame"):GetChild("font"):SetText(self.itemEquipLoc)
+            self.bgColor = {0,0,0,0.3}
             GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
             GameTooltip:SetInventoryItem(self.unit, self.slotID)
             GameTooltip:Show()
         end
         self:GetChild("EquipInfoFrame"):GetChild("NameFrame").OnLeave   =   function()
+            self:GetChild("EquipInfoFrame"):GetChild("LevlFrame"):GetChild("font"):SetText(self.itemLevl)
+            self.bgColor = {0,0,0,0}
             GameTooltip:Hide()
         end
         self:GetChild("ExtraInfoFrame"):GetChild("Gem1Frame").OnEnter   =   function()
@@ -442,6 +457,10 @@ Style.UpdateSkin("Default",{
         namefontsize                = _Config.namefontsize,
         LayoutManager               = HorizontalLayoutManager(false, false),
         width                       = 1,
+        backdrop                    = {
+            bgFile                  = [[Interface/AddOns/SEquipment/Modules/Texture/background]],
+        },
+        backdropColor               = Wow.FromUIProperty("bgColor"):Map(function(x) return Color(unpack(x))  end),
         -- 属性图标样式
         StatsIconFrame              = {
             LayoutManager           = HorizontalLayoutManager(true, false),

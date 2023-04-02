@@ -41,7 +41,6 @@ function P_GetCritChance(unit)
 	local extraCritRating = GetCombatRating(rating);
     return format("%.1f", critChance), extraCritRating, format("%.1f",extraCritChance), ITEM_MOD_CRIT_RATING_SHORT
 end
-
 -- 获取精通
 function P_GetMastery(unit)
 	if unit ~= "player" then
@@ -55,7 +54,6 @@ function P_GetMastery(unit)
     -- GetCombatRating(CR_MASTERY) 额外精通数
     return format("%.1f",mastery), GetCombatRating(CR_MASTERY), format("%.1f",masteryBonus),ITEM_MOD_MASTERY_RATING_SHORT
 end
-
 -- 获取急速
 function P_GetHaste(unit)
 	if unit ~= "player" then
@@ -67,7 +65,6 @@ function P_GetHaste(unit)
 	-- 返回总急速率,额外急速,额外急速率
 	return format("%.1f", haste), GetCombatRating(rating), format("%.1f",GetCombatRatingBonus(rating)), ITEM_MOD_HASTE_RATING_SHORT
 end
-
 -- 获取全能
 function P_GetVersa(unit)
 	if unit ~= "player" then
@@ -121,7 +118,6 @@ function GetLevelLine(tooltip, keyword)
 end
 
 -- 获取unit专精
-__Arguments__{NEString}
 function GetUnitSpec(unit)
 	local specID, specName
 	if unit =="player" then
@@ -133,7 +129,7 @@ function GetUnitSpec(unit)
 			specName = select(2, GetSpecializationInfoByID(specID))
 		end
 	end
-	local className = UnitClass(unit)
+	local className, classFilename, classID = UnitClass(unit)
 	return specName or className or ""
 end
 

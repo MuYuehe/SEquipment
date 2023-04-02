@@ -9,7 +9,8 @@ end
 --======================--
 -- 初始化预加载 --
 --======================--
-function OnEnable()
+__Async__()
+function OnEnable(self)
 	-- Player 初始化
 	PlayerInfoFrame = UnitInfoFrame("PlayerInfoFrame", PaperDollFrame)
 	PlayerStatsInfoFrame = StatsInfoFrame("PlayerStatsInfoFrame", PlayerInfoFrame)
@@ -20,6 +21,25 @@ function OnEnable()
 	for i = 1, 17, 1 do
 		Make_Per_ItemFrame(i, nil, "player", PlayerInfoFrame)
 		Make_Per_ItemFrame(i, nil, "target", TargetInfoFrame)
+	end
+
+	if not IsAddOnLoaded("Blizzard_InspectUI") then
+        -- 循环等待只到目标插件加载
+        while NextEvent("ADDON_LOADED") ~= "Blizzard_InspectUI" do end
+    end
+    -- 开始初始化
+	if TargetInfoFrame:GetParent() ~= InspectFrame then
+		TargetInfoFrame:SetParent(InspectFrame)
+		TargetInfoFrame:SetPoint("TOPLEFT", InspectFrame, "TOPRIGHT", -3, 0)
+	end
+	LocalInspectFrame = GetWrapperUI(InspectFrame)
+	function LocalInspectFrame:OnHide()
+		TargetInfoFrame:Hide()
+	end
+	-- __Async__()
+	function LocalInspectFrame:OnShow()
+		-- Delay(1)
+		TargetInfoFrame:Show()
 	end
 end
 --======================--
@@ -46,8 +66,9 @@ end
 -- Action
 --======================--
 local targetTitleInfo = {}
-__AddonSecureHook__ ("Blizzard_InspectUI", "InspectPaperDollItemSlotButton_Update")
+__AddonSecureHook__ ("Blizzard_InspectUI", "InspectPaperDollItemSlotButton_Update") __Async__()
 function Hook_InspectPaperDollItemSlotButton_Update(self)
+	Next()
 	local slotID = self:GetID()
 	if slotID == 4 or slotID == 19 then
 		return
@@ -71,8 +92,9 @@ function Hook_InspectPaperDollItemSlotButton_Update(self)
 	Make_Per_ItemFrame(slotID, itemLink, "target", TargetInfoFrame)
 end
 
-__SecureHook__ "PaperDollItemSlotButton_Update"
+__SecureHook__ "PaperDollItemSlotButton_Update" __Async__()
 function Hook_PaperDollItemSlotButton_Update(self)
+	Next()
 	if self.isBag then return end
 	local slotID = self:GetID()
 	if slotID == 4 or slotID == 19 then

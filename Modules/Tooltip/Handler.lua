@@ -3,7 +3,7 @@ Scorpio "SEquipment.core.tooltip.handler" ""
 local guids = {}
 __SecureHook__ (GameTooltip, "ProcessInfo") __Async__()
 function Hook_GameTooltip_ProcessInfo(self, info)
-
+    Next()
     if not _Config.showtooltiplevel:GetValue() then return end
     if not info or not info.tooltipData then return end
 
@@ -12,28 +12,11 @@ function Hook_GameTooltip_ProcessInfo(self, info)
     if not C_PlayerInfo.GUIDIsPlayer(guid) then return end
     local _, unitId = self:GetUnit()
     if not unitId or guid ~= UnitGUID(unitId) then return end
+    if not CanInspect(unitId) or not UnitIsVisible(unitId) then return end
     local data = guids[guid]
     if data and data.avgItemLevelEquipped > 0 then
         return AddExtraLine(guid, data.avgItemLevelEquipped, data.specName, data.argbHex)
-    end
-    if not CanInspect(unitId) or not UnitIsVisible(unitId) then return end
-
-    AddExtraLine(guid, "...")
-    Delay(1)
-    if guid ~= UnitGUID("mouseover") then
-        return
-    end
-    ClearInspectPlayer()
-    NotifyInspect(unitId)
-end
-__SecureHook__ "NotifyInspect" __Async__()
-function Hook_NotifyInspect(unitid)
-    if not unitid or not UnitGUID(unitid) then
-        return
-    end
-    local guid = UnitGUID(unitid)
-    local data = guids[guid]
-    if not data then
+    else
         data = {
             guid = guid,
             spec = nil,
@@ -42,19 +25,39 @@ function Hook_NotifyInspect(unitid)
         }
         guids[guid] = data
     end
+    AddExtraLine(guid, "...")
+    Delay(1)
+    -- 防止鼠标一闪而过也去NotifyInspect()占用请求资源
+    if guid ~= UnitGUID("mouseover") then
+        return
+    end
+    ClearInspectPlayer()
+    NotifyInspect(unitId)
+end
+__SecureHook__ "NotifyInspect" __Async__()
+function Hook_NotifyInspect(unitid)
+    if not unitid or unitid == "" then
+        return
+    end
+    local guid = UnitGUID(unitid)
+    if not guid then
+        return
+    end
+    local data = guids[guid]
+
     AddExtraLine(guid, "......")
     local inspectGuid = NextEvent("INSPECT_READY")
-    if guid ~= inspectGuid then return end
+    if guid ~= inspectGuid or not data then return end
 
-    local specName = GetUnitSpec(unitid)
-    local argbHex = GettUnitColor(unitid)
-    local avgItemLevelEquipped = C_PaperDollInfo.GetInspectItemLevel(unitid)
-    data.avgItemLevelEquipped = avgItemLevelEquipped
-    data.specName = specName
-    data.argbHex = argbHex
-    data.guid = guid
+    local specName  = GetUnitSpec(unitid)
+    local argbHex   = GettUnitColor(unitid)
+    local avgItemLevelEquipped  = C_PaperDollInfo.GetInspectItemLevel(unitid)
+    data.avgItemLevelEquipped   = avgItemLevelEquipped
+    data.specName               = specName
+    data.argbHex                = argbHex
+    data.guid                   = guid
 
     if data.guid == UnitGUID("mouseover") then
-        AddExtraLine(data.guid, data.avgItemLevelEquipped, data.specName, data.argbHex)
+        AddExtraLine(guid, avgItemLevelEquipped, specName, argbHex)
     end
 end
