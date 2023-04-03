@@ -14,13 +14,19 @@ function OnEnable(self)
 	-- Player 初始化
 	PlayerInfoFrame = UnitInfoFrame("PlayerInfoFrame", PaperDollFrame)
 	PlayerStatsInfoFrame = StatsInfoFrame("PlayerStatsInfoFrame", PlayerInfoFrame)
-	PlayerTileFrame = TitleFrame("PlayerTileFrame", PlayerInfoFrame)
 	-- Target 初始化
-	TargetInfoFrame = UnitInfoFrame("TargetInfoFrame")
-	TargetTileFrame = TitleFrame("TargetTileFrame", TargetInfoFrame)
+	TargetInfoFrame = UnitInfoFrame("TargetInfoFrame", nil)
 	for i = 1, 17, 1 do
 		Make_Per_ItemFrame(i, nil, "player", PlayerInfoFrame)
 		Make_Per_ItemFrame(i, nil, "target", TargetInfoFrame)
+	end
+
+	LocalCharacterFrame = GetWrapperUI(CharacterFrame)
+	function LocalCharacterFrame:OnShow()
+		PlayerInfoFrame:Show()
+	end
+	function LocalCharacterFrame:OnHide()
+		PlayerInfoFrame:Hide()
 	end
 
 	if not IsAddOnLoaded("Blizzard_InspectUI") then
@@ -58,9 +64,12 @@ end
 -- 自身获取专精/平均等级/最大等级
 __SecureHook__ "PaperDollFrame_SetItemLevel"
 function Hook_PaperDollFrame_SetItemLevel(statFrame, unit)
-	local argbHex, specName = GettUnitColor(unit), GetUnitSpec(unit)
-	local avgItemLevel, avgItemLevelEquipped = GetAverageItemLevel()
-	PlayerTileFrame.unitInfo = string.format("%s%s%d(%d)", argbHex, specName, floor(avgItemLevelEquipped),floor(avgItemLevel))
+	local specID, specName, classFile, specIcon, className, argbHex = GetUnitSpec(unit)
+	local _, avgItemLevelEquipped = GetAverageItemLevel()
+	local data = {}
+	data["avgItemLevel"] = floor(avgItemLevelEquipped)
+	data["specIcon"] = specIcon or classFile or ""
+	PlayerInfoFrame.data = data
 end
 --======================--
 -- Action
@@ -77,15 +86,13 @@ function Hook_InspectPaperDollItemSlotButton_Update(self)
 	if not targetTitleInfo.guid or targetTitleInfo.guid ~= UnitGUID( InspectFrame and InspectFrame.unit) then
 		local unit = InspectFrame.unit
 		targetTitleInfo.guid = UnitGUID(unit)
-		local argbHex, specName = GettUnitColor(unit), GetUnitSpec(unit)
+		
+		local specID, specName, classFile, specIcon, className, argbHex = GetUnitSpec(unit)
 		local avgItemLevelEquipped = C_PaperDollInfo.GetInspectItemLevel(unit)
-
-		TargetTileFrame.unitInfo = string.format("%s%s%d", argbHex, specName, floor(avgItemLevelEquipped))
-		if TargetInfoFrame:GetParent() == InspectFrame then
-			return
-		end
-		TargetInfoFrame:SetParent(InspectFrame)
-		TargetInfoFrame:SetPoint("TOPLEFT", InspectFrame, "TOPRIGHT", -3, 0)
+		local data = {}
+		data["avgItemLevel"] = floor(avgItemLevelEquipped)
+		data["specIcon"] = specIcon or classFile or ""
+		TargetInfoFrame.data = data
 	end
 
 	local itemLink = GetInventoryItemLink(InspectFrame and InspectFrame.unit, slotID)

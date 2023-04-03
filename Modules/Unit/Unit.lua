@@ -7,15 +7,50 @@ L = _Locale
 --======================--
 -- Constant
 --======================--
-PER_ITEM_HEIGHT = 20
+PER_ITEM_HEIGHT = 23
+PER_ICON_HEIGHT = 20
 --======================--
 -- Default Class
 --======================--
 class "UnitInfoFrame" (function (_ENV)
     inherit "Frame"
 
+    property "data" { type = Table, handler = function(self, table)
+        if not table then
+            return
+        end
+        self.avgLevel = STAT_AVERAGE_ITEM_LEVEL .. ":" .. table["avgItemLevel"]
+        self.specIcon = table["specIcon"]
+        self.classFileName = table["classFileName"]
+    end}
+    __Observable__()
+    property "avgLevel" { type = String + Number, default = ""}
+    __Observable__()
+    property "specIcon" { type = String + Number, default = "", handler = function(self, specIcon)
+        if type(specIcon) == "number" then
+            self:GetChild("SpecFrame"):GetChild("texture"):SetTexture(specIcon)
+        elseif type(specIcon) == "string" then
+            self:GetChild("SpecFrame"):GetChild("texture"):SetTexture("Interface/ICONS/ClassIcon_" .. specIcon)
+        else
+            self:GetChild("SpecFrame"):GetChild("texture"):SetTexture("")
+        end
+    end}
+    __Template__ {
+        LeveFrame = Frame,
+        SpecFrame = Frame,
+        HideFrame = Frame,
+        {
+            HideFrame = { texture = Texture},
+            LeveFrame = { font = FontString},
+            SpecFrame = { texture = Texture},
+        }
+    }
     function __ctor(self)
         -- ^.^
+        self:Hide()
+        self:GetChild("HideFrame").OnMouseUp = function()
+            self:Hide()
+        end
     end
 end)
 
@@ -183,7 +218,7 @@ class "PerSlotFrame" (function (_ENV)
     property "itemLink" { type = String, default = ""}
     property "slotID" { type = Number, handler = function(self, id)
         -- 前面有个TitleFrame,所以装备列表从2开始往下顺序
-        self:SetID(id + 1)
+        self:SetID(id)
     end}
     property "unit"     {type = String, default = "" }
     __Observable__()
@@ -283,8 +318,6 @@ class "PerSlotFrame" (function (_ENV)
     property "hasEnchant" { type = Number + String, handler = function(self, id)
         -- 通过判断bol是否为真,控制附魔frame得显示与隐藏
         if id ~= "" then
-            -- print(id)
-            -- print(GetItemLink(id))
             self:GetChild("ExtraInfoFrame"):GetChild("EnchFrame"):Show()
         else
             self:GetChild("ExtraInfoFrame"):GetChild("EnchFrame"):Hide()
@@ -395,25 +428,6 @@ class "PerSlotFrame" (function (_ENV)
         end
     end
 end)
-
-class "TitleFrame" (function (_ENV)
-    inherit "Frame"
-
-    property "unitInfo" { type = String, default = "",handler = function(self, info)
-        self:GetChild("font"):SetText(info)
-
-        Next(function ()
-            self:SetWidth(self:GetChild("font"):GetWidth())
-        end)
-    end}
-
-    __Template__ {
-        font = FontString
-    }
-    function __ctor(self)
-        -- ^.^
-    end
-end)
 --======================--
 -- Default Style
 --======================--
@@ -425,7 +439,7 @@ Style.UpdateSkin("Default",{
         Scale                       = _Config.MainScale,
         LayoutManager               = VerticalLayoutManager(false, false),
         height                      = 1,
-        -- minResize                   = Size(1, CharacterFrame:GetHeight() - 1),
+        minResize                   = Size(1, CharacterFrame:GetHeight() - 1),
         backdrop = {
             edgeFile                = [[Interface/AddOns/SEquipment/Modules/Texture/border]],
             -- bgFile                  = [[Interface/Tooltips/UI-Tooltip-Background-Azerite]],
@@ -436,22 +450,38 @@ Style.UpdateSkin("Default",{
         backdropbordercolor         = _Config.unitinfobordercolor,
         backdropcolor               = _Config.unitinfobackcolor,
         padding                     = {
-            top                     = 2,
+            top                     = 40,
             left                    = 5,
             right                   = 5,
             bottom                  = 2,
-        }
-    },
-    [TitleFrame] = {
-        id                          = 1,
-        width                       = 1,
-        height                      = 20, --决定把这个大小固定下来
-        font                        = {
-            Text                    = Wow.FromUIProperty("unitInfo"),
-            Font                    = _Config.titleunitinfo:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
-            -- TextColor               = _Config.titleunitinfoColor,
-            location                = { Anchor("LEFT") },
         },
+        HideFrame                       = {
+            size                    = Size(30,30),
+            location                = { Anchor("BOTTOMLEFT", 3, 3)},
+            texture                 = {
+                file                = [[Interface/Cursor/Item]],
+                Rotation            = 3.14/2,
+                SetAllPoints        = true,
+            }
+        },
+        LeveFrame                   = {
+            size                    = Size( 100, 40),
+            location                = { Anchor("TOPLEFT")},
+            font                    = {
+                Text                = Wow.FromUIProperty("avgLevel"),
+                Font                = _Config.titleunitinfo:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
+                location            = { Anchor("LEFT", 10, 0) },
+            }
+        },
+        SpecFrame                   = {
+            size                    = Size(40,40),
+            location                = { Anchor("TOPRIGHT", -3, -3)},
+            alpha                   = 0.8,
+            texture                 = {
+                SetAllPoints        = true,
+                Mask                = [[Interface/COMMON/Indicator-Gray]],
+            }
+        }
     },
     [PerSlotFrame] = {
         namefontsize                = _Config.namefontsize,
@@ -464,12 +494,15 @@ Style.UpdateSkin("Default",{
         -- 属性图标样式
         StatsIconFrame              = {
             LayoutManager           = HorizontalLayoutManager(true, false),
+            margin                  = {
+                top = (PER_ITEM_HEIGHT - PER_ICON_HEIGHT) / 2
+            },
             width                   = 1,
             id                      = 1,
             Visible                 = _Config.ShowStatsIcon, --控制是否可见
             CritIconFrame           = {
                 id                  = 1,
-                Size                = Size(PER_ITEM_HEIGHT, PER_ITEM_HEIGHT),
+                Size                = Size(PER_ICON_HEIGHT, PER_ICON_HEIGHT),
                 texture             = {
                     file            = SEData.GetStatsTexture(),
                     SetAllPoints    = true,
@@ -484,7 +517,7 @@ Style.UpdateSkin("Default",{
             },
             HastIconFrame           = {
                 id                  = 2,
-                Size                = Size(PER_ITEM_HEIGHT, PER_ITEM_HEIGHT),
+                Size                = Size(PER_ICON_HEIGHT, PER_ICON_HEIGHT),
                 texture             = {
                     file            = SEData.GetStatsTexture(),
                     SetAllPoints    = true,
@@ -499,7 +532,7 @@ Style.UpdateSkin("Default",{
             },
             MastIconFrame           = {
                 id                  = 3,
-                Size                = Size(PER_ITEM_HEIGHT, PER_ITEM_HEIGHT),
+                Size                = Size(PER_ICON_HEIGHT, PER_ICON_HEIGHT),
                 texture             = {
                     file            = SEData.GetStatsTexture(),
                     SetAllPoints    = true,
@@ -514,7 +547,7 @@ Style.UpdateSkin("Default",{
             },
             VersIconFrame           = {
                 id                  = 4,
-                Size                = Size(PER_ITEM_HEIGHT, PER_ITEM_HEIGHT),
+                Size                = Size(PER_ICON_HEIGHT, PER_ICON_HEIGHT),
                 texture             = {
                     file            = SEData.GetStatsTexture(),
                     SetAllPoints    = true,

@@ -117,25 +117,19 @@ function GetLevelLine(tooltip, keyword)
     end
 end
 
--- 获取unit专精
+-- 获取unit职业相关信息
 function GetUnitSpec(unit)
-	local specID, specName
+	local specID, specName, classFile, icon, className, argbHex
 	if unit =="player" then
 		specID = GetSpecialization()
-		specName = select(2, GetSpecializationInfoByID(specID))
+		specName, _, icon = select(2, GetSpecializationInfo(specID))
 	else
 		specID = GetInspectSpecialization(unit)
 		if specID and specID > 0 then
-			specName = select(2, GetSpecializationInfoByID(specID))
+			specName, _, icon = select(2, GetSpecializationInfoByID(specID))
 		end
 	end
-	local className, classFilename, classID = UnitClass(unit)
-	return specName or className or ""
-end
-
--- 获取职业颜色
-function GettUnitColor(unit)
-	local _, classFilename = UnitClass(unit)
-	local argbHex = select(4,GetClassColor(classFilename))
-	return "|c" .. argbHex or ""
+	className, classFile = UnitClass(unit)
+	argbHex = select(4,GetClassColor(classFile))
+	return specID, specName, classFile, icon, className, "|c" .. argbHex or ""
 end

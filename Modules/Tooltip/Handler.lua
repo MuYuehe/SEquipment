@@ -12,7 +12,7 @@ function Hook_GameTooltip_ProcessInfo(self, info)
     if not C_PlayerInfo.GUIDIsPlayer(guid) then return end
     local _, unitId = self:GetUnit()
     if not unitId or guid ~= UnitGUID(unitId) then return end
-    if not CanInspect(unitId) or not UnitIsVisible(unitId) then return end
+    if not CanInspect(unitId) or not UnitIsVisible(unitId) then AddExtraLine(guid, "a/n") return end
     local data = guids[guid]
     if data and data.avgItemLevelEquipped > 0 then
         return AddExtraLine(guid, data.avgItemLevelEquipped, data.specName, data.argbHex)
@@ -49,11 +49,10 @@ function Hook_NotifyInspect(unitid)
     local inspectGuid = NextEvent("INSPECT_READY")
     if guid ~= inspectGuid or not data then return end
 
-    local specName  = GetUnitSpec(unitid)
-    local argbHex   = GettUnitColor(unitid)
+    local specID, specName, classFile, icon, className, argbHex  = GetUnitSpec(unitid)
     local avgItemLevelEquipped  = C_PaperDollInfo.GetInspectItemLevel(unitid)
     data.avgItemLevelEquipped   = avgItemLevelEquipped
-    data.specName               = specName
+    data.specName               = specName or className or ""
     data.argbHex                = argbHex
     data.guid                   = guid
 
