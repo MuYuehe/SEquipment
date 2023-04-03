@@ -78,31 +78,41 @@ function P_GetVersa(unit)
 	return format("%.1f", versatilityDamageBonus), versatility,format("%.1f", versatilityDamageTakenReduction),ITEM_MOD_VERSATILITY
 end
 
--- get one piece equip`s info
+-- 获取item相关信息
 function GetItemUseInfo(itemLink,slotID, unit)
-    local dict = Dictionary()
-	dict["slotID"] = slotID
-	if itemLink then
-		-- itemLink info
-		local itemLink_string = { "start", "itemID", "enchantID", "gemID1", "gemID2", "gemID3", "gemID4" }
-		-- GetItemInfo info
-		local itemLink_api = { "itemName", "itemLink", "itemQuality" }
-		-- get realLevel
-		local effectLevel = GetDetailedItemLevelInfo(itemLink)
-		local itemEquipLoc, _, itemType = select(4, GetItemInfoInstant(itemLink))
-		local itemLink_dictionary = Dictionary(itemLink_string, {strsplit(":",itemLink)})
-		local itemInfo_dictionary = Dictionary(itemLink_api, {GetItemInfo(itemLink)})
-		local itemStats_dictionary = Dictionary(GetItemStats(itemLink))
-		dict = dict:Update(itemLink_dictionary)
-		dict = dict:Update(itemInfo_dictionary)
-		dict = dict:Update(itemStats_dictionary)
-		dict["itemRealLevel"] = effectLevel
-		dict["itemEquipLoc"] = itemEquipLoc
-		dict["itemType"] = itemType
-		dict["unit"] = unit
-	end
+	local data = {}
 
-	return dict
+	if itemLink then
+		local _, itemID, enchantID, gemID1, gemID2, gemID3, gemID4
+		local itemEquipLoc, itemType, itemName, itemQuality, setID
+		-- get realLevel
+		local itemLevel 	= GetDetailedItemLevelInfo(itemLink)
+		local statsTable 	= GetItemStats(itemLink)
+		_, itemID, enchantID, gemID1, gemID2, gemID3, gemID4 = strsplit(":",itemLink)
+		itemName, _, itemQuality, _, _, itemType, _, _, itemEquipLoc, _, _, _, _, _, _, setID = GetItemInfo(itemLink)
+		data = {
+			["itemID"] 		= itemID,
+			["itemLink"] 	= itemLink,
+			["itemName"] 	= itemName or "",
+			["itemQuality"] = ITEM_QUALITY_COLORS[itemQuality],
+			["itemEquipLoc"]= _G[itemEquipLoc] or "",
+			["itemType"] 	= itemType or "",
+			["itemLevel"] 	= itemLevel or 0,
+			["setID"] 		= setID,
+			["gemID1"] 		= gemID1 and gemID1 ~= "" and gemID1,
+			["gemID2"] 		= gemID2 and gemID2 ~= "" and gemID2,
+			["gemID3"] 		= gemID3 and gemID3 ~= "" and gemID3,
+			["gemID4"] 		= gemID4 and gemID4 ~= "" and gemID4,
+			["enchantID"] 	= enchantID and enchantID ~= "" and enchantID,
+			["ITEM_MOD_CRIT_RATING_SHORT"] 		= statsTable["ITEM_MOD_CRIT_RATING_SHORT"] or 0,
+			["ITEM_MOD_HASTE_RATING_SHORT"] 	= statsTable["ITEM_MOD_HASTE_RATING_SHORT"] or 0,
+			["ITEM_MOD_MASTERY_RATING_SHORT"] 	= statsTable["ITEM_MOD_MASTERY_RATING_SHORT"] or 0,
+			["ITEM_MOD_VERSATILITY"] 			= statsTable["ITEM_MOD_VERSATILITY"] or 0,
+		}
+	end
+	data["slotID"] 	= slotID
+	data["unit"] 	= unit
+	return data
 end
 
 -- 获取tooltip含关键字的行
