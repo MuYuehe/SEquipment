@@ -9,6 +9,7 @@ L = _Locale
 --======================--
 PER_ITEM_HEIGHT = 23
 PER_ICON_HEIGHT = 20
+local tooltip = CreateFrame("GameTooltip", "MyScanningTooltip", nil, "GameTooltipTemplate")
 --======================--
 -- Default Class
 --======================--
@@ -16,23 +17,19 @@ class "UnitInfoFrame" (function (_ENV)
     inherit "Frame"
 
     property "data" { type = Table, handler = function(self, table)
-        if not table then
-            return
-        end
-        self.avgLevel = STAT_AVERAGE_ITEM_LEVEL .. ":" .. table["avgItemLevel"]
-        self.specIcon = table["specIcon"]
-        self.classFileName = table["classFileName"]
+        if not table then return end
+
+        self.avgLevel       = STAT_AVERAGE_ITEM_LEVEL .. ":" .. table["avgItemLevel"]
+        self.specIcon       = table["specIcon"]
+        self.classFileName  = table["classFileName"]
     end}
     __Observable__()
     property "avgLevel" { type = String + Number, default = ""}
-    __Observable__()
     property "specIcon" { type = String + Number, default = "", handler = function(self, specIcon)
         if type(specIcon) == "number" then
             self:GetChild("SpecFrame"):GetChild("texture"):SetTexture(specIcon)
         elseif type(specIcon) == "string" then
             self:GetChild("SpecFrame"):GetChild("texture"):SetTexture("Interface/ICONS/ClassIcon_" .. specIcon)
-        else
-            self:GetChild("SpecFrame"):GetChild("texture"):SetTexture("")
         end
     end}
     __Template__ {
@@ -163,67 +160,47 @@ class "PerSlotFrame" (function (_ENV)
 
     property "data" { type = Table, handler = function(self, table)
         -- table值为其中一件装备得信息,什么条件下继续向下进行,table["itemLink"]不为空
-        if not table["itemLink"] then
-            -- 如果table["itemLink"] == nil, 则不继续执行 return, 同时此Frame需要Hide()
-            self:Hide()
-            return
-        end
+        if not table["itemLink"] then self:Hide() return end
+
         -- 分配table中值到各个property中
-        self.itemLink   = table["itemLink"]
-        self.slotID     = table["slotID"] --用于确定frame在layout中的顺序
-        self.unit       = table["unit"]
+        self.itemLink       = table["itemLink"]
+        self.slotID         = table["slotID"] --用于确定frame在layout中的顺序
+        self.unit           = table["unit"]
         -- ==================== --
-        self.itemLevl   = table["itemRealLevel"]
-        self.itemName   = table["itemName"]
-        self.itemEquipLoc= _G[table["itemEquipLoc"]]
-        self.itemQuality= table["itemQuality"]
+        self.itemLevl       = table["itemLevel"]
+        self.itemName       = table["itemName"]
+        self.itemEquipLoc   = table["itemEquipLoc"]
+        self.setID          = table["setID"]
+        self.itemQuality    = table["itemQuality"]
         -- ==================== --
-        -- 标记套装
-        local setID = select(16, GetItemInfo(self.itemLink))
-        if SEData.GetSetID(setID) then
-            self:GetChild("EquipInfoFrame"):GetChild("NameFrame"):GetChild("font"):SetTextColor(0.93, 0.38, 0.35)
-        else
-            local r, g, b = ITEM_QUALITY_COLORS[self.itemQuality].r, ITEM_QUALITY_COLORS[self.itemQuality].g, ITEM_QUALITY_COLORS[self.itemQuality].b
-            self:GetChild("EquipInfoFrame"):GetChild("NameFrame"):GetChild("font"):SetTextColor(r, g, b)
-        end
-        -- ==================== --
-        self.hasCrit    = table["ITEM_MOD_CRIT_RATING_SHORT"] ~= nil
-        self.hasHaste   = table["ITEM_MOD_HASTE_RATING_SHORT"] ~= nil
-        self.hasMastery = table["ITEM_MOD_MASTERY_RATING_SHORT"] ~= nil
-        self.hasVersa   = table["ITEM_MOD_VERSATILITY"] ~= nil
+        self.hasCrit    = table["ITEM_MOD_CRIT_RATING_SHORT"]
+        self.hasHaste   = table["ITEM_MOD_HASTE_RATING_SHORT"]
+        self.hasMastery = table["ITEM_MOD_MASTERY_RATING_SHORT"]
+        self.hasVersa   = table["ITEM_MOD_VERSATILITY"]
         -- ==================== --
         self.gemID1     = table["gemID1"]
         self.gemID2     = table["gemID2"]
         self.gemID3     = table["gemID3"]
         self.gemID4     = table["gemID4"]
-        self.hasEnchant = table["enchantID"]
+        self.enchantID  = table["enchantID"]
         -- ==================== --
-        if self.gemID1 == "" and self.gemID2 == "" and self.gemID3 == ""
-                and self.gemID4 == "" and self.hasEnchant == ""
-                or ( not self.isExtraInfoShown) then
-            self:GetChild("ExtraInfoFrame"):Hide()
-        else
+        if (self.gemID1 or self.gemID2 or self.gemID3 or self.gemID4 or self.enchantID) and self.isExtraInfoShown then
             self:GetChild("ExtraInfoFrame"):Show()
+        else
+            self:GetChild("ExtraInfoFrame"):Hide()
         end
         -- ==================== --
         self:Show()
     end}
-    property "namefontsize" { type = Number, default = 15, handler = function(self, size)
-        if self:GetChild("EquipInfoFrame"):GetChild("NameFrame"):GetWidth() < 1 then
-            return
-        end
-        self:GetChild("EquipInfoFrame"):GetChild("NameFrame"):SetWidth(
-            self:GetChild("EquipInfoFrame"):GetChild("NameFrame"):GetChild("font"):GetStringWidth())
-    end}
-    property "itemLink" { type = String, default = ""}
-    property "slotID" { type = Number, handler = function(self, id)
+    property "itemLink"     { type = String, default = ""}
+    property "slotID"       { type = Number, handler = function(self, id)
         -- 前面有个TitleFrame,所以装备列表从2开始往下顺序
         self:SetID(id)
     end}
-    property "unit"     {type = String, default = "" }
+    property "unit"         {type = String, default = "" }
     __Observable__()
-    property "itemLevl" { type = Number, default = 0 }
-    property "itemName" { type = String, default = "", handler = function(self, name)
+    property "itemLevl"     { type = Number, default = 0 }
+    property "itemName"     { type = String, default = "", handler = function(self, name)
         -- 拿到name之后,因为之前已经验证过table,所以这里不需要再次验证name
         self:GetChild("EquipInfoFrame"):GetChild("NameFrame"):GetChild("font"):SetText(name)
         -- 由于fontstring渲染机制的原因,只有再parent:OnUpdate的时候才会进行渲染
@@ -239,34 +216,42 @@ class "PerSlotFrame" (function (_ENV)
     end}
     property "itemEquipLoc" {type = String, default = ""}
     __Observable__()
-    property "itemQuality"  { type = Number, default = 0 }
-    property "hasCrit"      { type = Boolean, handler = function(self, bol)
+    property "itemColor"    { type = Table }
+    property "setID"        { type = Number }
+    property "itemQuality"  { type = Table , handler = function(self, table)
+        if SEData.GetSetID(self.setID) then
+            self.itemColor = {["hex"]="",["r"]=0.93,["g"]=0.38,["b"]=0.35 }
+        else
+            self.itemColor = table
+        end
+    end}
+    property "hasCrit"      { type = Number, handler = function(self, number)
         -- 通过bol的真假判断装备是否有此绿字属性,真则显示
-        if bol then
+        if number ~= 0 then
             self:GetChild("StatsIconFrame"):GetChild("CritIconFrame"):Show()
         else
             self:GetChild("StatsIconFrame"):GetChild("CritIconFrame"):Hide()
         end
     end}
-    property "hasHaste"      { type = Boolean, handler = function(self, bol)
+    property "hasHaste"      { type = Number, handler = function(self, number)
         -- 通过bol的真假判断装备是否有此绿字属性,真则显示
-        if bol then
+        if number ~= 0 then
             self:GetChild("StatsIconFrame"):GetChild("HastIconFrame"):Show()
         else
             self:GetChild("StatsIconFrame"):GetChild("HastIconFrame"):Hide()
         end
     end}
-    property "hasMastery"      { type = Boolean, handler = function(self, bol)
+    property "hasMastery"      { type = Number, handler = function(self, number)
         -- 通过bol的真假判断装备是否有此绿字属性,真则显示
-        if bol then
+        if number ~= 0 then
             self:GetChild("StatsIconFrame"):GetChild("MastIconFrame"):Show()
         else
             self:GetChild("StatsIconFrame"):GetChild("MastIconFrame"):Hide()
         end
     end}
-    property "hasVersa"      { type = Boolean, handler = function(self, bol)
+    property "hasVersa"      { type = Number, handler = function(self, number)
         -- 通过bol的真假判断装备是否有此绿字属性,真则显示
-        if bol then
+        if number ~= 0 then
             self:GetChild("StatsIconFrame"):GetChild("VersIconFrame"):Show()
         else
             self:GetChild("StatsIconFrame"):GetChild("VersIconFrame"):Hide()
@@ -279,51 +264,57 @@ class "PerSlotFrame" (function (_ENV)
             self:GetChild("ExtraInfoFrame"):Hide()
         end
     end}
-    property "gemID1"       { type = Number + String, handler = function(self, id)
+    property "gemID1"       { type = String + Boolean, handler = function(self, id)
         -- 首先判断id是否为空,如果为空,则隐藏此宝石得frame,并不再执行,否则显示
-        if id == "" then
+        if not id then
             self:GetChild("ExtraInfoFrame"):GetChild("Gem1Frame"):Hide()
             return
         end
         self:GetChild("ExtraInfoFrame"):GetChild("Gem1Frame"):Show()
         self:GetChild("ExtraInfoFrame"):GetChild("Gem1Frame"):GetChild("texture"):SetTexture(GetItemIcon(id))
     end}
-    property "gemID2"   { type = Number + String, handler = function(self, id)
+    property "gemID2"   { type = String + Boolean, handler = function(self, id)
         -- 首先判断id是否为空,如果为空,则隐藏此宝石得frame,并不再执行,否则显示
-        if id == "" then
+        if not id then
             self:GetChild("ExtraInfoFrame"):GetChild("Gem2Frame"):Hide()
             return
         end
         self:GetChild("ExtraInfoFrame"):GetChild("Gem2Frame"):Show()
         self:GetChild("ExtraInfoFrame"):GetChild("Gem2Frame"):GetChild("texture"):SetTexture(GetItemIcon(id))
     end}
-    property "gemID3"   { type = Number + String, handler = function(self, id)
+    property "gemID3"   { type = String + Boolean, handler = function(self, id)
         -- 首先判断id是否为空,如果为空,则隐藏此宝石得frame,并不再执行,否则显示
-        if id == "" then
+        if not id then
             self:GetChild("ExtraInfoFrame"):GetChild("Gem3Frame"):Hide()
             return
         end
         self:GetChild("ExtraInfoFrame"):GetChild("Gem3Frame"):Show()
         self:GetChild("ExtraInfoFrame"):GetChild("Gem3Frame"):GetChild("texture"):SetTexture(GetItemIcon(id))
     end}
-    property "gemID4"   { type = Number + String, handler = function(self, id)
+    property "gemID4"   { type = String + Boolean, handler = function(self, id)
         -- 首先判断id是否为空,如果为空,则隐藏此宝石得frame,并不再执行,否则显示
-        if id == "" then
+        if not id then
             self:GetChild("ExtraInfoFrame"):GetChild("Gem4Frame"):Hide()
             return
         end
         self:GetChild("ExtraInfoFrame"):GetChild("Gem4Frame"):Show()
         self:GetChild("ExtraInfoFrame"):GetChild("Gem4Frame"):GetChild("texture"):SetTexture(GetItemIcon(id))
     end}
-    property "hasEnchant" { type = Number + String, handler = function(self, id)
+    property "enchantID" { type = String + Boolean, handler = function(self, id)
         -- 通过判断bol是否为真,控制附魔frame得显示与隐藏
-        if id ~= "" then
+        if id then
+            local enchantItemID = SEData.GetEnchantItemID(id) --暂时只收录了10.0的相关附魔
+            if enchantItemID then
+                local enchantLink = select(2, GetItemInfo(enchantItemID))
+                self.enchantItemLink = enchantLink or ""
+            end
             self:GetChild("ExtraInfoFrame"):GetChild("EnchFrame"):Show()
         else
             self:GetChild("ExtraInfoFrame"):GetChild("EnchFrame"):Hide()
         end
         self:GetChild("ExtraInfoFrame"):GetChild("EnchFrame"):GetChild("texture"):SetTexture("Interface/ICONS/inv_misc_enchantedscroll")
     end}
+    property "enchantItemLink" { type = String, default = ""}
     __Observable__()
     property "bgColor" {type = Table, default = {0,0,0,0}}
 
@@ -382,7 +373,7 @@ class "PerSlotFrame" (function (_ENV)
             self:GetChild("EquipInfoFrame"):GetChild("LevlFrame"):GetChild("font"):SetText(self.itemEquipLoc)
             self.bgColor = {0,0,0,0.3}
             GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-            GameTooltip:SetInventoryItem(self.unit, self.slotID)
+            GameTooltip:SetInventoryItem(self.unit, self.slotID) --TODO
             GameTooltip:Show()
         end
         self:GetChild("EquipInfoFrame"):GetChild("NameFrame").OnLeave   =   function()
@@ -424,6 +415,16 @@ class "PerSlotFrame" (function (_ENV)
             GameTooltip:Show()
         end
         self:GetChild("ExtraInfoFrame"):GetChild("Gem4Frame").OnLeave   =   function()
+            GameTooltip:Hide()
+        end
+        self:GetChild("ExtraInfoFrame"):GetChild("EnchFrame").OnEnter   =   function()
+            if self.enchantItemLink then
+                GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+                GameTooltip:SetHyperlink(self.enchantItemLink)
+                GameTooltip:Show()
+            end
+        end
+        self:GetChild("ExtraInfoFrame"):GetChild("EnchFrame").OnLeave   =   function()
             GameTooltip:Hide()
         end
     end
@@ -484,7 +485,6 @@ Style.UpdateSkin("Default",{
         }
     },
     [PerSlotFrame] = {
-        namefontsize                = _Config.namefontsize,
         LayoutManager               = HorizontalLayoutManager(false, false),
         width                       = 1,
         backdrop                    = {
@@ -587,8 +587,8 @@ Style.UpdateSkin("Default",{
                 Visible             = _Config.ShowEquipmentName, --控制是否可见
                 Height              = PER_ITEM_HEIGHT,
                 font                = {
-                    Font            = _Config.namefontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
-                    -- TextColor       = Wow.FromUIProperty("itemQuality"):Map("x=>ITEM_QUALITY_COLORS[x]"),
+                    Font            = _Config.namefontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = _Config.namefontsize:GetValue()} end),
+                    TextColor       = Wow.FromUIProperty("itemColor"),
                     location        = { Anchor("LEFT")},
                 },
             },
@@ -640,7 +640,6 @@ Style.UpdateSkin("Default",{
                 size                = Size(PER_ITEM_HEIGHT, PER_ITEM_HEIGHT),
                 texture             = {
                     SetAllPoints    = true,
-                    -- file            = [[Interface/ICONS/inv_misc_enchantedscroll]],
                     Mask            = [[Interface/COMMON/Indicator-Gray]],
                 },
             },
