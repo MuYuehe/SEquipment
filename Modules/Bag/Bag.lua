@@ -1,30 +1,37 @@
 Scorpio "SEquipment.core.bag" ""
-
+--======================--
+import "SEquipment.data"
+--======================--
 class "ButtonInfo" (function (_ENV)
     inherit "Frame"
 
     property "data"     { type = Table, handler = function(self, data)
-        if data["itemLink"] and (data["itemType"] == 4 or data["itemType"] == 2) then
-            self:Show()
-        else
-            self:Hide() return
+        
+        if data["itemType"] ~= ARMOR and data["itemType"] ~= WEAPON then
+            self:Hide()
+            return
         end
-        self.width      = data["width"]
-        self.height     = data["height"]
         self.part       = data["itemEquipLoc"]
-        self.level      = data["itemRealLevel"]
+        self.level      = data["itemLevel"]
+        self.setID      = data["setID"]
         self.quality    = data["itemQuality"]
+        self:Show()
     end}
-    __Observable__()
-    property "width"         { type = Number, default = 0}
-    __Observable__()
-    property "height"        { type = Number, default = 0}
     __Observable__()
     property "part"          { type = String, default = ""}
     __Observable__()
     property "level"         { type = Number, default = 0}
     __Observable__()
-    property "quality"       { type = Number, default = 0}
+    property "itemColor"    { type = Table }
+    property "setID"        { type = Number }
+    property "quality"      { type = Table, handler = function(self, table)
+        if SEData.GetSetID(self.setID) then
+            self.itemColor = {["hex"]="",["r"]=0.93,["g"]=0.38,["b"]=0.35 }
+        else
+            self.itemColor = table
+        end
+    end}
+
     __Template__ {
         partFont    = FontString,
         LevelFont   = FontString,
@@ -36,12 +43,9 @@ class "ButtonInfo" (function (_ENV)
 end)
 Style.UpdateSkin("Default",{
     [ButtonInfo] = {
-        width                       = Wow.FromUIProperty("width"),
-        height                      = Wow.FromUIProperty("height"),
-        location                    = { Anchor("CENTER")},
         partFont                    = {
-            Text                    = Wow.FromUIProperty("part"):Map("x=>_G[x]"),
-            TextColor               = Wow.FromUIProperty("quality"):Map("x=>ITEM_QUALITY_COLORS[x]"),
+            Text                    = Wow.FromUIProperty("part"),
+            TextColor               = Wow.FromUIProperty("itemColor"),
             Font                    = {
                 font                = STANDARD_TEXT_FONT,
                 height              = 12,
@@ -51,7 +55,7 @@ Style.UpdateSkin("Default",{
         },
         LevelFont                   = {
             Text                    = Wow.FromUIProperty("level"),
-            TextColor               = Wow.FromUIProperty("quality"):Map("x=>ITEM_QUALITY_COLORS[x]"),
+            TextColor               = Wow.FromUIProperty("itemColor"),
             Font                    = {
                 font                = STANDARD_TEXT_FONT,
                 height              = 15,
