@@ -6,5 +6,5 @@ required-dependencies:
 
 manual-changelog: changelog.txt
 
-<!-- ignore:
-   -->
+ignore:
+  - Picture
