@@ -28,7 +28,7 @@ function Hook_SetItemButtonQuality(self, quality, itemIDOrLink, ...)
         itemIDOrLink = info.hyperlink
 
         local data = GetItemUseInfo(itemIDOrLink, buttonID)
-        self.extraFrame.data = data
+        self.extraFrame.data = data["itemInfo"]
     end
 end
 
@@ -59,8 +59,8 @@ function Hook_InspectPaperDollItemSlotButton_Update(self)
     end
     -- 获取信息并显示出来
     local itemLink = GetInventoryItemLink(InspectFrame and InspectFrame.unit, buttonID)
-    local table = GetItemUseInfo(itemLink, buttonID)
-    self.extraFrame.data = table
+    local data = GetItemUseInfo(itemLink, buttonID)
+    self.extraFrame.data = data["itemInfo"]
 end
 
 __SecureHook__ "PaperDollItemSlotButton_Update" __Async__()
@@ -91,6 +91,6 @@ function Hook_PaperDollItemSlotButton_Update(self)
     end
     -- 获取信息并显示出来
     local itemLink = GetInventoryItemLink("player", buttonID)
-    local table = GetItemUseInfo(itemLink, buttonID)
-    self.extraFrame.data = table
+    local data = GetItemUseInfo(itemLink, buttonID)
+    self.extraFrame.data = data["itemInfo"]
 end

@@ -82,7 +82,7 @@ end
 function GetItemUseInfo(itemLink,slotID, unit)
 	local data = {}
 
-	if itemLink then
+	if itemLink and itemLink ~= "" then
 		local _, itemID, enchantID, gemID1, gemID2, gemID3, gemID4
 		local itemEquipLoc, itemType, itemName, itemQuality, setID
 		-- get realLevel
@@ -91,27 +91,33 @@ function GetItemUseInfo(itemLink,slotID, unit)
 		_, itemID, enchantID, gemID1, gemID2, gemID3, gemID4 = strsplit(":",itemLink)
 		itemName, _, itemQuality, _, _, itemType, _, _, itemEquipLoc, _, _, _, _, _, _, setID = GetItemInfo(itemLink)
 		data = {
-			["itemID"] 		= itemID,
-			["itemLink"] 	= itemLink,
-			["itemName"] 	= itemName or "",
-			["itemQuality"] = ITEM_QUALITY_COLORS[itemQuality],
-			["itemEquipLoc"]= _G[itemEquipLoc] or "",
-			["itemType"] 	= itemType or "",
-			["itemLevel"] 	= itemLevel or 0,
-			["setID"] 		= setID,
-			["gemID1"] 		= gemID1 and gemID1 ~= "" and gemID1,
-			["gemID2"] 		= gemID2 and gemID2 ~= "" and gemID2,
-			["gemID3"] 		= gemID3 and gemID3 ~= "" and gemID3,
-			["gemID4"] 		= gemID4 and gemID4 ~= "" and gemID4,
-			["enchantID"] 	= enchantID and enchantID ~= "" and enchantID,
-			["ITEM_MOD_CRIT_RATING_SHORT"] 		= statsTable["ITEM_MOD_CRIT_RATING_SHORT"] or 0,
-			["ITEM_MOD_HASTE_RATING_SHORT"] 	= statsTable["ITEM_MOD_HASTE_RATING_SHORT"] or 0,
-			["ITEM_MOD_MASTERY_RATING_SHORT"] 	= statsTable["ITEM_MOD_MASTERY_RATING_SHORT"] or 0,
-			["ITEM_MOD_VERSATILITY"] 			= statsTable["ITEM_MOD_VERSATILITY"] or 0,
+			["itemInfo"] 			= {
+				["itemID"] 			= itemID,
+				["itemLink"] 		= itemLink,
+				["itemName"] 		= itemName or "",
+				["itemQuality"] 	= ITEM_QUALITY_COLORS[itemQuality],
+				["itemEquipLoc"]	= _G[itemEquipLoc] or "",
+				["itemType"] 		= itemType or "",
+				["itemLevel"] 		= itemLevel or 0,
+				["setID"] 			= setID,
+			},
+			["extraInfo"]			= {
+				["gemID1"] 			= gemID1 and gemID1 ~= "" and gemID1,
+				["gemID2"] 			= gemID2 and gemID2 ~= "" and gemID2,
+				["gemID3"] 			= gemID3 and gemID3 ~= "" and gemID3,
+				["gemID4"] 			= gemID4 and gemID4 ~= "" and gemID4,
+				["enchantID"] 		= enchantID and enchantID ~= "" and enchantID,
+			},
+			["statsInfo"]			= {
+				["ITEM_MOD_CRIT_RATING_SHORT"] 		= statsTable and statsTable["ITEM_MOD_CRIT_RATING_SHORT"] or 0,
+				["ITEM_MOD_HASTE_RATING_SHORT"] 	= statsTable and statsTable["ITEM_MOD_HASTE_RATING_SHORT"] or 0,
+				["ITEM_MOD_MASTERY_RATING_SHORT"] 	= statsTable and statsTable["ITEM_MOD_MASTERY_RATING_SHORT"] or 0,
+				["ITEM_MOD_VERSATILITY"] 			= statsTable and statsTable["ITEM_MOD_VERSATILITY"] or 0,
+			},
 		}
 	end
-	data["slotID"] 	= slotID
-	data["unit"] 	= unit
+	data["slotID"] 					= slotID
+	data["unit"] 					= unit
 	return data
 end
 

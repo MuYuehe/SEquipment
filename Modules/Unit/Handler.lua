@@ -2,8 +2,12 @@ Scorpio "SEquipment.core.unit.handler" ""
 --======================--
 -- Specialized Func
 --======================--
+local PlayerInfoFrame, TargetInfoFrame
+local PlayerStatsInfoFrame
+local isFlushInHide = true --是否在characterframe隐藏的时候触发PLAYER_EQUIPMENT_CHANGED
+
 local function GetPerItemData(slotID, itemLink, unit, parent)
-	local extraFrame = PerSlotFrame(unit .. "ExtraInfo" .. slotID, parent)
+	local extraFrame = ItemInfoFrame(unit .. "ExtraInfo" .. slotID, parent)
 	extraFrame.data = GetItemUseInfo(itemLink, slotID, unit)
 end
 --======================--
@@ -12,26 +16,16 @@ end
 __Async__()
 function OnEnable(self)
 	--========Player========--
-	PlayerInfoFrame = UnitInfoFrame("PlayerInfoFrame")
+	PlayerInfoFrame = UnitInfoFrame("PlayerInfoFrame", CharacterFrame)
 	PlayerStatsInfoFrame = StatsInfoFrame("PlayerStatsInfoFrame", PlayerInfoFrame)
 	--=========Target========--
 	TargetInfoFrame = UnitInfoFrame("TargetInfoFrame")
 	--=========Init========--
 	for i = 1, 17, 1 do
-		GetPerItemData(i, nil, "player", PlayerInfoFrame)
-		GetPerItemData(i, nil, "target", TargetInfoFrame)
-	end
-	--========Player========--
-	LocalCharacterFrame = GetWrapperUI(CharacterFrame)
-	function LocalCharacterFrame:OnShow()
-		if PlayerInfoFrame:GetParent() ~= PaperDollFrame then
-			PlayerInfoFrame:SetParent(PaperDollFrame)
-			PlayerInfoFrame:SetPoint("TOPLEFT", PaperDollFrame, "TOPRIGHT", -3, 0)
+		if i ~= 4 then
+			GetPerItemData(i, nil, "player", PlayerInfoFrame)
+			GetPerItemData(i, nil, "target", TargetInfoFrame)
 		end
-		PlayerInfoFrame:Show()
-	end
-	function LocalCharacterFrame:OnHide()
-		PlayerInfoFrame:Hide()
 	end
 	--=========Target========--
 	if not IsAddOnLoaded("Blizzard_InspectUI") then
@@ -39,30 +33,54 @@ function OnEnable(self)
         while NextEvent("ADDON_LOADED") ~= "Blizzard_InspectUI" do end
     end
     -- 开始初始化
-	if TargetInfoFrame:GetParent() ~= InspectFrame then
-		TargetInfoFrame:SetParent(InspectFrame)
-		TargetInfoFrame:SetPoint("TOPLEFT", InspectFrame, "TOPRIGHT", -3, 0)
-	end
-	LocalInspectFrame = GetWrapperUI(InspectFrame)
-	function LocalInspectFrame:OnHide()
-		TargetInfoFrame:Hide()
-	end
+	TargetInfoFrame:SetParent(InspectFrame)
+	TargetInfoFrame:SetPoint("TOPLEFT", InspectFrame, "TOPRIGHT", 0, 0)
+	local LocalInspectFrame = GetWrapperUI(InspectFrame)
+
 	function LocalInspectFrame:OnShow()
 		if InspectFrame and InspectFrame.unit then
 			local unit = InspectFrame.unit
 			local specID, specName, classFile, specIcon, className, argbHex = GetUnitSpec(unit)
 			local avgItemLevelEquipped = C_PaperDollInfo.GetInspectItemLevel(unit)
-			local data = {}
-			data["avgItemLevel"] = argbHex .. floor(avgItemLevelEquipped)
-			data["specIcon"] = specIcon or classFile or ""
+			local data = {
+				["avgItemLevel"] = argbHex .. floor(avgItemLevelEquipped),
+				["specIcon"] = specIcon or classFile or "",
+			}
 			TargetInfoFrame.data = data
 		end
 		TargetInfoFrame:Show()
 	end
+	function LocalInspectFrame:OnHide()
+		TargetInfoFrame:Hide()
+	end
 end
 --======================--
--- self
+-- Player
 --======================--
+local LocalCharacterFrame = GetWrapperUI(CharacterFrame)
+function LocalCharacterFrame:OnShow()
+	for i = 1, 17, 1 do
+		if not isFlushInHide then break end
+		if i ~= 4 then
+			local itemLink = GetInventoryItemLink("player", i)
+			GetPerItemData(i, itemLink, "player", PlayerInfoFrame)
+		end
+	end
+	isFlushInHide = false
+	PlayerInfoFrame:Show()
+end
+function LocalCharacterFrame:OnHide()
+	PlayerInfoFrame:Hide()
+end
+__SystemEvent__ "PLAYER_EQUIPMENT_CHANGED" __Async__()
+function EVENT_PLAYER_EQUIPMENT_CHANGED(slotID, hasCurrent)
+	Next()
+	if slotID == 4 or slotID == 19 then return end
+	if not CharacterFrame:IsShown() then isFlushInHide = true end
+
+	local itemLink = GetInventoryItemLink("player", slotID)
+	GetPerItemData(slotID, itemLink, "player", PlayerInfoFrame)
+end
 -- 获取自身绿字属性
 __SecureHook__ "PaperDollFrame_UpdateStats" __Async__()
 function Hook_PaperDollFrame_UpdateStats()
@@ -77,13 +95,14 @@ __SecureHook__ "PaperDollFrame_SetItemLevel"
 function Hook_PaperDollFrame_SetItemLevel(statFrame, unit)
 	local specID, specName, classFile, specIcon, className, argbHex = GetUnitSpec(unit)
 	local _, avgItemLevelEquipped = GetAverageItemLevel()
-	local data = {}
-	data["avgItemLevel"] = argbHex .. floor(avgItemLevelEquipped)
-	data["specIcon"] = specIcon or classFile or ""
+	local data = {
+		["avgItemLevel"] 	= argbHex .. floor(avgItemLevelEquipped),
+		["specIcon"] 		= specIcon or classFile or "",
+	}
 	PlayerInfoFrame.data = data
 end
 --======================--
--- Action
+-- Target
 --======================--
 __AddonSecureHook__ ("Blizzard_InspectUI", "InspectPaperDollItemSlotButton_Update") __Async__()
 function Hook_InspectPaperDollItemSlotButton_Update(self)
@@ -95,14 +114,4 @@ function Hook_InspectPaperDollItemSlotButton_Update(self)
 	local unit = InspectFrame.unit
 	local itemLink = GetInventoryItemLink(unit, slotID)
 	GetPerItemData(slotID, itemLink, "target", TargetInfoFrame)
-end
-
-__SecureHook__ "PaperDollItemSlotButton_Update" __Async__()
-function Hook_PaperDollItemSlotButton_Update(self)
-	Next()
-	local slotID = self:GetID()
-	if self.isBag or slotID == 4 or slotID == 19 then return end
-
-	local itemLink = GetInventoryItemLink("player", slotID)
-	GetPerItemData(slotID, itemLink, "player", PlayerInfoFrame)
 end

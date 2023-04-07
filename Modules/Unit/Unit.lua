@@ -7,13 +7,12 @@ L = _Locale
 --======================--
 -- Constant
 --======================--
-PER_ITEM_HEIGHT = 23
-PER_ICON_HEIGHT = 20
-local tooltip = CreateFrame("GameTooltip", "MyScanningTooltip", nil, "GameTooltipTemplate")
+local PER_ITEM_HEIGHT = 23
+local PER_ICON_HEIGHT = 20
 --======================--
 -- Default Class
 --======================--
-class "UnitInfoFrame" (function (_ENV)
+class "UnitInfoFrame"       (function (_ENV)
     inherit "Frame"
 
     property "data" { type = Table, handler = function(self, table)
@@ -50,8 +49,7 @@ class "UnitInfoFrame" (function (_ENV)
         end
     end
 end)
-
-class "StatsInfoFrame" (function (_ENV)
+class "StatsInfoFrame"      (function (_ENV)
     inherit "Frame"
 
     property "critData" { type = Table, handler = function(self, table)
@@ -152,279 +150,274 @@ class "StatsInfoFrame" (function (_ENV)
         -- ^.^
     end
 end)
-
--- TODO 判断是否需要先应用样式,如果有问题,再应用
--- __InstantApplyStyle__()
-class "PerSlotFrame" (function (_ENV)
+class "ItemStatsInfoFrame"  (function (_ENV)
     inherit "Frame"
 
-    property "data" { type = Table, handler = function(self, table)
-        -- table值为其中一件装备得信息,什么条件下继续向下进行,table["itemLink"]不为空
-        if not table["itemLink"] then self:Hide() return end
+    property "data" { type = Table, handler = function(self, data)
 
-        -- 分配table中值到各个property中
-        self.itemLink       = table["itemLink"]
-        self.slotID         = table["slotID"] --用于确定frame在layout中的顺序
-        self.unit           = table["unit"]
-        -- ==================== --
-        self.itemLevl       = table["itemLevel"]
-        self.itemName       = table["itemName"]
-        self.itemEquipLoc   = table["itemEquipLoc"]
-        self.setID          = table["setID"]
-        self.itemQuality    = table["itemQuality"]
-        -- ==================== --
-        self.hasCrit    = table["ITEM_MOD_CRIT_RATING_SHORT"]
-        self.hasHaste   = table["ITEM_MOD_HASTE_RATING_SHORT"]
-        self.hasMastery = table["ITEM_MOD_MASTERY_RATING_SHORT"]
-        self.hasVersa   = table["ITEM_MOD_VERSATILITY"]
-        -- ==================== --
-        self.gemID1     = table["gemID1"]
-        self.gemID2     = table["gemID2"]
-        self.gemID3     = table["gemID3"]
-        self.gemID4     = table["gemID4"]
-        self.enchantID  = table["enchantID"]
-        -- ==================== --
-        if (self.gemID1 or self.gemID2 or self.gemID3 or self.gemID4 or self.enchantID) and self.isExtraInfoShown then
-            self:GetChild("ExtraInfoFrame"):Show()
-        else
-            self:GetChild("ExtraInfoFrame"):Hide()
-        end
-        -- ==================== --
-        self:Show()
+        -- ===================================== --
+        self.versaNum   = data["ITEM_MOD_VERSATILITY"]
+        self.critNum    = data["ITEM_MOD_CRIT_RATING_SHORT"]
+        self.hasteNum   = data["ITEM_MOD_HASTE_RATING_SHORT"]
+        self.masteryNum = data["ITEM_MOD_MASTERY_RATING_SHORT"]
     end}
-    property "itemLink"     { type = String, default = ""}
-    property "slotID"       { type = Number, handler = function(self, id)
-        -- 前面有个TitleFrame,所以装备列表从2开始往下顺序
-        self:SetID(id)
+    property "critNum"      {type = Number, handler = function(self, num)
+        local frame = self:GetChild("CritIconFrame")
+        frame:SetShown( num ~= 0 )
     end}
-    property "unit"         {type = String, default = "" }
+    property "hasteNum"     {type = Number, handler = function(self, num)
+        local frame = self:GetChild("HastIconFrame")
+        frame:SetShown( num ~= 0 )
+    end}
+    property "masteryNum"   {type = Number, handler = function(self, num)
+        local frame = self:GetChild("MastIconFrame")
+        frame:SetShown( num ~= 0 )
+    end}
+    property "versaNum"     {type = Number, handler = function(self, num)
+        local frame = self:GetChild("VersIconFrame")
+        frame:SetShown( num ~= 0 )
+    end}
+
+    __Template__ {
+        CritIconFrame = Frame,
+        HastIconFrame = Frame,
+        MastIconFrame = Frame,
+        VersIconFrame = Frame,
+        {
+            CritIconFrame = { texture = Texture, font = FontString },
+            HastIconFrame = { texture = Texture, font = FontString },
+            MastIconFrame = { texture = Texture, font = FontString },
+            VersIconFrame = { texture = Texture, font = FontString },
+        }
+    }
+    function __ctor(self)
+        -- nothing to do
+    end
+end)
+class "ItemBaseInfoFrame"   (function (_ENV)
+    inherit "Frame"
+
+    property "data"         { type = Table, handler = function(self, data)
+        -- ===================================== --
+        self.itemLink       = data["itemLink"]
+        self.itemLevel      = data["itemLevel"]
+        self.itemName       = data["itemName"]
+        self.itemEquipLoc   = data["itemEquipLoc"]
+        self.itemSetID      = data["setID"]
+        self.itemQuality    = data["itemQuality"]
+    end}
+    property "itemLink"         { type = String }
     __Observable__()
-    property "itemLevl"     { type = Number, default = 0 }
-    property "itemName"     { type = String, default = "", handler = function(self, name)
-        -- 拿到name之后,因为之前已经验证过table,所以这里不需要再次验证name
-        self:GetChild("EquipInfoFrame"):GetChild("NameFrame"):GetChild("font"):SetText(name)
-        -- 由于fontstring渲染机制的原因,只有再parent:OnUpdate的时候才会进行渲染
-        -- 所以这里可以等待一帧再获取fontstring的width
-        -- TODO 但由于下一帧处理width的原因,可能发生一些不希望的情况,外部获取width的时候还处于上一帧,
-        -- TODO 可能拿到的还是未处理的值,这就需要进一步处理关系了
+    property "itemLevel"        { type = Number }
+    property "itemEquipLoc"     { type = String }
+    property "itemSetID"        { type = Number }
+    __Observable__()
+    property "itemColor"        { type = Table }
+    property "itemName"         {type = String, handler = function(self, str)
+        local frame = self:GetChild("NameFrame")
+        local fontString = frame:GetChild("font")
+        fontString:SetText(str)
         Next(function()
-            -- 其实由于渲染问题,还有很多情况需要处理,例如通过GetStringWidth/GetWidth获取的并不是实际长度,
-            -- 而是浮点长度,但由于FontString的width并不是一个整数,这里还是不要取整赋值
-            self:GetChild("EquipInfoFrame"):GetChild("NameFrame"):SetWidth(
-                self:GetChild("EquipInfoFrame"):GetChild("NameFrame"):GetChild("font"):GetStringWidth())
+            frame:SetWidth(fontString:GetWidth())
         end)
     end}
-    property "itemEquipLoc" {type = String, default = ""}
-    __Observable__()
-    property "itemColor"    { type = Table }
-    property "setID"        { type = Number }
-    property "itemQuality"  { type = Table , handler = function(self, table)
-        if SEData.GetSetID(self.setID) then
+    property "itemQuality"  { type = Table, handler = function(self, table)
+        if SEData.GetSetID(self.itemSetID) then
             self.itemColor = {["hex"]="",["r"]=0.93,["g"]=0.38,["b"]=0.35 }
         else
             self.itemColor = table
         end
     end}
-    property "hasCrit"      { type = Number, handler = function(self, number)
-        -- 通过bol的真假判断装备是否有此绿字属性,真则显示
-        if number ~= 0 then
-            self:GetChild("StatsIconFrame"):GetChild("CritIconFrame"):Show()
-        else
-            self:GetChild("StatsIconFrame"):GetChild("CritIconFrame"):Hide()
-        end
+    property "isLevelShow" { type = Boolean, handler = function(self, bol)
+        self:GetChild("LevlFrame"):SetShown(bol)
+        self:SetShown(self.isNameShow or bol)
     end}
-    property "hasHaste"      { type = Number, handler = function(self, number)
-        -- 通过bol的真假判断装备是否有此绿字属性,真则显示
-        if number ~= 0 then
-            self:GetChild("StatsIconFrame"):GetChild("HastIconFrame"):Show()
-        else
-            self:GetChild("StatsIconFrame"):GetChild("HastIconFrame"):Hide()
-        end
+    property "isNameShow" { type = Boolean, handler = function(self, bol)
+        self:GetChild("NameFrame"):SetShown(bol)
+        self:SetShown(self.isLevelShow or bol)
     end}
-    property "hasMastery"      { type = Number, handler = function(self, number)
-        -- 通过bol的真假判断装备是否有此绿字属性,真则显示
-        if number ~= 0 then
-            self:GetChild("StatsIconFrame"):GetChild("MastIconFrame"):Show()
-        else
-            self:GetChild("StatsIconFrame"):GetChild("MastIconFrame"):Hide()
-        end
-    end}
-    property "hasVersa"      { type = Number, handler = function(self, number)
-        -- 通过bol的真假判断装备是否有此绿字属性,真则显示
-        if number ~= 0 then
-            self:GetChild("StatsIconFrame"):GetChild("VersIconFrame"):Show()
-        else
-            self:GetChild("StatsIconFrame"):GetChild("VersIconFrame"):Hide()
-        end
-    end}
-    property "isExtraInfoShown" {type = Boolean + String, default = false, handler = function(self, bol)
-        if bol then
-            self:GetChild("ExtraInfoFrame"):Show()
-        else
-            self:GetChild("ExtraInfoFrame"):Hide()
-        end
-    end}
-    property "gemID1"       { type = String + Boolean, handler = function(self, id)
-        -- 首先判断id是否为空,如果为空,则隐藏此宝石得frame,并不再执行,否则显示
-        if not id then
-            self:GetChild("ExtraInfoFrame"):GetChild("Gem1Frame"):Hide()
-            return
-        end
-        self:GetChild("ExtraInfoFrame"):GetChild("Gem1Frame"):Show()
-        self:GetChild("ExtraInfoFrame"):GetChild("Gem1Frame"):GetChild("texture"):SetTexture(GetItemIcon(id))
-    end}
-    property "gemID2"   { type = String + Boolean, handler = function(self, id)
-        -- 首先判断id是否为空,如果为空,则隐藏此宝石得frame,并不再执行,否则显示
-        if not id then
-            self:GetChild("ExtraInfoFrame"):GetChild("Gem2Frame"):Hide()
-            return
-        end
-        self:GetChild("ExtraInfoFrame"):GetChild("Gem2Frame"):Show()
-        self:GetChild("ExtraInfoFrame"):GetChild("Gem2Frame"):GetChild("texture"):SetTexture(GetItemIcon(id))
-    end}
-    property "gemID3"   { type = String + Boolean, handler = function(self, id)
-        -- 首先判断id是否为空,如果为空,则隐藏此宝石得frame,并不再执行,否则显示
-        if not id then
-            self:GetChild("ExtraInfoFrame"):GetChild("Gem3Frame"):Hide()
-            return
-        end
-        self:GetChild("ExtraInfoFrame"):GetChild("Gem3Frame"):Show()
-        self:GetChild("ExtraInfoFrame"):GetChild("Gem3Frame"):GetChild("texture"):SetTexture(GetItemIcon(id))
-    end}
-    property "gemID4"   { type = String + Boolean, handler = function(self, id)
-        -- 首先判断id是否为空,如果为空,则隐藏此宝石得frame,并不再执行,否则显示
-        if not id then
-            self:GetChild("ExtraInfoFrame"):GetChild("Gem4Frame"):Hide()
-            return
-        end
-        self:GetChild("ExtraInfoFrame"):GetChild("Gem4Frame"):Show()
-        self:GetChild("ExtraInfoFrame"):GetChild("Gem4Frame"):GetChild("texture"):SetTexture(GetItemIcon(id))
-    end}
-    property "enchantID" { type = String + Boolean, handler = function(self, id)
-        -- 通过判断bol是否为真,控制附魔frame得显示与隐藏
-        if id then
-            local enchantItemID = SEData.GetEnchantItemID(id) --暂时只收录了10.0的相关附魔
-            if enchantItemID then
-                local enchantLink = select(2, GetItemInfo(enchantItemID))
-                self.enchantItemLink = enchantLink or ""
-            end
-            self:GetChild("ExtraInfoFrame"):GetChild("EnchFrame"):Show()
-        else
-            self:GetChild("ExtraInfoFrame"):GetChild("EnchFrame"):Hide()
-        end
-        self:GetChild("ExtraInfoFrame"):GetChild("EnchFrame"):GetChild("texture"):SetTexture("Interface/ICONS/inv_misc_enchantedscroll")
-    end}
-    property "enchantItemLink" { type = String, default = ""}
-    __Observable__()
-    property "bgColor" {type = Table, default = {0,0,0,0}}
-
     __Template__ {
-        StatsIconFrame = Frame,
-        EquipInfoFrame = Frame,
-        ExtraInfoFrame = Frame,
+        LevlFrame = Frame,
+        NameFrame = Frame,
         {
-            StatsIconFrame = {
-                CritIconFrame = Frame,
-                HastIconFrame = Frame,
-                MastIconFrame = Frame,
-                VersIconFrame = Frame,
-                {
-                    CritIconFrame = { texture = Texture, font = FontString },
-                    HastIconFrame = { texture = Texture, font = FontString },
-                    MastIconFrame = { texture = Texture, font = FontString },
-                    VersIconFrame = { texture = Texture, font = FontString },
-                }
-            },
-            EquipInfoFrame = {
-                LevlFrame = Frame,
-                NameFrame = Frame,
-                {
-                    LevlFrame = { font = FontString },
-                    NameFrame = { font = FontString },
-                }
-            },
-            ExtraInfoFrame = {
-                Gem1Frame = Frame,
-                Gem2Frame = Frame,
-                Gem3Frame = Frame,
-                Gem4Frame = Frame,
-                EnchFrame = Frame,
-                {
-                    Gem1Frame    = { texture = Texture },
-                    Gem2Frame    = { texture = Texture },
-                    Gem3Frame    = { texture = Texture },
-                    Gem4Frame    = { texture = Texture },
-                    EnchFrame    = { texture = Texture },
-                }
-            },
-        },
+            LevlFrame = { font = FontString },
+            NameFrame = { font = FontString },
+        }
     }
-
     function __ctor(self)
-        self.OnEnter                                                    =   function(self)
-            self:GetChild("EquipInfoFrame"):GetChild("LevlFrame"):GetChild("font"):SetText(self.itemEquipLoc)
-            self.bgColor = {0,0,0,0.3}
+        local fontString = self:GetChild("LevlFrame"):GetChild("font")
+        self.OnEnter                            = function()
+            fontString:SetText(self.itemEquipLoc)
         end
-        self.OnLeave                                                    =   function(self)
-            self:GetChild("EquipInfoFrame"):GetChild("LevlFrame"):GetChild("font"):SetText(self.itemLevl)
-            self.bgColor = {0,0,0,0}
+        self.OnLeave                            = function()
+            fontString:SetText(self.itemLevel)
         end
-        self:GetChild("EquipInfoFrame"):GetChild("NameFrame").OnEnter   =   function()
-            self:GetChild("EquipInfoFrame"):GetChild("LevlFrame"):GetChild("font"):SetText(self.itemEquipLoc)
-            self.bgColor = {0,0,0,0.3}
-            GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-            GameTooltip:SetInventoryItem(self.unit, self.slotID) --TODO
-            GameTooltip:Show()
+    end
+end)
+class "ItemExtraInfoFrame"  (function (_ENV)
+    inherit "Frame"
+
+    property "data"             { type = Table, handler = function(self, data)
+        -- ============================================ --
+        self.gemID1     = data["gemID1"]
+        self.gemID2     = data["gemID2"]
+        self.gemID3     = data["gemID3"]
+        self.gemID4     = data["gemID4"]
+        self.enchantID  = data["enchantID"]
+        -- ============================================ --
+        local bol = XDictionary(data).Values:Any(function(x) return x ~= false end)
+        self:SetShown(bol and self.isExtraInfoShown)
+    end}
+    property "gemID1"           { type = String + Boolean, handler = function(self, id)
+        -- 首先判断id是否为空,如果为空,则隐藏此宝石得frame,并不再执行,否则显示
+        local frame = self:GetChild("Gem1Frame")
+        frame:SetShown(id and true)
+        if not id then return end
+        frame:GetChild("texture"):SetTexture(GetItemIcon(id))
+    end}
+    property "gemID2"           { type = String + Boolean, handler = function(self, id)
+        -- 首先判断id是否为空,如果为空,则隐藏此宝石得frame,并不再执行,否则显示
+        local frame = self:GetChild("Gem2Frame")
+        frame:SetShown(id and true)
+        if not id then return end
+        frame:GetChild("texture"):SetTexture(GetItemIcon(id))
+    end}
+    property "gemID3"           { type = String + Boolean, handler = function(self, id)
+        -- 首先判断id是否为空,如果为空,则隐藏此宝石得frame,并不再执行,否则显示
+        local frame = self:GetChild("Gem3Frame")
+        frame:SetShown(id and true)
+        if not id then return end
+        frame:GetChild("texture"):SetTexture(GetItemIcon(id))
+    end}
+    property "gemID4"           { type = String + Boolean, handler = function(self, id)
+        -- 首先判断id是否为空,如果为空,则隐藏此宝石得frame,并不再执行,否则显示
+        local frame = self:GetChild("Gem4Frame")
+        frame:SetShown(id and true)
+        if not id then return end
+        frame:GetChild("texture"):SetTexture(GetItemIcon(id))
+    end}
+    property "enchantID"        { type = String + Boolean, handler = function(self, id)
+        -- 通过判断bol是否为真,控制附魔frame得显示与隐藏
+        local frame = self:GetChild("EnchFrame")
+        frame:SetShown(id and true)
+        if not id then return end
+        local enchantItemID = SEData.GetEnchantItemID(id) --暂时只收录了10.0的相关附魔
+        if enchantItemID then
+            local enchantLink = select(2, GetItemInfo(enchantItemID))
+            self.enchantItemLink = enchantLink or ""
         end
-        self:GetChild("EquipInfoFrame"):GetChild("NameFrame").OnLeave   =   function()
-            self:GetChild("EquipInfoFrame"):GetChild("LevlFrame"):GetChild("font"):SetText(self.itemLevl)
-            self.bgColor = {0,0,0,0}
-            GameTooltip:Hide()
-        end
-        self:GetChild("ExtraInfoFrame"):GetChild("Gem1Frame").OnEnter   =   function()
+        frame:GetChild("texture"):SetTexture("Interface/ICONS/inv_misc_enchantedscroll")
+    end}
+    property "enchantItemLink"  { type = String }
+    property "isExtraInfoShown" { type = Boolean + String, default = false, handler = function(self, bol)
+        self:SetShown(bol)
+    end}
+    __Template__ {
+        Gem1Frame = Frame,
+        Gem2Frame = Frame,
+        Gem3Frame = Frame,
+        Gem4Frame = Frame,
+        EnchFrame = Frame,
+        {
+            Gem1Frame    = { texture = Texture },
+            Gem2Frame    = { texture = Texture },
+            Gem3Frame    = { texture = Texture },
+            Gem4Frame    = { texture = Texture },
+            EnchFrame    = { texture = Texture },
+        }
+    }
+    function __ctor(self)
+        local gem1Frame = self:GetChild("Gem1Frame")
+        local gem2Frame = self:GetChild("Gem2Frame")
+        local gem3Frame = self:GetChild("Gem3Frame")
+        local gem4Frame = self:GetChild("Gem4Frame")
+        local enchFrame = self:GetChild("EnchFrame")
+        gem1Frame.OnEnter   =   function()
             local gemlink = select(2, GetItemInfo(self.gemID1))
             GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
             GameTooltip:SetHyperlink(gemlink)
             GameTooltip:Show()
         end
-        self:GetChild("ExtraInfoFrame"):GetChild("Gem1Frame").OnLeave   =   function()
+        gem1Frame.OnLeave   =   function()
             GameTooltip:Hide()
         end
-        self:GetChild("ExtraInfoFrame"):GetChild("Gem2Frame").OnEnter   =   function()
+        gem2Frame.OnEnter   =   function()
             local gemlink = select(2, GetItemInfo(self.gemID2))
             GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
             GameTooltip:SetHyperlink(gemlink)
             GameTooltip:Show()
         end
-        self:GetChild("ExtraInfoFrame"):GetChild("Gem2Frame").OnLeave   =   function()
+        gem2Frame.OnLeave   =   function()
             GameTooltip:Hide()
         end
-        self:GetChild("ExtraInfoFrame"):GetChild("Gem3Frame").OnEnter   =   function()
+        gem3Frame.OnEnter   =   function()
             local gemlink = select(2, GetItemInfo(self.gemID3))
             GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
             GameTooltip:SetHyperlink(gemlink)
             GameTooltip:Show()
         end
-        self:GetChild("ExtraInfoFrame"):GetChild("Gem3Frame").OnLeave   =   function()
+        gem3Frame.OnLeave   =   function()
             GameTooltip:Hide()
         end
-        self:GetChild("ExtraInfoFrame"):GetChild("Gem4Frame").OnEnter   =   function()
+        gem4Frame.OnEnter   =   function()
             local gemlink = select(2, GetItemInfo(self.gemID4))
             GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
             GameTooltip:SetHyperlink(gemlink)
             GameTooltip:Show()
         end
-        self:GetChild("ExtraInfoFrame"):GetChild("Gem4Frame").OnLeave   =   function()
+        gem4Frame.OnLeave   =   function()
             GameTooltip:Hide()
         end
-        self:GetChild("ExtraInfoFrame"):GetChild("EnchFrame").OnEnter   =   function()
+        enchFrame.OnEnter   =   function()
             if self.enchantItemLink then
                 GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
                 GameTooltip:SetHyperlink(self.enchantItemLink)
                 GameTooltip:Show()
             end
         end
-        self:GetChild("ExtraInfoFrame"):GetChild("EnchFrame").OnLeave   =   function()
+        enchFrame.OnLeave   =   function()
+            GameTooltip:Hide()
+        end
+    end
+end)
+class "ItemInfoFrame"       (function (_ENV)
+    inherit "Frame"
+
+    property "data" { type = Table, handler = function(self, data)
+        -- ======================================== --
+        self.unit       = data["unit"]
+        self.slotID     = data["slotID"]
+        -- ======================================== --
+        self:SetShown(data["itemInfo"] and true)
+        if not data["itemInfo"] then return end
+        self.statsData  = data["statsInfo"]
+        self.baseData   = data["itemInfo"]
+        self.extraData  = data["extraInfo"]
+    end}
+    property "unit" { type = String }
+    __Observable__()
+    property "slotID" { type = Number }
+    property "statsData" { type = Table, handler = function(self, data)
+        self:GetChild("StatsInfoFrame").data = data
+    end}
+    property "baseData" { type = Table, handler = function(self, data)
+        self:GetChild("BaseInfoFrame").data = data
+    end}
+    property "extraData" {type = Table, handler = function(self, data)
+        self:GetChild("ExtraInfoFrame").data = data
+    end}
+    __Template__ {
+        StatsInfoFrame  = ItemStatsInfoFrame,
+        BaseInfoFrame   = ItemBaseInfoFrame,
+        ExtraInfoFrame  = ItemExtraInfoFrame,
+    }
+    function __ctor(self)
+        self.OnEnter = function()
+            GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+            GameTooltip:SetInventoryItem(self.unit, self.slotID)
+            GameTooltip:Show()
+        end
+        self.OnLeave = function()
             GameTooltip:Hide()
         end
     end
@@ -433,17 +426,16 @@ end)
 -- Default Style
 --======================--
 Style.UpdateSkin("Default",{
-    [UnitInfoFrame] = {
+    [UnitInfoFrame]         = {
         location                    = _Config.location:Map(function(loc)
-            return { Anchor("TOPLEFT", loc["x"], loc["y"], nil, "TOPRIGHT" ) }
+                                        return { Anchor("TOPLEFT", loc["x"], loc["y"], nil, "TOPRIGHT" ) }
         end),
         Scale                       = _Config.MainScale,
-        LayoutManager               = VerticalLayoutManager(false, false),
+        LayoutManager               = VerticalLayoutManager(true, false),
         height                      = 1,
         minResize                   = Size(1, CharacterFrame:GetHeight() - 1),
         backdrop = {
             edgeFile                = [[Interface/AddOns/SEquipment/Modules/Texture/border]],
-            -- bgFile                  = [[Interface/Tooltips/UI-Tooltip-Background-Azerite]],
             bgFile                  = [[Interface/AddOns/SEquipment/Modules/Texture/background]],
             edgeSize                = 10,
             insets                  = {left = 2,right = 2,top = 2, bottom = 2}
@@ -456,7 +448,7 @@ Style.UpdateSkin("Default",{
             right                   = 5,
             bottom                  = 2,
         },
-        HideFrame                       = {
+        HideFrame                   = {
             size                    = Size(30,30),
             location                = { Anchor("BOTTOMLEFT", 3, 3)},
             texture                 = {
@@ -484,172 +476,25 @@ Style.UpdateSkin("Default",{
             }
         }
     },
-    [PerSlotFrame] = {
-        LayoutManager               = HorizontalLayoutManager(false, false),
-        width                       = 1,
-        backdrop                    = {
+    [StatsInfoFrame]        = {
+        visible                     = _Config.ShowStatsFrame,
+        LayoutManager               = VerticalLayoutManager(false, false),
+        size                        = Size(150, 80),
+        location                    = { Anchor("TOPLEFT", 0, - CharacterFrame:GetHeight()) },
+        backdrop = {
+            edgeFile                = [[Interface/AddOns/SEquipment/Modules/Texture/border]],
             bgFile                  = [[Interface/AddOns/SEquipment/Modules/Texture/background]],
+            edgeSize                = 10,
+            insets                  = {left = 2,right = 2,top = 2, bottom = 2}
         },
-        backdropColor               = Wow.FromUIProperty("bgColor"):Map(function(x) return Color(unpack(x))  end),
-        -- 属性图标样式
-        StatsIconFrame              = {
-            LayoutManager           = HorizontalLayoutManager(true, false),
-            margin                  = {
-                top = (PER_ITEM_HEIGHT - PER_ICON_HEIGHT) / 2
-            },
-            width                   = 1,
-            id                      = 1,
-            Visible                 = _Config.ShowStatsIcon, --控制是否可见
-            CritIconFrame           = {
-                id                  = 1,
-                Size                = Size(PER_ICON_HEIGHT, PER_ICON_HEIGHT),
-                texture             = {
-                    file            = SEData.GetStatsTexture(),
-                    SetAllPoints    = true,
-                    VertexColor     = _Config.criticoncolor,
-                },
-                font                = {
-                    Text            = SEData.GetStatsFont(1),
-                    Font            = _Config.statsiconfontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
-                    TextColor       = _Config.criticoncolor,
-                    location        = { Anchor("CENTER") },
-                }
-            },
-            HastIconFrame           = {
-                id                  = 2,
-                Size                = Size(PER_ICON_HEIGHT, PER_ICON_HEIGHT),
-                texture             = {
-                    file            = SEData.GetStatsTexture(),
-                    SetAllPoints    = true,
-                    VertexColor     = _Config.hasteiconcolor,
-                },
-                font                = {
-                    Text            = SEData.GetStatsFont(2),
-                    Font            = _Config.statsiconfontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
-                    TextColor       = _Config.hasteiconcolor,
-                    location        = { Anchor("CENTER") },
-                }
-            },
-            MastIconFrame           = {
-                id                  = 3,
-                Size                = Size(PER_ICON_HEIGHT, PER_ICON_HEIGHT),
-                texture             = {
-                    file            = SEData.GetStatsTexture(),
-                    SetAllPoints    = true,
-                    VertexColor     = _Config.masteryiconcolor,
-                },
-                font                = {
-                    Text            = SEData.GetStatsFont(3),
-                    Font            = _Config.statsiconfontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
-                    TextColor       = _Config.masteryiconcolor,
-                    location        = { Anchor("CENTER") },
-                }
-            },
-            VersIconFrame           = {
-                id                  = 4,
-                Size                = Size(PER_ICON_HEIGHT, PER_ICON_HEIGHT),
-                texture             = {
-                    file            = SEData.GetStatsTexture(),
-                    SetAllPoints    = true,
-                    VertexColor     = _Config.versaiconcolor,
-                },
-                font                = {
-                    Text            = SEData.GetStatsFont(4),
-                    Font            = _Config.statsiconfontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
-                    TextColor       = _Config.versaiconcolor,
-                    location        = { Anchor("CENTER") },
-                }
-            },
+        backdropbordercolor         = _Config.unitinfobordercolor,
+        backdropcolor               = _Config.unitinfobackcolor,
+        padding                     = {
+            top                     = 2,
+            left                    = 5,
+            right                   = 5,
+            bottom                  = 2,
         },
-        EquipInfoFrame              = {
-            LayoutManager           = HorizontalLayoutManager(false, false),
-            width                   = 1,
-            id                      = 2,
-            --TODO 控制是否可见
-            LevlFrame               = {
-                id                  = 1,
-                Visible             = _Config.ShowLevel, --控制是否可见
-                Size                = Size(PER_ITEM_HEIGHT * 2, PER_ITEM_HEIGHT),
-                font                = {
-                    Text            = Wow.FromUIProperty("itemLevl"),
-                    Font            = _Config.levelfontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
-                    TextColor       = _Config.levelfontcolor,
-                    location        = { Anchor("CENTER")},
-                },
-                backdrop            = {
-                    bgFile          = [[Interface/AddOns/SEquipment/Modules/Texture/background]],
-                    insets          = {left = 5,right = 5,top = 2, bottom = 2}
-                },
-                backdropcolor       = _Config.levelbackcolor,
-            },
-            NameFrame               = {
-                id                  = 2,
-                Visible             = _Config.ShowEquipmentName, --控制是否可见
-                Height              = PER_ITEM_HEIGHT,
-                font                = {
-                    Font            = _Config.namefontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = _Config.namefontsize:GetValue()} end),
-                    TextColor       = Wow.FromUIProperty("itemColor"),
-                    location        = { Anchor("LEFT")},
-                },
-            },
-        },
-        isExtraInfoShown            = _Config.ShowEnchantGem:Map(function(x) return x == true end), --控制ExtraInfoFrame是否可见
-        ExtraInfoFrame              = {
-            -- Visible                 = _Config.ShowEnchantGem, --控制ExtraInfoFrame是否可见
-            id                      = 3,
-            LayoutManager           = HorizontalLayoutManager(false, false),
-            width                   = 1,
-            Gem1Frame               = {
-                id                  = 1,
-                size                = Size(PER_ITEM_HEIGHT, PER_ITEM_HEIGHT),
-                texture             = {
-                    SetAllPoints    = true,
-                    file            = [[Interface/ICONS/inv_misc_enchantedscroll]],
-                    Mask            = [[Interface/COMMON/Indicator-Gray]],
-                },
-            },
-            Gem2Frame               = {
-                id                  = 2,
-                size                = Size(PER_ITEM_HEIGHT, PER_ITEM_HEIGHT),
-                texture             = {
-                    SetAllPoints    = true,
-                    file            = [[Interface/ICONS/inv_misc_enchantedscroll]],
-                    Mask            = [[Interface/COMMON/Indicator-Gray]],
-                },
-            },
-            Gem3Frame               = {
-                id                  = 3,
-                size                = Size(PER_ITEM_HEIGHT, PER_ITEM_HEIGHT),
-                texture             = {
-                    SetAllPoints    = true,
-                    file            = [[Interface/ICONS/inv_misc_enchantedscroll]],
-                    Mask            = [[Interface/COMMON/Indicator-Gray]],
-                },
-            },
-            Gem4Frame               = {
-                id                  = 4,
-                size                = Size(PER_ITEM_HEIGHT, PER_ITEM_HEIGHT),
-                texture             = {
-                    SetAllPoints    = true,
-                    file            = [[Interface/ICONS/inv_misc_enchantedscroll]],
-                    Mask            = [[Interface/COMMON/Indicator-Gray]],
-                },
-            },
-            EnchFrame               = {
-                id                  = 5,
-                size                = Size(PER_ITEM_HEIGHT, PER_ITEM_HEIGHT),
-                texture             = {
-                    SetAllPoints    = true,
-                    Mask            = [[Interface/COMMON/Indicator-Gray]],
-                },
-            },
-        },
-    },
-    [StatsInfoFrame] = {
-        visible = _Config.ShowStatsFrame,
-        id              = 19, --用于对接自动布局框架,后续有需求可以改成动态 19是因为除去战袍只剩17个槽位,然后还有个TitleFrame id = 1,所以按顺序此frame的id为19
-        LayoutManager   = VerticalLayoutManager(false, false),
-        height          = 1,
         CritInfoFrame               = {
             id                      = 1,
             LayoutManager           = HorizontalLayoutManager(false, false),
@@ -789,6 +634,167 @@ Style.UpdateSkin("Default",{
                     location        = { Anchor("LEFT")},
                 }
             },
+        },
+    },
+    [ItemStatsInfoFrame]    = {
+        Visible                             = _Config.ShowStatsIcon,
+        size                                = Size(PER_ITEM_HEIGHT * 4, PER_ITEM_HEIGHT),
+        CritIconFrame                       = {
+            size                            = Size(PER_ICON_HEIGHT, PER_ICON_HEIGHT),
+            location                        = { Anchor("CENTER", - PER_ITEM_HEIGHT * 3 / 2, 0) },
+            texture                         = {
+                file                        = SEData.GetStatsTexture(),
+                SetAllPoints                = true,
+                VertexColor                 = _Config.criticoncolor,
+            },
+            font                            = {
+                Text                        = SEData.GetStatsFont(1),
+                Font                        = _Config.statsiconfontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
+                TextColor                   = _Config.criticoncolor,
+                location                    = { Anchor("CENTER") },
+            },
+        },
+        HastIconFrame                       = {
+            size                            = Size(PER_ICON_HEIGHT, PER_ICON_HEIGHT),
+            location                        = { Anchor("CENTER", - PER_ITEM_HEIGHT / 2, 0) },
+            texture                         = {
+                file                        = SEData.GetStatsTexture(),
+                SetAllPoints                = true,
+                VertexColor                 = _Config.hasteiconcolor,
+            },
+            font                            = {
+                Text                        = SEData.GetStatsFont(2),
+                Font                        = _Config.statsiconfontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
+                TextColor                   = _Config.hasteiconcolor,
+                location                    = { Anchor("CENTER") },
+            },
+        },
+        MastIconFrame                       = {
+            size                            = Size(PER_ICON_HEIGHT, PER_ICON_HEIGHT),
+            location                        = { Anchor("CENTER", PER_ITEM_HEIGHT / 2, 0) },
+            texture                         = {
+                file                        = SEData.GetStatsTexture(),
+                SetAllPoints                = true,
+                VertexColor                 = _Config.masteryiconcolor,
+            },
+            font                            = {
+                Text                        = SEData.GetStatsFont(3),
+                Font                        = _Config.statsiconfontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
+                TextColor                   = _Config.masteryiconcolor,
+                location                    = { Anchor("CENTER") },
+            },
+        },
+        VersIconFrame                       = {
+            size                            = Size(PER_ICON_HEIGHT, PER_ICON_HEIGHT),
+            location                        = { Anchor("CENTER", PER_ITEM_HEIGHT * 3 / 2, 0) },
+            texture                         = {
+                file                        = SEData.GetStatsTexture(),
+                SetAllPoints                = true,
+                VertexColor                 = _Config.versaiconcolor,
+            },
+            font                            = {
+                Text                        = SEData.GetStatsFont(4),
+                Font                        = _Config.statsiconfontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
+                TextColor                   = _Config.versaiconcolor,
+                location                    = { Anchor("CENTER") },
+            },
+        },
+    },
+    [ItemBaseInfoFrame]     = {
+        isLevelShow                         = _Config.ShowLevel,
+        isNameShow                          = _Config.ShowEquipmentName,
+        size                                = Size(PER_ITEM_HEIGHT * 3, PER_ITEM_HEIGHT),
+        LayoutManager                       = HorizontalLayoutManager(false, false),
+        LevlFrame                           = {
+            id                              = 1,
+            size                            = Size(PER_ITEM_HEIGHT * 2, PER_ITEM_HEIGHT),
+            font                            = {
+                Text                        = Wow.FromUIProperty("itemLevel"),
+                Font                        = _Config.levelfontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
+                TextColor                   = _Config.levelfontcolor,
+                location                    = { Anchor("CENTER")},
+            },
+            backdrop                        = {
+                bgFile                      = [[Interface/AddOns/SEquipment/Modules/Texture/background]],
+                insets                      = {left = 5,right = 5,top = 2, bottom = 2}
+            },
+            backdropcolor                   = _Config.levelbackcolor,
+        },
+        NameFrame                           = {
+            id                              = 2,
+            size                            = Size(PER_ITEM_HEIGHT, PER_ITEM_HEIGHT),
+            font                            = {
+                Font                        = _Config.namefontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = _Config.namefontsize:GetValue()} end),
+                TextColor                   = Wow.FromUIProperty("itemColor"),
+                location                    = { Anchor("LEFT") },
+            },
+        },
+    },
+    [ItemExtraInfoFrame]    = {
+        isExtraInfoShown                    = _Config.ShowEnchantGem,
+        LayoutManager                       = HorizontalLayoutManager(false, false),
+        size                                = Size(PER_ITEM_HEIGHT * 5, PER_ITEM_HEIGHT),
+        Gem1Frame                           = {
+            id                              = 1,
+            size                            = Size(PER_ITEM_HEIGHT, PER_ITEM_HEIGHT),
+            texture                         = {
+                SetAllPoints                = true,
+                file                        = [[Interface/ICONS/inv_misc_enchantedscroll]],
+                Mask                        = [[Interface/COMMON/Indicator-Gray]],
+            },
+        },
+        Gem2Frame                           = {
+            id                              = 2,
+            size                            = Size(PER_ITEM_HEIGHT, PER_ITEM_HEIGHT),
+            texture                         = {
+                SetAllPoints                = true,
+                file                        = [[Interface/ICONS/inv_misc_enchantedscroll]],
+                Mask                        = [[Interface/COMMON/Indicator-Gray]],
+            },
+        },
+        Gem3Frame                           = {
+            id                              = 3,
+            size                            = Size(PER_ITEM_HEIGHT, PER_ITEM_HEIGHT),
+            texture                         = {
+                SetAllPoints                = true,
+                file                        = [[Interface/ICONS/inv_misc_enchantedscroll]],
+                Mask                        = [[Interface/COMMON/Indicator-Gray]],
+            },
+        },
+        Gem4Frame                           = {
+            id                              = 4,
+            size                            = Size(PER_ITEM_HEIGHT, PER_ITEM_HEIGHT),
+            texture                         = {
+                SetAllPoints                = true,
+                file                        = [[Interface/ICONS/inv_misc_enchantedscroll]],
+                Mask                        = [[Interface/COMMON/Indicator-Gray]],
+            },
+        },
+        EnchFrame                           = {
+            id                              = 5,
+            size                            = Size(PER_ITEM_HEIGHT, PER_ITEM_HEIGHT),
+            texture                         = {
+                SetAllPoints                = true,
+                Mask                        = [[Interface/COMMON/Indicator-Gray]],
+            },
+        },
+    },
+    [ItemInfoFrame]         = {
+        id                                  = Wow.FromUIProperty("slotID"):Map(function(id)
+                                                local uid = id
+                                                if id > 4 then uid = id - 1 end
+                                                return uid
+        end),
+        LayoutManager                       = HorizontalLayoutManager(false, false),
+        size                                = Size(PER_ITEM_HEIGHT * 12, PER_ITEM_HEIGHT),
+        StatsInfoFrame                      = {
+            id                              = 1,
+        },
+        BaseInfoFrame                       = {
+            id                              = 2,
+        },
+        ExtraInfoFrame                      = {
+            id                              = 3,
         },
     },
 })
