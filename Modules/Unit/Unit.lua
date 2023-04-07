@@ -12,10 +12,10 @@ local PER_ICON_HEIGHT = 20
 --======================--
 -- Default Class
 --======================--
-class "UnitInfoFrame"       (function (_ENV)
+class "UnitMainFrame"       (function (_ENV)
     inherit "Frame"
 
-    property "data" { type = Table, handler = function(self, table)
+    property "data"     { type = Table, handler = function(self, table)
         if not table then return end
 
         self.avgLevel       = STAT_AVERAGE_ITEM_LEVEL .. ":" .. table["avgItemLevel"]
@@ -32,13 +32,13 @@ class "UnitInfoFrame"       (function (_ENV)
         end
     end}
     __Template__ {
-        LeveFrame = Frame,
-        SpecFrame = Frame,
-        HideFrame = Frame,
+        LeveFrame               = Frame,
+        SpecFrame               = Frame,
+        HideFrame               = Frame,
         {
-            HideFrame = { texture = Texture},
-            LeveFrame = { font = FontString},
-            SpecFrame = { texture = Texture},
+            HideFrame           = { texture = Texture},
+            LeveFrame           = { font = FontString},
+            SpecFrame           = { texture = Texture},
         }
     }
     function __ctor(self)
@@ -49,103 +49,56 @@ class "UnitInfoFrame"       (function (_ENV)
         end
     end
 end)
-class "StatsInfoFrame"      (function (_ENV)
+class "PerStatsFrame"       (function (_ENV)
     inherit "Frame"
 
-    property "critData" { type = Table, handler = function(self, table)
-        self.critName       = table[4] .. ":"
-        self.critPercent    = table[1] .. "%"
-        self.critNumber     = "+" .. table[2]
-    end}
-    property "hasteData" { type = Table, handler = function(self, table)
-        self.hasteName       = table[4] .. ":"
-        self.hastePercent    = table[1] .. "%"
-        self.hasteNumber     = "+" .. table[2]
-    end}
-    property "masteryData" { type = Table, handler = function(self, table)
-        self.masteryName       = table[4] .. ":"
-        self.masteryPercent    = table[1] .. "%"
-        self.masteryNumber     = "+" .. table[2]
-    end}
-    property "versaData" { type = Table, handler = function(self, table)
-        self.versaName       = table[4] .. ":"
-        self.versaPercent    = table[1] .. "%"
-        self.versaNumber     = "+" .. table[2]
+    property "data"     { type = Table, handler = function(self, data)
+        -- ======================================== --
+        self.name           = data[4] .. ":"
+        self.percent        = data[1] .. "%"
+        self.number         = "+" .. data[2]
     end}
     __Observable__()
-    property "critName" { type = String, default = ""}
+    property "name"     { type = String }
     __Observable__()
-    property "critPercent" { type = String, default = ""}
+    property "percent"  { type = String }
     __Observable__()
-    property "critNumber" { type = String, default = ""}
-    __Observable__()
-    property "hasteName" { type = String, default = ""}
-    __Observable__()
-    property "hastePercent" { type = String, default = ""}
-    __Observable__()
-    property "hasteNumber" { type = String, default = ""}
-    __Observable__()
-    property "masteryName" { type = String, default = ""}
-    __Observable__()
-    property "masteryPercent" { type = String, default = ""}
-    __Observable__()
-    property "masteryNumber" { type = String, default = ""}
-    __Observable__()
-    property "versaName" { type = String, default = ""}
-    __Observable__()
-    property "versaPercent" { type = String, default = ""}
-    __Observable__()
-    property "versaNumber" { type = String, default = ""}
-
+    property "number"   { type = Number }
     __Template__ {
-        CritInfoFrame = Frame,
-        HastInfoFrame = Frame,
-        MastInfoFrame = Frame,
-        VersInfoFrame = Frame,
+        name                = Frame,
+        percent             = Frame,
+        number              = Frame,
         {
-            CritInfoFrame   = {
-                name        = Frame,
-                percent     = Frame,
-                number      = Frame,
-                {
-                    name    = { font = FontString },
-                    percent = { font = FontString },
-                    number  = { font = FontString },
-                }
-            },
-            HastInfoFrame = {
-                name        = Frame,
-                percent     = Frame,
-                number      = Frame,
-                {
-                    name    = { font = FontString },
-                    percent = { font = FontString },
-                    number  = { font = FontString },
-                }
-            },
-            MastInfoFrame = {
-                name        = Frame,
-                percent     = Frame,
-                number      = Frame,
-                {
-                    name    = { font = FontString },
-                    percent = { font = FontString },
-                    number  = { font = FontString },
-                }
-            },
-            VersInfoFrame = {
-                name        = Frame,
-                percent     = Frame,
-                number      = Frame,
-                {
-                    name    = { font = FontString },
-                    percent = { font = FontString },
-                    number  = { font = FontString },
-                }
-            },
+            name            = { font = FontString },
+            percent         = { font = FontString },
+            number          = { font = FontString },
         }
     }
+    function __ctor(self)
+        -- ^.^
+    end
+end)
+class "UnitStatsFrame"      (function (_ENV)
+    inherit "Frame"
 
+    property "crit" { type = Table ,handler = function(self, data)
+        self:GetChild("critFrame").data = data
+    end}
+    property "haste" { type = Table ,handler = function(self, data)
+        self:GetChild("hasteFrame").data = data
+    end}
+    property "mastery" { type = Table ,handler = function(self, data)
+        self:GetChild("masteryFrame").data = data
+    end}
+    property "versa" { type = Table ,handler = function(self, data)
+        self:GetChild("versaFrame").data = data
+    end}
+    __Template__ {
+        critFrame           = PerStatsFrame,
+        hasteFrame          = PerStatsFrame,
+        masteryFrame        = PerStatsFrame,
+        versaFrame          = PerStatsFrame,
+    }
     function __ctor(self)
         -- ^.^
     end
@@ -426,7 +379,7 @@ end)
 -- Default Style
 --======================--
 Style.UpdateSkin("Default",{
-    [UnitInfoFrame]         = {
+    [UnitMainFrame]                         = {
         location                    = _Config.location:Map(function(loc)
                                         return { Anchor("TOPLEFT", loc["x"], loc["y"], nil, "TOPRIGHT" ) }
         end),
@@ -476,167 +429,7 @@ Style.UpdateSkin("Default",{
             }
         }
     },
-    [StatsInfoFrame]        = {
-        visible                     = _Config.ShowStatsFrame,
-        LayoutManager               = VerticalLayoutManager(false, false),
-        size                        = Size(150, 80),
-        location                    = { Anchor("TOPLEFT", 0, - CharacterFrame:GetHeight()) },
-        backdrop = {
-            edgeFile                = [[Interface/AddOns/SEquipment/Modules/Texture/border]],
-            bgFile                  = [[Interface/AddOns/SEquipment/Modules/Texture/background]],
-            edgeSize                = 10,
-            insets                  = {left = 2,right = 2,top = 2, bottom = 2}
-        },
-        backdropbordercolor         = _Config.unitinfobordercolor,
-        backdropcolor               = _Config.unitinfobackcolor,
-        padding                     = {
-            top                     = 2,
-            left                    = 5,
-            right                   = 5,
-            bottom                  = 2,
-        },
-        CritInfoFrame               = {
-            id                      = 1,
-            LayoutManager           = HorizontalLayoutManager(false, false),
-            width                   = 1,
-            name                    = {
-                id                  = 1,
-                Size                = Size(50, 20), --此处直接固定了,影响不大
-                font                = {
-                    Text            = Wow.FromUIProperty("critName"),
-                    Font            = _Config.statsfontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
-                    TextColor       = _Config.statsfontcolor,
-                    location        = { Anchor("LEFT")},
-                }
-            },
-            percent                 = {
-                id                  = 2,
-                Size                = Size(50, 20), --此处直接固定了,影响不大
-                font                = {
-                    Text            = Wow.FromUIProperty("critPercent"),
-                    Font            = _Config.statsfontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
-                    TextColor       = _Config.statsfontcolor,
-                    location        = { Anchor("LEFT")},
-                }
-            },
-            number                  = {
-                id                  = 3,
-                Size                = Size(50, 20), --此处直接固定了,影响不大
-                font                = {
-                    Text            = Wow.FromUIProperty("critNumber"),
-                    Font            = _Config.statsfontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
-                    TextColor       = _Config.statsfontcolor,
-                    location        = { Anchor("LEFT")},
-                }
-            },
-        },
-        HastInfoFrame               = {
-            id                      = 2,
-            LayoutManager           = HorizontalLayoutManager(false, false),
-            width                   = 1,
-            name                    = {
-                id                  = 1,
-                Size                = Size(50, 20), --此处直接固定了,影响不大
-                font                = {
-                    Text            = Wow.FromUIProperty("hasteName"),
-                    Font            = _Config.statsfontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
-                    TextColor       = _Config.statsfontcolor,
-                    location        = { Anchor("LEFT")},
-                }
-            },
-            percent                 = {
-                id                  = 2,
-                Size                = Size(50, 20), --此处直接固定了,影响不大
-                font                = {
-                    Text            = Wow.FromUIProperty("hastePercent"),
-                    Font            = _Config.statsfontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
-                    TextColor       = _Config.statsfontcolor,
-                    location        = { Anchor("LEFT")},
-                }
-            },
-            number                  = {
-                id                  = 3,
-                Size                = Size(50, 20), --此处直接固定了,影响不大
-                font                = {
-                    Text            = Wow.FromUIProperty("hasteNumber"),
-                    Font            = _Config.statsfontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
-                    TextColor       = _Config.statsfontcolor,
-                    location        = { Anchor("LEFT")},
-                }
-            },
-        },
-        MastInfoFrame               = {
-            id                      = 3,
-            LayoutManager           = HorizontalLayoutManager(false, false),
-            width                   = 1,
-            name                    = {
-                id                  = 1,
-                Size                = Size(50, 20), --此处直接固定了,影响不大
-                font                = {
-                    Text            = Wow.FromUIProperty("masteryName"),
-                    Font            = _Config.statsfontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
-                    TextColor       = _Config.statsfontcolor,
-                    location        = { Anchor("LEFT")},
-                }
-            },
-            percent                 = {
-                id                  = 2,
-                Size                = Size(50, 20), --此处直接固定了,影响不大
-                font                = {
-                    Text            = Wow.FromUIProperty("masteryPercent"),
-                    Font            = _Config.statsfontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
-                    TextColor       = _Config.statsfontcolor,
-                    location        = { Anchor("LEFT")},
-                }
-            },
-            number                  = {
-                id                  = 3,
-                Size                = Size(50, 20), --此处直接固定了,影响不大
-                font                = {
-                    Text            = Wow.FromUIProperty("masteryNumber"),
-                    Font            = _Config.statsfontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
-                    TextColor       = _Config.statsfontcolor,
-                    location        = { Anchor("LEFT")},
-                }
-            },
-        },
-        VersInfoFrame               = {
-            id                      = 4,
-            LayoutManager           = HorizontalLayoutManager(false, false),
-            width                   = 1,
-            name                    = {
-                id                  = 1,
-                Size                = Size(50, 20), --此处直接固定了,影响不大
-                font                = {
-                    Text            = Wow.FromUIProperty("versaName"),
-                    Font            = _Config.statsfontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
-                    TextColor       = _Config.statsfontcolor,
-                    location        = { Anchor("LEFT")},
-                }
-            },
-            percent                 = {
-                id                  = 2,
-                Size                = Size(50, 20), --此处直接固定了,影响不大
-                font                = {
-                    Text            = Wow.FromUIProperty("versaPercent"),
-                    Font            = _Config.statsfontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
-                    TextColor       = _Config.statsfontcolor,
-                    location        = { Anchor("LEFT")},
-                }
-            },
-            number                  = {
-                id                  = 3,
-                Size                = Size(50, 20), --此处直接固定了,影响不大
-                font                = {
-                    Text            = Wow.FromUIProperty("versaNumber"),
-                    Font            = _Config.statsfontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
-                    TextColor       = _Config.statsfontcolor,
-                    location        = { Anchor("LEFT")},
-                }
-            },
-        },
-    },
-    [ItemStatsInfoFrame]    = {
+    [ItemStatsInfoFrame]                    = {
         Visible                             = _Config.ShowStatsIcon,
         size                                = Size(PER_ITEM_HEIGHT * 4, PER_ITEM_HEIGHT),
         CritIconFrame                       = {
@@ -700,7 +493,7 @@ Style.UpdateSkin("Default",{
             },
         },
     },
-    [ItemBaseInfoFrame]     = {
+    [ItemBaseInfoFrame]                     = {
         isLevelShow                         = _Config.ShowLevel,
         isNameShow                          = _Config.ShowEquipmentName,
         size                                = Size(PER_ITEM_HEIGHT * 3, PER_ITEM_HEIGHT),
@@ -730,7 +523,7 @@ Style.UpdateSkin("Default",{
             },
         },
     },
-    [ItemExtraInfoFrame]    = {
+    [ItemExtraInfoFrame]                    = {
         isExtraInfoShown                    = _Config.ShowEnchantGem,
         LayoutManager                       = HorizontalLayoutManager(false, false),
         size                                = Size(PER_ITEM_HEIGHT * 5, PER_ITEM_HEIGHT),
@@ -779,7 +572,7 @@ Style.UpdateSkin("Default",{
             },
         },
     },
-    [ItemInfoFrame]         = {
+    [ItemInfoFrame]                         = {
         id                                  = Wow.FromUIProperty("slotID"):Map(function(id)
                                                 local uid = id
                                                 if id > 4 then uid = id - 1 end
@@ -796,5 +589,70 @@ Style.UpdateSkin("Default",{
         ExtraInfoFrame                      = {
             id                              = 3,
         },
+    },
+    [PerStatsFrame]                         = {
+        size                                = Size(150, 20),
+        name                                = {
+            size                            = Size(50,20),
+            location                        = { Anchor("LEFT")},
+            font                            = {
+                Text                        = Wow.FromUIProperty("name"),
+                Font                        = _Config.statsfontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
+                TextColor                   = _Config.statsfontcolor,
+                location                    = { Anchor("LEFT")},
+            },
+        },
+        percent                             = {
+            size                            = Size(50,20),
+            location                        = { Anchor("CENTER") },
+            font                            = {
+                Text                        = Wow.FromUIProperty("percent"),
+                Font                        = _Config.statsfontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
+                TextColor                   = _Config.statsfontcolor,
+                location                    = { Anchor("LEFT")},
+            }
+        },
+        number                              = {
+            size                            = Size(50,20),
+            location                        = { Anchor("RIGHT") },
+            font                            = {
+                Text                        = Wow.FromUIProperty("number"),
+                Font                        = _Config.statsfontsize:Map(function(size) return { font = STANDARD_TEXT_FONT, height = size} end),
+                TextColor                   = _Config.statsfontcolor,
+                location                    = { Anchor("LEFT")},
+            }
+        }
+    },
+    [UnitStatsFrame]                        = {
+        visible                             = _Config.ShowStatsFrame,
+        LayoutManager                       = VerticalLayoutManager(false, false),
+        size                                = Size(150, 80),
+        location                            = { Anchor("TOPLEFT", 0, - CharacterFrame:GetHeight()) },
+        backdrop                            = {
+            edgeFile                        = [[Interface/AddOns/SEquipment/Modules/Texture/border]],
+            bgFile                          = [[Interface/AddOns/SEquipment/Modules/Texture/background]],
+            edgeSize                        = 10,
+            insets                          = {left = 2,right = 2,top = 2, bottom = 2}
+        },
+        backdropbordercolor                 = _Config.unitinfobordercolor,
+        backdropcolor                       = _Config.unitinfobackcolor,
+        padding                             = {
+            top                             = 2,
+            left                            = 5,
+            right                           = 5,
+            bottom                          = 2,
+        },
+        critFrame                           = {
+            id                              = 1,
+        },
+        hasteFrame                          = {
+            id                              = 2,
+        },
+        masteryFrame                        = {
+            id                              = 3,
+        },
+        versaFrame                          = {
+            id                              = 4,
+        }
     },
 })

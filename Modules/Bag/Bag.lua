@@ -6,16 +6,13 @@ class "ButtonInfo" (function (_ENV)
     inherit "Frame"
 
     property "data"     { type = Table, handler = function(self, data)
-        
-        if data["itemType"] ~= ARMOR and data["itemType"] ~= WEAPON then
-            self:Hide()
-            return
-        end
+        self:SetShown(data["itemType"] == ARMOR or data["itemType"] == WEAPON)
+        if data["itemType"] ~= ARMOR and data["itemType"] ~= WEAPON then return end
+
         self.part       = data["itemEquipLoc"]
         self.level      = data["itemLevel"]
         self.setID      = data["setID"]
         self.quality    = data["itemQuality"]
-        self:Show()
     end}
     __Observable__()
     property "part"          { type = String, default = ""}

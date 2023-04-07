@@ -139,7 +139,7 @@ class "VerticalLayoutManager"   (function(_ENV)
             totalHeight         = totalHeight + offsety + child:GetHeight()
             prev                = child
             spacing             = margin and margin.bottom or 0
-            if child:IsVisible() then
+            if child:IsShown() then
                 maxWidth            = math.max(maxWidth, child:GetWidth())
             end
         end

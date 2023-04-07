@@ -14,10 +14,6 @@ function Hook_SetItemButtonQuality(self, quality, itemIDOrLink, ...)
             if self.extraFrame then self.extraFrame:Hide() end
             return
         end
-        if not self.hasItem then
-            if self.extraFrame then self.extraFrame:Hide() end
-            return
-        end
         if not self.extraFrame then
             self.extraFrame = ButtonInfo(buttonName .. "Info", self)
             self.extraFrame:SetAllPoints()

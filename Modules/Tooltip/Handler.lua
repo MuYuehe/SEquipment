@@ -50,7 +50,7 @@ function Hook_NotifyInspect(unit)
     end
     AddExtraLine(guid, "......")
     local inspectGUID = NextEvent("INSPECT_READY")
-    if time() - guids["time"] > 600 and not (InspectFrame and InspectFrame:IsVisible()) then
+    if time() - guids["time"] > 600 and not (InspectFrame and InspectFrame:IsShown()) then
         guids["time"] = time()
         guids["times"]= 1
     end
