@@ -35,7 +35,7 @@ function EVENT_PLAYER_EQUIPMENT_CHANGED(slotID, hasCurrent)
 	if not CharacterFrame:IsShown() then isFlushInHide = true end
 
 	local itemLink = GetInventoryItemLink("player", slotID)
-	local itemInfoFrame = ItemInfoFrame("playerItemInfo" .. slotIDi, PlayerInfoFrame)
+	local itemInfoFrame = ItemInfoFrame("playerItemInfo" .. slotID, PlayerInfoFrame)
 	itemInfoFrame.data = GetItemUseInfo(itemLink, slotID, "player")
 end
 -- 获取自身绿字属性
