@@ -63,7 +63,7 @@ class "PerStatsFrame"       (function (_ENV)
     __Observable__()
     property "percent"  { type = String }
     __Observable__()
-    property "number"   { type = Number }
+    property "number"   { type = String }
     __Template__ {
         name                = Frame,
         percent             = Frame,
