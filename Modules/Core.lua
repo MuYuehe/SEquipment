@@ -77,6 +77,22 @@ function P_GetVersa(unit)
 	-- 总全能率,额外全能数,伤害治疗提高率,减伤率
 	return format("%.1f", versatilityDamageBonus), versatility,format("%.1f", versatilityDamageTakenReduction),ITEM_MOD_VERSATILITY
 end
+-- Item是否有空宝石孔
+function IsItemEmptySlots(stats, table)
+	local socketNumber, gemNumber = 0, 0
+	for k, v in pairs(stats) do
+		if string.find(k, "EMPTY_SOCKET_") then
+			socketNumber = v
+			break
+		end
+	end
+	for _, v in pairs(table) do
+		if v and v ~= "" then
+			gemNumber = gemNumber + 1
+		end
+	end
+	return socketNumber > gemNumber
+end
 
 -- 获取item相关信息
 function GetItemUseInfo(itemLink,slotID, unit)
@@ -108,6 +124,7 @@ function GetItemUseInfo(itemLink,slotID, unit)
 				["gemID3"] 			= gemID3 and gemID3 ~= "" and gemID3,
 				["gemID4"] 			= gemID4 and gemID4 ~= "" and gemID4,
 				["enchantID"] 		= enchantID and enchantID ~= "" and enchantID,
+				["emptySlots"]		= IsItemEmptySlots(statsTable, {gemID1, gemID2, gemID3, gemID4}),
 			},
 			["statsInfo"]			= {
 				["ITEM_MOD_CRIT_RATING_SHORT"] 		= statsTable and statsTable["ITEM_MOD_CRIT_RATING_SHORT"] or 0,

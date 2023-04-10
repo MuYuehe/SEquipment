@@ -216,6 +216,7 @@ class "ItemExtraInfoFrame"  (function (_ENV)
         self.gemID2     = data["gemID2"]
         self.gemID3     = data["gemID3"]
         self.gemID4     = data["gemID4"]
+        self.emptySlots = data["emptySlots"]
         self.enchantID  = data["enchantID"]
         -- ============================================ --
         local bol = XDictionary(data).Values:Any(function(x) return x ~= false end)
@@ -261,6 +262,9 @@ class "ItemExtraInfoFrame"  (function (_ENV)
         end
         frame:GetChild("texture"):SetTexture("Interface/ICONS/inv_misc_enchantedscroll")
     end}
+    property "emptySlots"       { type = Boolean, handler = function(self, bol)
+        self:GetChild("EmptySlot"):SetShown(bol)
+    end}
     property "enchantItemLink"  { type = String }
     property "isExtraInfoShown" { type = Boolean + String, default = false, handler = function(self, bol)
         self:SetShown(bol)
@@ -270,12 +274,14 @@ class "ItemExtraInfoFrame"  (function (_ENV)
         Gem2Frame = Frame,
         Gem3Frame = Frame,
         Gem4Frame = Frame,
+        EmptySlot = Frame,
         EnchFrame = Frame,
         {
             Gem1Frame    = { texture = Texture },
             Gem2Frame    = { texture = Texture },
             Gem3Frame    = { texture = Texture },
             Gem4Frame    = { texture = Texture },
+            EmptySlot    = { texture = Texture },
             EnchFrame    = { texture = Texture },
         }
     }
@@ -535,7 +541,7 @@ Style.UpdateSkin("Default",{
     [ItemExtraInfoFrame]                    = {
         isExtraInfoShown                    = _Config.ShowEnchantGem,
         LayoutManager                       = HorizontalLayoutManager(false, false),
-        size                                = Size(PER_ITEM_HEIGHT * 5, PER_ITEM_HEIGHT),
+        size                                = Size(PER_ITEM_HEIGHT * 6, PER_ITEM_HEIGHT),
         Gem1Frame                           = {
             id                              = 1,
             size                            = Size(PER_ITEM_HEIGHT, PER_ITEM_HEIGHT),
@@ -572,8 +578,16 @@ Style.UpdateSkin("Default",{
                 Mask                        = [[Interface/COMMON/Indicator-Gray]],
             },
         },
-        EnchFrame                           = {
+        EmptySlot                           = {
             id                              = 5,
+            size                            = Size(PER_ITEM_HEIGHT, PER_ITEM_HEIGHT),
+            texture                         = {
+                SetAllPoints                = true,
+                file                        = [[Interface/MINIMAP/TRACKING/QuestBlob]],
+            },
+        },
+        EnchFrame                           = {
+            id                              = 6,
             size                            = Size(PER_ITEM_HEIGHT, PER_ITEM_HEIGHT),
             texture                         = {
                 SetAllPoints                = true,
