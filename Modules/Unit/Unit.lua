@@ -365,12 +365,21 @@ class "ItemInfoFrame"       (function (_ENV)
         ExtraInfoFrame  = ItemExtraInfoFrame,
     }
     function __ctor(self)
+        local frame = self:GetChild("BaseInfoFrame")
         self.OnEnter = function()
             GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
             GameTooltip:SetInventoryItem(self.unit, self.slotID)
             GameTooltip:Show()
         end
         self.OnLeave = function()
+            GameTooltip:Hide()
+        end
+        frame.OnEnter = function()
+            GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+            GameTooltip:SetInventoryItem(self.unit, self.slotID)
+            GameTooltip:Show()
+        end
+        frame.OnLeave = function()
             GameTooltip:Hide()
         end
     end
@@ -637,10 +646,10 @@ Style.UpdateSkin("Default",{
         backdropbordercolor                 = _Config.unitinfobordercolor,
         backdropcolor                       = _Config.unitinfobackcolor,
         padding                             = {
-            top                             = 2,
+            -- top                             = 5,
             left                            = 5,
             right                           = 5,
-            bottom                          = 2,
+            -- bottom                          = 5,
         },
         critFrame                           = {
             id                              = 1,

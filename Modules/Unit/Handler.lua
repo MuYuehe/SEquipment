@@ -103,7 +103,7 @@ function Hook_InspectPaperDollItemSlotButton_Update(self)
 	Next()
 	local slotID = self:GetID()
 	if not (InspectFrame and InspectFrame.unit) then return end
-	if slotID == 4 or slotID == 19 then return end
+	if slotID == 4 or slotID >= 19 then return end
 
 	local unit = InspectFrame.unit
 	local itemLink = GetInventoryItemLink(unit, slotID)

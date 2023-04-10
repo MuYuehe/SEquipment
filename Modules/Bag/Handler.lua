@@ -21,6 +21,7 @@ function Hook_SetItemButtonQuality(self, quality, itemIDOrLink, ...)
         local containerName = self:GetParent():GetName()
         local bagID = self:GetBagID()
         local info = C_Container.GetContainerItemInfo(bagID, buttonID)
+        if not info then return end
         itemIDOrLink = info.hyperlink
 
         local data = GetItemUseInfo(itemIDOrLink, buttonID)
@@ -72,7 +73,7 @@ function Hook_PaperDollItemSlotButton_Update(self)
     end
     -- 如果为衬衫以及战袍则返回
     local buttonID = self:GetID()
-    if buttonID == 4 or buttonID == 19 then
+    if buttonID == 4 or buttonID >= 19 then
         return
     end
     -- 如果self.extraFrame不存在则创建self.extraFrame

@@ -95,6 +95,7 @@ function GetItemUseInfo(itemLink,slotID, unit)
 				["itemID"] 			= itemID,
 				["itemLink"] 		= itemLink,
 				["itemName"] 		= itemName or "",
+				["itemQualityNum"]	= itemQuality,
 				["itemQuality"] 	= ITEM_QUALITY_COLORS[itemQuality],
 				["itemEquipLoc"]	= _G[itemEquipLoc] or "",
 				["itemType"] 		= itemType or "",

@@ -6,7 +6,8 @@ class "ButtonInfo" (function (_ENV)
     inherit "Frame"
 
     property "data"     { type = Table, handler = function(self, data)
-        self:SetShown(data["itemType"] == ARMOR or data["itemType"] == WEAPON)
+        self:SetShown(data and (data["itemType"] == ARMOR or data["itemType"] == WEAPON))
+        if not data then return end
         if data["itemType"] ~= ARMOR and data["itemType"] ~= WEAPON then return end
 
         self.part       = data["itemEquipLoc"]
