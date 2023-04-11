@@ -127,10 +127,10 @@ function GetItemUseInfo(itemLink,slotID, unit)
 				["emptySlots"]		= IsItemEmptySlots(statsTable, {gemID1, gemID2, gemID3, gemID4}),
 			},
 			["statsInfo"]			= {
-				["ITEM_MOD_CRIT_RATING_SHORT"] 		= statsTable and statsTable["ITEM_MOD_CRIT_RATING_SHORT"] or 0,
-				["ITEM_MOD_HASTE_RATING_SHORT"] 	= statsTable and statsTable["ITEM_MOD_HASTE_RATING_SHORT"] or 0,
-				["ITEM_MOD_MASTERY_RATING_SHORT"] 	= statsTable and statsTable["ITEM_MOD_MASTERY_RATING_SHORT"] or 0,
-				["ITEM_MOD_VERSATILITY"] 			= statsTable and statsTable["ITEM_MOD_VERSATILITY"] or 0,
+				["ITEM_MOD_CRIT_RATING_SHORT"] 		= (statsTable and statsTable["ITEM_MOD_CRIT_RATING_SHORT"]) or 0,
+				["ITEM_MOD_HASTE_RATING_SHORT"] 	= (statsTable and statsTable["ITEM_MOD_HASTE_RATING_SHORT"]) or 0,
+				["ITEM_MOD_MASTERY_RATING_SHORT"] 	= (statsTable and statsTable["ITEM_MOD_MASTERY_RATING_SHORT"]) or 0,
+				["ITEM_MOD_VERSATILITY"] 			= (statsTable and statsTable["ITEM_MOD_VERSATILITY"]) or 0,
 			},
 		}
 	end

@@ -12,8 +12,12 @@ class "ButtonInfo" (function (_ENV)
 
         self.part       = data["itemEquipLoc"]
         self.level      = data["itemLevel"]
-        self.setID      = data["setID"]
-        self.quality    = data["itemQuality"]
+        -- ==================================== --
+        if SEData.GetSetID(data["setID"]) then
+            self.itemColor = {["hex"]="",["r"]=0.93,["g"]=0.38,["b"]=0.35 }
+        else
+            self.itemColor = data["itemQuality"]
+        end
     end}
     __Observable__()
     property "part"          { type = String, default = ""}
@@ -21,14 +25,6 @@ class "ButtonInfo" (function (_ENV)
     property "level"         { type = Number, default = 0}
     __Observable__()
     property "itemColor"    { type = Table }
-    property "setID"        { type = Number }
-    property "quality"      { type = Table, handler = function(self, table)
-        if SEData.GetSetID(self.setID) then
-            self.itemColor = {["hex"]="",["r"]=0.93,["g"]=0.38,["b"]=0.35 }
-        else
-            self.itemColor = table
-        end
-    end}
 
     __Template__ {
         partFont    = FontString,

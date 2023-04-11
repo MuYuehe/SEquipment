@@ -41,7 +41,7 @@ function Hook_InspectPaperDollItemSlotButton_Update(self)
     end
     -- 如果为衬衫以及战袍则返回
     local buttonID = self:GetID()
-    if buttonID == 4 or buttonID == 19 then
+    if buttonID == 4 or buttonID >= 18 then
         return
     end
     -- 如果self.extraFrame不存在则创建self.extraFrame
@@ -73,7 +73,7 @@ function Hook_PaperDollItemSlotButton_Update(self)
     end
     -- 如果为衬衫以及战袍则返回
     local buttonID = self:GetID()
-    if buttonID == 4 or buttonID >= 19 then
+    if buttonID == 4 or buttonID >= 18 then
         return
     end
     -- 如果self.extraFrame不存在则创建self.extraFrame

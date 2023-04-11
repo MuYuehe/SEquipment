@@ -156,14 +156,17 @@ class "ItemBaseInfoFrame"   (function (_ENV)
         self.itemLevel      = data["itemLevel"]
         self.itemName       = data["itemName"]
         self.itemEquipLoc   = data["itemEquipLoc"]
-        self.itemSetID      = data["setID"]
-        self.itemQuality    = data["itemQuality"]
+        -- ===================================== --
+        if SEData.GetSetID(data["setID"]) then
+            self.itemColor = {["hex"]="",["r"]=0.93,["g"]=0.38,["b"]=0.35 }
+        else
+            self.itemColor = data["itemQuality"]
+        end
     end}
     property "itemLink"         { type = String }
     __Observable__()
     property "itemLevel"        { type = Number }
     property "itemEquipLoc"     { type = String }
-    property "itemSetID"        { type = Number }
     __Observable__()
     property "itemColor"        { type = Table }
     property "itemName"         {type = String, handler = function(self, str)
@@ -173,13 +176,6 @@ class "ItemBaseInfoFrame"   (function (_ENV)
         Next(function()
             frame:SetWidth(fontString:GetWidth())
         end)
-    end}
-    property "itemQuality"  { type = Table, handler = function(self, table)
-        if SEData.GetSetID(self.itemSetID) then
-            self.itemColor = {["hex"]="",["r"]=0.93,["g"]=0.38,["b"]=0.35 }
-        else
-            self.itemColor = table
-        end
     end}
     property "isLevelShow" { type = Boolean, handler = function(self, bol)
         self:GetChild("LevlFrame"):SetShown(bol)

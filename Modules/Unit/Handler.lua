@@ -31,7 +31,7 @@ end
 __SystemEvent__ "PLAYER_EQUIPMENT_CHANGED" __Async__()
 function EVENT_PLAYER_EQUIPMENT_CHANGED(slotID, hasCurrent)
 	Next()
-	if slotID == 4 or slotID == 19 then return end
+	if slotID == 4 or slotID >= 18 then return end
 	if not CharacterFrame:IsShown() then isFlushInHide = true end
 
 	local itemLink = GetInventoryItemLink("player", slotID)
@@ -78,7 +78,8 @@ function OnEnable(self)
     end
     -- 开始初始化
 	TargetInfoFrame:SetParent(InspectFrame)
-	TargetInfoFrame:SetPoint("TOPLEFT", InspectFrame, "TOPRIGHT", 0, 0)
+	local points = _Config.location:GetValue()
+	TargetInfoFrame:SetPoint("TOPLEFT", InspectFrame, "TOPRIGHT", points.x, points.y)
 	local LocalInspectFrame = GetWrapperUI(InspectFrame)
 
 	function LocalInspectFrame:OnShow()
@@ -103,7 +104,7 @@ function Hook_InspectPaperDollItemSlotButton_Update(self)
 	Next()
 	local slotID = self:GetID()
 	if not (InspectFrame and InspectFrame.unit) then return end
-	if slotID == 4 or slotID >= 19 then return end
+	if slotID == 4 or slotID >= 18 then return end
 
 	local unit = InspectFrame.unit
 	local itemLink = GetInventoryItemLink(unit, slotID)
