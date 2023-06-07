@@ -157,7 +157,7 @@ class "ItemBaseInfoFrame"   (function (_ENV)
         self.itemName       = data["itemName"]
         self.itemEquipLoc   = data["itemEquipLoc"]
         -- ===================================== --
-        if SEData.GetSetID(data["setID"]) then
+        if data["setID"] and data["itemQualityNum"] <= 4 then
             self.itemColor = {["hex"]="",["r"]=0.93,["g"]=0.38,["b"]=0.35 }
         else
             self.itemColor = data["itemQuality"]
