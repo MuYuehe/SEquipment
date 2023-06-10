@@ -7,4 +7,4 @@ required-dependencies:
 manual-changelog: changelog.txt
 
 ignore:
-  - Picture
+  - pics
